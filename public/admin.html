@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta property="og:title" content="Kuwaha Cloud Academy" />
+  <meta property="og:description" content="Empowering Digital Professionals — Cisco CCNA, AWS, and Linux certification training." />
+  <meta property="og:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+  <meta property="og:url" content="https://kca-cloudnet.com" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — KCA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0c0f;color:#e2e8f0;min-height:100vh}
+nav{background:#111318;border-bottom:1px solid #1e2330;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.8rem;text-decoration:none}
+.logo img{height:36px}
+.logo span{font-size:1.1rem;font-weight:700;color:#3b9eff}
+.admin-badge{background:rgba(255,140,0,.15);border:1px solid rgba(255,140,0,.3);color:#ff8c00;padding:.25rem .7rem;border-radius:4px;font-size:.75rem;font-weight:700}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.btn-logout{background:transparent;border:1px solid #1e2330;color:#94a3b8;padding:.4rem .9rem;border-radius:6px;cursor:pointer;font-size:.85rem;transition:.2s}
+.btn-logout:hover{border-color:#ff4d4d;color:#ff4d4d}
+.container{max-width:1200px;margin:0 auto;padding:2.5rem 2rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:2.5rem}
+.stat{background:#111318;border:1px solid #1e2330;border-radius:10px;padding:1.3rem;text-align:center}
+.stat .num{font-size:2rem;font-weight:800;margin-bottom:.3rem}
+.stat .lbl{font-size:.78rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em}
+.tabs{display:flex;gap:0;border-bottom:1px solid #1e2330;margin-bottom:2rem}
+.tab{padding:.75rem 1.5rem;font-size:.9rem;font-weight:600;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;transition:.2s}
+.tab.active{color:#3b9eff;border-bottom-color:#3b9eff}
+.section{display:none}
+.section.active{display:block}
+.search-bar{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.search-bar input,.search-bar select{background:#111318;border:1px solid #1e2330;border-radius:8px;padding:.6rem 1rem;color:#e2e8f0;font-size:.875rem;outline:none;transition:.2s}
+.search-bar input{flex:1;min-width:200px}
+.search-bar input:focus,.search-bar select:focus{border-color:#3b9eff}
+.search-bar select option{background:#111318}
+table{width:100%;border-collapse:collapse;font-size:.875rem}
+th{padding:.75rem 1rem;text-align:left;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#64748b;border-bottom:1px solid #1e2330}
+td{padding:.85rem 1rem;border-bottom:1px solid rgba(30,35,48,.5);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.02)}
+.badge{display:inline-block;padding:.2rem .6rem;border-radius:4px;font-size:.72rem;font-weight:700}
+.badge.pending{background:rgba(255,213,79,.1);color:#ffd54f;border:1px solid rgba(255,213,79,.3)}
+.badge.approved{background:rgba(62,207,110,.1);color:#3ecf6e;border:1px solid rgba(62,207,110,.3)}
+.badge.rejected{background:rgba(255,77,77,.1);color:#ff4d4d;border:1px solid rgba(255,77,77,.3)}
+.btn-approve{background:rgba(62,207,110,.15);color:#3ecf6e;border:1px solid rgba(62,207,110,.3);padding:.3rem .8rem;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:600;transition:.2s;margin-right:.3rem}
+.btn-approve:hover{background:rgba(62,207,110,.3)}
+.btn-reject{background:rgba(255,77,77,.1);color:#ff4d4d;border:1px solid rgba(255,77,77,.3);padding:.3rem .8rem;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:600;transition:.2s}
+.btn-reject:hover{background:rgba(255,77,77,.25)}
+.empty{text-align:center;padding:3rem;color:#64748b}
+.msg{padding:.7rem 1rem;border-radius:8px;font-size:.85rem;margin-bottom:1rem;display:none}
+.msg.success{background:rgba(62,207,110,.1);border:1px solid rgba(62,207,110,.3);color:#3ecf6e;display:block}
+.msg.error{background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.3);color:#ff4d4d;display:block}
+.table-wrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">
+    <img src="/KCA-LOGO-transparent.png" alt="KCA" onerror="this.style.display='none'">
+    <span>Kuwaha Cloud Academy</span>
+  </a>
+  <div class="nav-right">
+    <span class="admin-badge">ADMIN</span>
+    <button class="btn-logout" onclick="logout()">Sign Out</button>
+  </div>
+</nav>
+<div class="container">
+  <div id="msg" class="msg"></div>
+  <div class="stats">
+    <div class="stat" style="cursor:pointer" onclick="showTab('students');document.getElementById('statusFilter').value='';loadStudents()"><div class="num" id="s-total" style="color:#3b9eff">-</div><div class="lbl">Total Students</div></div>
+    <div class="stat" style="cursor:pointer" onclick="showTab('pending')"><div class="num" id="s-pending" style="color:#ffd54f">-</div><div class="lbl">Pending</div></div>
+    <div class="stat" style="cursor:pointer" onclick="showTab('enrollments');loadEnrollments('approved')"><div class="num" id="s-approved" style="color:#3ecf6e">-</div><div class="lbl">Approved</div></div>
+    <div class="stat" style="cursor:pointer" onclick="showTab('enrollments');loadEnrollments('rejected')"><div class="num" id="s-rejected" style="color:#ff4d4d">-</div><div class="lbl">Rejected</div></div>
+    <div class="stat" style="cursor:pointer" onclick="showTab('enrollments');loadEnrollments()"><div class="num" id="s-enrollments" style="color:#b06aff">-</div><div class="lbl">Enrollments</div></div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('pending')">Pending Approvals</div>
+    <div class="tab" onclick="showTab('students')">All Students</div>
+    <div class="tab" onclick="showTab('enrollments')">Enrollments</div>
+    <div class="tab" onclick="showTab('tickets')">Tickets</div><div class="tab" onclick="window.location.href='/instructor'">📚 Assignments</div>
+  </div>
+  <div id="sec-pending" class="section active">
+    <div class="table-wrap"><table>
+      <thead><tr><th>Name</th><th>Email</th><th>Country</th><th>Registered</th><th>Actions</th></tr></thead>
+      <tbody id="pendingBody"></tbody>
+    </table></div>
+  </div>
+  <div id="sec-students" class="section">
+    <div class="search-bar">
+      <button onclick="exportCSV()" style="background:#0e8a78;color:#fff;padding:.5rem 1rem;border-radius:8px;font-size:.85rem;font-weight:600;border:none;cursor:pointer;white-space:nowrap">⬇ Export CSV</button>
+    <input type="text" id="searchInput" placeholder="Search by name or email..." oninput="loadStudents()">
+      <select id="statusFilter" onchange="loadStudents()">
+        <option value="">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Name</th><th>Email</th><th>Country</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead>
+      <tbody id="studentsBody"></tbody>
+    </table></div>
+  </div>
+  <div id="sec-enrollments" class="section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+      <span style="color:#64748b;font-size:.85rem" id="selectedCount"></span>
+      <button class="btn-reject" id="dropSelectedBtn" onclick="dropSelected()" style="display:none">🗑 Drop Selected</button>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Student</th><th>Email</th><th>Course</th><th>Category</th><th>Enrolled</th></tr></thead>
+      <thead><tr><th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"></th><th>STUDENT</th><th>EMAIL</th><th>COURSE</th><th>CATEGORY</th><th>STATUS</th><th>ENROLLED</th><th>ACTION</th></tr></thead><tbody id="enrollmentsBody"></tbody>
+    </table></div>
+  </div>
+  <div id="sec-tickets" class="section">
+    <div class="table-wrap"><table>
+      <thead><tr><th>Ticket #</th><th>Title</th><th>Queue</th><th>Created By</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+      <tbody id="ticketsBody"></tbody>
+    </table></div>
+  </div>
+</div>
+<script>
+const token=localStorage.getItem('kca_token');
+const user=JSON.parse(localStorage.getItem('kca_user')||'{}');
+if(!token||user.role!=='admin'){window.location.replace('login.html');}
+async function loadStats(){
+  const r=await fetch('/api/admin/stats',{headers:{Authorization:'Bearer '+token}});
+  const d=await r.json();
+  document.getElementById('s-total').textContent=d.total_students;
+  document.getElementById('s-pending').textContent=d.pending;
+  document.getElementById('s-approved').textContent=d.approved;
+  document.getElementById('s-rejected').textContent=d.rejected;
+  document.getElementById('s-enrollments').textContent=d.total_enrollments;
+}
+async function loadPending(){
+  const r=await fetch('/api/admin/enrollments',{headers:{Authorization:'Bearer '+token}});
+  const students=await r.json();
+  const tbody=document.getElementById('pendingBody');
+  if(!students.length){tbody.innerHTML='<tr><td colspan="5" class="empty">No pending approvals</td></tr>';return;}
+  const pending=students.filter(e=>e.status==='pending');if(!pending.length){tbody.innerHTML='<tr><td colspan="5" class="empty">No pending enrollment requests</td></tr>';return;}tbody.innerHTML=pending.map(e=>'<tr><td>'+e.full_name+'</td><td>'+e.email+'</td><td>'+e.course+'</td><td>'+new Date(e.enrolled_at).toLocaleDateString()+'</td><td><button class="btn-approve" onclick="updateEnrollment('+e.id+',&apos;approved&apos;)">Approve</button><button class="btn-reject" onclick="updateEnrollment('+e.id+',&apos;rejected&apos;)">Reject</button></td></tr>').join('');
+}
+async function loadStudents(){
+  const search=document.getElementById('searchInput').value;
+  const status=document.getElementById('statusFilter').value;
+  let url='/api/admin/students?';
+  if(status) url+='status='+status+'&';
+  if(search) url+='search='+encodeURIComponent(search);
+  const r=await fetch(url,{headers:{Authorization:'Bearer '+token}});
+  const students=await r.json();
+  const tbody=document.getElementById('studentsBody');
+  if(!students.length){tbody.innerHTML='<tr><td colspan="6" class="empty">No students found</td></tr>';return;}
+  tbody.innerHTML=students.map(s=>'<tr><td>'+s.full_name+'</td><td>'+s.email+'</td><td>'+(s.country||'-')+'</td><td><span class="badge '+s.status+'">'+s.status+'</span></td><td>'+new Date(s.created_at).toLocaleDateString()+'</td><td>'+(s.status!=='approved'?'<button class="btn-approve" onclick="updateStatus('+s.id+',&apos;approved&apos;)">Approve</button>':'')+(s.status!=='rejected'?'<button class="btn-reject" onclick="updateStatus('+s.id+',&apos;rejected&apos;)">Reject</button>':'')+'</td><td><button class="btn-reject" onclick="deleteStudent('+s.id+',&apos;'+s.full_name+'&apos;)">Delete</button></td></tr>').join('');
+}
+async function loadEnrollments(filterStatus=''){
+  const r=await fetch('/api/admin/enrollments',{headers:{Authorization:'Bearer '+token}});
+  const data=await r.json();
+  const tbody=document.getElementById('enrollmentsBody');
+  if(!data.length){tbody.innerHTML='<tr><td colspan="5" class="empty">No enrollments yet</td></tr>';return;}
+  const filtered=filterStatus?data.filter(e=>e.status===filterStatus):data;if(!filtered.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No enrollments found</td></tr>';return;}tbody.innerHTML=filtered.map(e=>'<tr><td><input type="checkbox" class="enrollment-cb" value="'+e.id+'" onchange="updateDropBtn()"></td><td>'+e.full_name+'</td><td>'+e.email+'</td><td>'+e.course+'</td><td>'+e.category+'</td><td><span class="badge '+e.status+'">'+e.status+'</span></td><td>'+new Date(e.enrolled_at).toLocaleDateString()+'</td><td><button class="btn-reject" onclick="dropEnrollment('+e.id+')">Drop</button></td></tr>').join('');
+}
+async function updateStatus(id,status){
+  const r=await fetch('/api/admin/students/'+id+'/status',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({status})});
+  const d=await r.json();
+  if(r.ok){showMsg(d.message,'success');loadStats();loadPending();loadStudents();}
+  else showMsg(d.error,'error');
+}
+function showTab(name){
+  ['pending','students','enrollments'].forEach((t,i)=>{
+    document.getElementById('sec-'+t).classList.toggle('active',t===name);
+    document.querySelectorAll('.tab')[i].classList.toggle('active',t===name);
+  });
+  if(name==='enrollments') loadEnrollments();
+  if(name==='tickets') loadTickets();
+  if(name==='students') loadStudents();
+}
+function showMsg(t,type){const m=document.getElementById('msg');m.textContent=t;m.className='msg '+type;setTimeout(()=>m.className='msg',4000);}
+async function deleteStudent(id, name){
+  if(!confirm('Delete ' + name + '? This will also remove their enrollments.')) return;
+  const r=await fetch('/api/admin/students/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+localStorage.getItem('kca_token')}});
+  const d=await r.json();
+  alert(d.message||d.error);
+  loadStudents();
+  loadStats();
+}
+function toggleSelectAll(){
+  const all=document.getElementById('selectAll').checked;
+  document.querySelectorAll('.enrollment-cb').forEach(cb=>cb.checked=all);
+  updateDropBtn();
+}
+function updateDropBtn(){
+  const selected=document.querySelectorAll('.enrollment-cb:checked');
+  const btn=document.getElementById('dropSelectedBtn');
+  const count=document.getElementById('selectedCount');
+  btn.style.display=selected.length?'inline-block':'none';
+  count.textContent=selected.length?selected.length+' selected':'';
+}
+async function dropEnrollment(id){
+  console.log('Drop clicked for id:', id);
+  const r=await fetch('/api/admin/enrollments/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+token}});
+  const d=await r.json();
+  alert(d.message||d.error);
+  loadEnrollments();loadStats();
+}
+async function dropSelected(){
+  const ids=[...document.querySelectorAll('.enrollment-cb:checked')].map(cb=>parseInt(cb.value));
+  if(!ids.length) return;
+  const r=await fetch('/api/admin/enrollments/bulk-drop',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({ids})});
+  const d=await r.json();
+  alert(d.message||d.error);
+  loadEnrollments();loadStats();
+}
+async function updateEnrollment(id,status){
+  const r=await fetch('/api/admin/enrollments/'+id+'/status',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('kca_token')},body:JSON.stringify({status})});
+  const d=await r.json();
+  alert(d.message||d.error);
+  loadPending();
+  loadStats();
+}
+async function exportCSV(){
+  const r = await fetch('/api/admin/students/export', {headers:{Authorization:'Bearer '+token}});
+  if(!r.ok){alert('Export failed');return;}
+  const blob = await r.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'KCA_Students.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+async function loadTickets(){
+  const r = await fetch('/api/tickets', {headers:{Authorization:'Bearer '+token}});
+  const tickets = await r.json();
+  const tbody = document.getElementById('ticketsBody');
+  if(!tickets.length){tbody.innerHTML='<tr><td colspan="7" class="empty">No tickets found</td></tr>';return;}
+  tbody.innerHTML = tickets.map(t => `
+    <tr>
+      <td><a href="/ticket-view.html?id=${t.id}" style="color:#3b9eff;font-weight:600" target="_blank">${t.ticket_no}</a></td>
+      <td>${t.title}</td>
+      <td><span style="background:#1e2330;padding:.2rem .5rem;border-radius:4px;font-size:.75rem">${t.queue}</span></td>
+      <td style="color:#94a3b8;font-size:.82rem">${t.username||'deleted-user'}</td>
+      <td><span class="badge ${t.status}">${t.status.replace('_',' ')}</span></td>
+      <td style="color:#64748b">${new Date(t.created_at).toLocaleDateString()}</td>
+      <td><button class="btn-reject" onclick="deleteTicket(${t.id})">🗑 Delete</button></td>
+    </tr>`).join('');
+}
+async function deleteTicket(id){
+  if(!confirm('Permanently delete this ticket and all comments?')) return;
+  const r = await fetch('/api/tickets/'+id, {method:'DELETE', headers:{Authorization:'Bearer '+token}});
+  const d = await r.json();
+  alert(d.message||d.error);
+  loadTickets();
+}
+function logout(){localStorage.removeItem('kca_token');localStorage.removeItem('kca_user');window.location.replace('login.html');}
+loadStats();loadPending();
+</script>
+</body>
+</html>

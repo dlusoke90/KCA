@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta property="og:title" content="Kuwaha Cloud Academy" />
+  <meta property="og:description" content="Empowering Digital Professionals — Cisco CCNA, AWS, and Linux certification training." />
+  <meta property="og:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+  <meta property="og:url" content="https://kca-cloudnet.com" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCA Ticket</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0a0f1a;color:#e2e8f0;min-height:100vh}
+header{background:linear-gradient(135deg,#0a1628,#0d2040);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #0e8a78}
+.logo{color:#0e8a78;font-size:1.2rem;font-weight:900}
+.back-link{color:#3b9eff;text-decoration:none;font-size:.85rem;font-weight:600}
+.container{max-width:900px;margin:0 auto;padding:2rem}
+.ticket-header{background:#111827;border:1px solid #1e2330;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem}
+.ticket-no{color:#0e8a78;font-size:.8rem;font-weight:700;letter-spacing:.1em;margin-bottom:.5rem}
+.ticket-title{font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:1rem}
+.ticket-meta{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:.82rem;color:#64748b;margin-bottom:1rem}
+.meta-item span{color:#e2e8f0;font-weight:600}
+.badge{padding:.3rem .8rem;border-radius:20px;font-size:.78rem;font-weight:700;text-transform:uppercase}
+.badge.assigned{background:rgba(255,213,79,.15);color:#ffd54f;border:1px solid rgba(255,213,79,.3)}
+.badge.work_in_progress{background:rgba(59,158,255,.15);color:#3b9eff;border:1px solid rgba(59,158,255,.3)}
+.badge.resolved{background:rgba(14,138,120,.15);color:#0e8a78;border:1px solid rgba(14,138,120,.3)}
+.actions{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1rem;padding-top:1rem;border-top:1px solid #1e2330}
+.btn{background:#0e8a78;color:#fff;border:none;padding:.5rem 1.1rem;border-radius:8px;cursor:pointer;font-weight:600;font-size:.85rem}
+.btn:hover{background:#0a6b5e}
+.btn-wip{background:#3b5bdb}
+.btn-wip:hover{background:#2f4ac7}
+.btn-resolve{background:#2d6a4f}
+.btn-resolve:hover{background:#1e4d38}
+.btn-move{background:#1e2330;border:1px solid #2d3748;color:#94a3b8}
+.btn-move:hover{border-color:#0e8a78;color:#0e8a78}
+select.inline{background:#1e2330;border:1px solid #2d3748;color:#e2e8f0;padding:.4rem .8rem;border-radius:8px;font-size:.85rem;outline:none}
+.ticket-desc{background:#0d1117;border:1px solid #1e2330;border-radius:8px;padding:1.2rem;color:#94a3b8;line-height:1.7;margin-bottom:1rem;white-space:pre-wrap}
+.code-block{background:#000;border-radius:8px;padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:#a8ff78;white-space:pre-wrap;overflow-x:auto;margin-bottom:1rem;border:1px solid #1a1a1a}
+.topology-img{max-width:100%;border-radius:8px;border:1px solid #1e2330;margin-bottom:1rem}
+.comments-section{margin-top:1.5rem}
+.section-title{color:#94a3b8;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem}
+.comment{background:#111827;border:1px solid #1e2330;border-radius:10px;padding:1.2rem;margin-bottom:1rem}
+.comment-header{display:flex;justify-content:space-between;margin-bottom:.8rem}
+.comment-user{color:#0e8a78;font-weight:700;font-size:.875rem}
+.comment-time{color:#64748b;font-size:.78rem}
+.comment-text{color:#cbd5e1;line-height:1.7;white-space:pre-wrap}
+.add-comment{background:#111827;border:1px solid #1e2330;border-radius:12px;padding:1.5rem;margin-top:1.5rem}
+.add-comment h3{color:#fff;font-size:1rem;margin-bottom:1.2rem}
+textarea{width:100%;padding:.8rem;background:#1e2330;border:1px solid #2d3748;border-radius:8px;color:#e2e8f0;font-size:.9rem;outline:none;resize:vertical;font-family:inherit}
+textarea:focus{border-color:#0e8a78}
+.code-area{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:#000;border-color:#1e2330;color:#a8ff78}
+.tab-btns{display:flex;gap:.5rem;margin-bottom:1rem}
+.tab-btn{padding:.4rem 1rem;border-radius:6px;border:1px solid #1e2330;color:#64748b;cursor:pointer;font-size:.82rem;background:transparent}
+.tab-btn.active{background:#0e8a78;color:#fff;border-color:#0e8a78}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">KCA · SUPPORT</div>
+  <a href="tickets.html" class="back-link">← Back to Tickets</a>
+</header>
+<div class="container">
+  <div id="ticketContent">Loading...</div>
+</div>
+<script>
+const token = localStorage.getItem('kca_token');
+const user = JSON.parse(localStorage.getItem('kca_user')||'{}');
+if(!token) window.location.replace('login.html');
+const params = new URLSearchParams(window.location.search);
+const ticketId = params.get('id');
+let ticket = null;
+
+async function loadTicket(){
+  const r = await fetch('/api/tickets/'+ticketId, {headers:{Authorization:'Bearer '+token}});
+  ticket = await r.json();
+  document.title = `${ticket.ticket_no} — KCA Support`;
+  renderTicket();
+}
+
+function renderTicket(){
+  const commentsHtml = (ticket.comments||[]).map(c => `
+    <div class="comment">
+      <div class="comment-header">
+        <span class="comment-user">${c.username} ${c.role==='admin'?'<span style="background:#f5a623;color:#000;padding:.1rem .4rem;border-radius:4px;font-size:.7rem">ADMIN</span>':''}</span>
+        <span class="comment-time">${new Date(c.created_at).toLocaleString()}</span>
+      </div>
+      ${c.comment ? `<div class="comment-text">${c.comment}</div>` : ''}
+      ${c.command_output ? `<div class="code-block">${c.command_output}</div>` : ''}
+    </div>`).join('');
+
+  document.getElementById('ticketContent').innerHTML = `
+    <div class="ticket-header">
+      <div class="ticket-no">${ticket.ticket_no}</div>
+      <div class="ticket-title">${ticket.title}</div>
+      <div class="ticket-meta">
+        <div class="meta-item">Queue: <span>${ticket.queue}</span></div>
+        <div class="meta-item">Created by: <span>${ticket.username}</span></div>
+        <div class="meta-item">Date: <span>${new Date(ticket.created_at).toLocaleString()}</span></div>
+        <div class="meta-item">Status: <span class="badge ${ticket.status}">${ticket.status.replace('_',' ')}</span></div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-wip" onclick="updateStatus('work_in_progress')">🔧 Work In Progress</button>
+        <button class="btn btn-resolve" onclick="updateStatus('resolved')">✅ Mark Resolved</button>
+        <button class="btn btn-move" onclick="document.getElementById('moveRow').style.display='flex'">📦 Move Queue</button>
+      </div>
+      <div id="moveRow" style="display:none;gap:.8rem;align-items:center;margin-top:.8rem">
+        <select class="inline" id="newQueueSelect">
+          <option value="">-- Select Queue --</option>
+          <option value="Cisco CCNA (200-301)">Cisco CCNA (200-301)</option>
+          <option value="AWS Cloud Practitioner">AWS Cloud Practitioner</option>
+          <option value="AWS Advanced Networking">AWS Advanced Networking</option>
+          <option value="Linux Fundamentals">Linux Fundamentals</option>
+          <option value="General Support">General Support</option>
+        </select>
+        <button class="btn" onclick="moveQueue()">Move</button>
+      </div>
+    </div>
+
+    ${ticket.description ? `<div class="ticket-desc">${ticket.description}</div>` : ''}
+    ${ticket.image_path ? `<img class="topology-img" src="${ticket.image_path}" alt="Topology">` : ''}
+
+    <div class="comments-section">
+      <div class="section-title">💬 ${ticket.comments.length} Comment${ticket.comments.length!==1?'s':''}</div>
+      ${commentsHtml || '<p style="color:#64748b;font-size:.875rem">No comments yet. Be the first to respond!</p>'}
+    </div>
+
+    <div class="add-comment">
+      <h3>Add a Comment</h3>
+      <div class="tab-btns">
+        <button class="tab-btn active" onclick="showTab('comment',this)">💬 Comment</button>
+        <button class="tab-btn" onclick="showTab('command',this)">💻 Command & Output</button>
+      </div>
+      <div id="tab-comment">
+        <textarea id="commentText" rows="4" placeholder="Share your findings, ask a question, or provide a solution..."></textarea>
+      </div>
+      <div id="tab-command" style="display:none">
+        <textarea id="commandOutput" class="code-area" rows="6" placeholder="$ your-command here&#10;output goes here..."></textarea>
+      </div>
+      <button class="btn" style="margin-top:1rem" onclick="addComment()">Post Comment</button>
+    </div>`;
+}
+
+function showTab(tab, btn){
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-comment').style.display = tab==='comment'?'block':'none';
+  document.getElementById('tab-command').style.display = tab==='command'?'block':'none';
+}
+
+async function updateStatus(status){
+  const r = await fetch('/api/tickets/'+ticketId+'/status', {
+    method:'PUT', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body: JSON.stringify({status})
+  });
+  const d = await r.json();
+  alert(d.message||d.error);
+  loadTicket();
+}
+
+async function moveQueue(){
+  const queue = document.getElementById('newQueueSelect').value;
+  if(!queue){ alert('Please select a queue'); return; }
+  const r = await fetch('/api/tickets/'+ticketId+'/queue', {
+    method:'PUT', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body: JSON.stringify({queue})
+  });
+  const d = await r.json();
+  alert(d.message||d.error);
+  loadTicket();
+}
+
+async function addComment(){
+  const comment = document.getElementById('commentText').value;
+  const command_output = document.getElementById('commandOutput').value;
+  if(!comment && !command_output){ alert('Please enter a comment or command output'); return; }
+  const r = await fetch('/api/tickets/'+ticketId+'/comments', {
+    method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body: JSON.stringify({comment, command_output})
+  });
+  const d = await r.json();
+  if(r.ok){
+    document.getElementById('commentText').value = '';
+    document.getElementById('commandOutput').value = '';
+    loadTicket();
+  } else { alert(d.error); }
+}
+
+loadTicket();
+</script>
+</body>
+</html>

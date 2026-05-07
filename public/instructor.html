@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCA Instructor Portal</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0a0f1a;color:#e2e8f0;min-height:100vh}
+header{background:linear-gradient(135deg,#0a1628,#0d2040);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #0e8a78}
+.logo{color:#0e8a78;font-size:1.2rem;font-weight:900;display:flex;align-items:center;gap:.5rem}
+.logo img{height:36px}
+.header-right{display:flex;gap:1rem;align-items:center}
+.btn{background:#0e8a78;color:#fff;border:none;padding:.5rem 1.2rem;border-radius:8px;cursor:pointer;font-weight:600;font-size:.875rem}
+.btn:hover{background:#0a6b5e}
+.btn-danger{background:#c0392b}
+.btn-danger:hover{background:#a93226}
+.btn-outline{background:transparent;border:1px solid #0e8a78;color:#0e8a78}
+.btn-outline:hover{background:#0e8a78;color:#fff}
+.container{max-width:1100px;margin:0 auto;padding:2rem}
+.page-title{font-size:1.5rem;font-weight:800;color:#f8fafc;margin-bottom:1.5rem}
+.grid{display:grid;grid-template-columns:380px 1fr;gap:2rem;align-items:start}
+.card{background:#111827;border:1px solid #1e2330;border-radius:12px;padding:1.5rem}
+.card h3{font-size:1rem;font-weight:700;color:#f8fafc;margin-bottom:1.2rem;padding-bottom:.75rem;border-bottom:1px solid #1e2330}
+.form-group{margin-bottom:1rem}
+label{display:block;font-size:.8rem;font-weight:600;color:#94a3b8;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em}
+input,textarea,select{width:100%;padding:.65rem .9rem;background:#0a0f1a;border:1px solid #1e2330;border-radius:8px;color:#e2e8f0;font-size:.875rem;font-family:inherit}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#0e8a78}
+textarea{resize:vertical;min-height:90px}
+.upload-area{border:2px dashed #1e2330;border-radius:8px;padding:1.5rem;text-align:center;cursor:pointer;transition:.2s}
+.upload-area:hover{border-color:#0e8a78;background:rgba(14,138,120,.05)}
+.upload-area input{display:none}
+.upload-icon{font-size:2rem;margin-bottom:.5rem}
+.upload-text{font-size:.85rem;color:#64748b}
+.upload-text span{color:#0e8a78;font-weight:600}
+.file-selected{color:#0e8a78;font-size:.8rem;margin-top:.5rem;font-weight:600}
+.assignment-card{background:#0a0f1a;border:1px solid #1e2330;border-radius:10px;padding:1.2rem;margin-bottom:1rem;transition:.2s}
+.assignment-card:hover{border-color:#0e8a78}
+.assignment-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem}
+.assignment-title{font-weight:700;color:#f8fafc;font-size:.95rem}
+.assignment-meta{font-size:.75rem;color:#64748b;margin-bottom:.5rem}
+.badge{padding:.2rem .6rem;border-radius:12px;font-size:.7rem;font-weight:700;text-transform:uppercase}
+.badge-course{background:rgba(14,138,120,.15);color:#0e8a78;border:1px solid rgba(14,138,120,.3)}
+.badge-all{background:rgba(245,166,35,.15);color:#f5a623;border:1px solid rgba(245,166,35,.3)}
+.file-badge{background:rgba(59,158,255,.15);color:#3b9eff;border:1px solid rgba(59,158,255,.3)}
+.submissions-btn{background:transparent;border:1px solid #1e2330;color:#94a3b8;padding:.3rem .8rem;border-radius:6px;font-size:.75rem;cursor:pointer;font-weight:600}
+.submissions-btn:hover{border-color:#0e8a78;color:#0e8a78}
+.empty{text-align:center;color:#64748b;padding:3rem;font-size:.9rem}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center}
+.modal.open{display:flex}
+.modal-box{background:#111827;border:1px solid #1e2330;border-radius:12px;padding:1.5rem;width:90%;max-width:650px;max-height:80vh;overflow-y:auto}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid #1e2330}
+.modal-title{font-weight:700;font-size:1rem}
+.close-btn{background:none;border:none;color:#64748b;font-size:1.2rem;cursor:pointer}
+.sub-row{background:#0a0f1a;border:1px solid #1e2330;border-radius:8px;padding:1rem;margin-bottom:.75rem}
+.sub-name{font-weight:700;font-size:.9rem;color:#f8fafc}
+.sub-date{font-size:.75rem;color:#64748b;margin-bottom:.5rem}
+.sub-reply{font-size:.85rem;color:#94a3b8;background:#111827;padding:.75rem;border-radius:6px;margin-top:.5rem}
+.sub-file{color:#3b9eff;font-size:.8rem;text-decoration:none;display:inline-block;margin-top:.5rem}
+.no-sub{color:#64748b;font-size:.8rem;font-style:italic}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><img src="/KCA-LOGO-transparent.png" alt="KCA"> Instructor Portal</div>
+  <div class="header-right">
+    <span id="adminName" style="color:#94a3b8;font-size:.85rem"></span>
+    <a href="/admin" class="btn btn-outline">Admin Panel</a>
+    <button class="btn" onclick="logout()">Sign Out</button>
+  </div>
+</header>
+<div class="container">
+  <div class="page-title">📚 Assignment Manager</div>
+  <div class="grid">
+    <!-- CREATE FORM -->
+    <div class="card">
+      <h3>➕ Create New Assignment</h3>
+      <div class="form-group">
+        <label>Assignment Title *</label>
+        <input type="text" id="aTitle" placeholder="e.g. VLAN Lab 1 - Basic Segmentation">
+      </div>
+      <div class="form-group">
+        <label>Description / Instructions</label>
+        <div id="aDesc" contenteditable="true"
+  data-placeholder="Describe the assignment, objectives, and submission requirements... (Ctrl+V to paste images)"
+  style="width:100%;min-height:120px;padding:.65rem .9rem;background:#0a0f1a;border:1px solid #1e2330;border-radius:8px;color:#e2e8f0;font-size:.875rem;font-family:inherit;line-height:1.5;outline:none;overflow-y:auto"
+  onfocus="this.style.borderColor='#0e8a78'"
+  onblur="this.style.borderColor='#1e2330'"></div>
+<style>
+#aDesc:empty:before{content:attr(data-placeholder);color:#4a5568;pointer-events:none;display:block}
+#aDesc img{max-width:100%;border-radius:6px;margin:0 0 .5rem 0;display:block;border:1px solid #1e2330}
+</style>
+      </div>
+      <div class="form-group">
+        <label>Assign To Course</label>
+        <select id="aCourse">
+          <option value="">All Enrolled Students</option>
+          <option value="1">Cisco CCNA (200-301)</option>
+          <option value="2">AWS Cloud Practitioner</option>
+          <option value="3">AWS Advanced Networking</option>
+          <option value="4">Linux Fundamentals</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Attach File (Packet Tracer, Image, PDF)</label>
+        <div class="upload-area" onclick="document.getElementById('aFile').click()">
+          <input type="file" id="aFile" accept=".pkt,.pka,.png,.jpg,.jpeg,.pdf,.zip" onchange="showFileName(this)">
+          <div class="upload-icon">📎</div>
+          <div class="upload-text">Click to upload or drag & drop<br><span>.pkt .pka .png .jpg .pdf .zip</span></div>
+          <div class="file-selected" id="fileName"></div>
+        </div>
+      </div>
+      <button class="btn" style="width:100%;padding:.75rem" onclick="createAssignment()">🚀 Publish Assignment</button>
+      <div id="createMsg" style="margin-top:.75rem;font-size:.85rem;text-align:center"></div>
+    </div>
+
+    <!-- ASSIGNMENTS LIST -->
+    <div class="card">
+      <h3>📋 Published Assignments</h3>
+      <div id="assignmentsList"><div class="empty">Loading assignments...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBMISSIONS MODAL -->
+<div class="modal" id="subsModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title" id="subsTitle">Student Submissions</div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div id="subsList"></div>
+  </div>
+</div>
+
+<script>
+const token = localStorage.getItem('kca_token');
+const user = JSON.parse(localStorage.getItem('kca_user') || '{}');
+if (!token || user.role !== 'admin') window.location.replace('/login');
+document.getElementById('adminName').textContent = user.full_name || 'Instructor';
+
+function showFileName(input) {
+  const el = document.getElementById('fileName');
+  el.textContent = input.files[0] ? '✅ ' + input.files[0].name : '';
+}
+
+async function createAssignment() {
+  const title = document.getElementById('aTitle').value.trim();
+  const description = document.getElementById('aDesc').innerHTML.trim();
+  const course = document.getElementById('aCourse').value;
+  const file = document.getElementById('aFile').files[0];
+  const msg = document.getElementById('createMsg');
+
+  if (!title) { msg.style.color = '#e74c3c'; msg.textContent = '⚠️ Title is required'; return; }
+
+  const fd = new FormData();
+  fd.append('title', title);
+  fd.append('description', description);
+  fd.append('course', course);
+  if (file) fd.append('file', file);
+
+  msg.style.color = '#0e8a78'; msg.textContent = 'Publishing...';
+  const r = await fetch('/api/assignments', { method: 'POST', headers: { Authorization: 'Bearer ' + token }, body: fd });
+  const d = await r.json();
+  if (d.message) {
+    msg.textContent = '✅ ' + d.message;
+    document.getElementById('aTitle').value = '';
+    document.getElementById('aDesc').innerHTML = '';
+    document.getElementById('aFile').value = '';
+    document.getElementById('fileName').textContent = '';
+    loadAssignments();
+  } else {
+    msg.style.color = '#e74c3c'; msg.textContent = '❌ ' + (d.error || 'Failed');
+  }
+}
+
+async function loadAssignments() {
+  const r = await fetch('/api/assignments', { headers: { Authorization: 'Bearer ' + token } });
+  const assignments = await r.json();
+  const el = document.getElementById('assignmentsList');
+  if (!assignments.length) { el.innerHTML = '<div class="empty">No assignments yet. Create your first one!</div>'; return; }
+  el.innerHTML = assignments.map(a => `
+    <div class="assignment-card">
+      <div class="assignment-header">
+        <div class="assignment-title">${a.title}</div>
+        <div style="display:flex;gap:.5rem">
+          <button class="submissions-btn" onclick="viewSubmissions(${a.id}, '${a.title.replace(/'/g, "\\'")}')">
+            👥 Submissions (${a.submission_count || 0})
+          </button>
+          <button class="btn btn-danger" style="padding:.3rem .7rem;font-size:.75rem" onclick="deleteAssignment(${a.id})">🗑</button>
+        </div>
+      </div>
+      <div class="assignment-meta">
+        📅 ${new Date(a.created_at).toLocaleDateString()} &nbsp;|&nbsp; 👤 ${a.instructor_name || 'Admin'}
+      </div>
+      ${a.description ? `<div style="font-size:.82rem;color:#94a3b8;margin-bottom:.5rem">${a.description}</div>` : ''}
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <span class="badge ${a.course ? 'badge-course' : 'badge-all'}">${a.course_name || '🌐 All Students'}</span>
+        ${a.file_path ? `<span class="badge file-badge">📎 File Attached</span>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+async function deleteAssignment(id) {
+  if (!confirm('Delete this assignment and all submissions?')) return;
+  const r = await fetch('/api/assignments/' + id, { method: 'DELETE', headers: { Authorization: 'Bearer ' + token } });
+  const d = await r.json();
+  alert(d.message || d.error);
+  loadAssignments();
+}
+
+let currentAssignmentId = null;
+async function viewSubmissions(id, title) {
+  currentAssignmentId = id;
+  document.getElementById('subsTitle').textContent = '👥 ' + title;
+  document.getElementById('subsList').innerHTML = '<div class="empty">Loading...</div>';
+  document.getElementById('subsModal').classList.add('open');
+  const r = await fetch('/api/assignments/' + id + '/submissions', { headers: { Authorization: 'Bearer ' + token } });
+  const subs = await r.json();
+  const el = document.getElementById('subsList');
+  if (!subs.length) { el.innerHTML = '<div class="empty">No submissions yet.</div>'; return; }
+  el.innerHTML = subs.map(s => `
+    <div class="sub-row">
+      <div class="sub-name">👤 ${s.full_name}</div>
+      <div class="sub-date">📧 ${s.email} &nbsp;|&nbsp; 📅 ${new Date(s.submitted_at).toLocaleDateString()}</div>
+      ${s.reply_text ? `<div class="sub-reply">${s.reply_text}</div>` : '<div class="no-sub">No text reply submitted</div>'}
+      ${s.file_path ? `<a href="${s.file_path}" target="_blank" class="sub-file">📎 View Attached File</a>` : ''}
+      <div style="margin-top:.75rem;border-top:1px solid #1e2330;padding-top:.75rem">
+        ${s.instructor_reply ? `
+          <div style="font-size:.75rem;font-weight:700;color:#0e8a78;margin-bottom:.3rem">✅ Your Reply <span style="color:#64748b;font-weight:400">${new Date(s.replied_at).toLocaleDateString()}</span></div>
+          <div style="background:#0a1628;border:1px solid rgba(14,138,120,.3);padding:.6rem .8rem;border-radius:6px;font-size:.83rem;color:#e2e8f0;margin-bottom:.5rem">${s.instructor_reply}</div>
+        ` : ''}
+        <textarea id="reply-${currentAssignmentId}-${s.student_id}" placeholder="Write feedback for ${s.full_name}..."
+          style="width:100%;padding:.5rem .75rem;background:#0a0f1a;border:1px solid #1e2330;border-radius:6px;color:#e2e8f0;font-size:.82rem;font-family:inherit;resize:vertical;min-height:60px;margin-bottom:.4rem">${s.instructor_reply||''}</textarea>
+        <button onclick="sendReply(${currentAssignmentId}, ${s.student_id})"
+          style="background:#0e8a78;color:#fff;border:none;padding:.35rem .9rem;border-radius:6px;font-size:.8rem;font-weight:600;cursor:pointer">
+          ${s.instructor_reply ? '🔄 Update Reply' : '💬 Send Reply'}
+        </button>
+        <span id="replyMsg-${currentAssignmentId}-${s.student_id}" style="font-size:.78rem;margin-left:.5rem"></span>
+      </div>
+    </div>`).join('');
+}
+
+async function sendReply(assignmentId, studentId) {
+  const ta = document.getElementById(`reply-${assignmentId}-${studentId}`);
+  const msgEl = document.getElementById(`replyMsg-${assignmentId}-${studentId}`);
+  const instructor_reply = ta.value.trim();
+  if (!instructor_reply) { msgEl.style.color='#e74c3c'; msgEl.textContent='Reply cannot be empty'; return; }
+  msgEl.style.color='#0e8a78'; msgEl.textContent='Sending...';
+  const r = await fetch(`/api/assignments/${assignmentId}/submissions/${studentId}/reply`, {
+    method: 'PUT',
+    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ instructor_reply })
+  });
+  const d = await r.json();
+  if (d.message) {
+    msgEl.textContent = '✅ Sent!';
+    setTimeout(() => viewSubmissions(assignmentId, document.getElementById('subsTitle').textContent.replace('👥 ','')), 800);
+  } else {
+    msgEl.style.color='#e74c3c'; msgEl.textContent = '❌ ' + (d.error||'Failed');
+  }
+}
+function closeModal() { document.getElementById('subsModal').classList.remove('open'); }
+function logout() { localStorage.removeItem('kca_token'); localStorage.removeItem('kca_user'); window.location.replace('/login'); }
+loadAssignments();
+
+// Image paste handler
+document.getElementById('aDesc').addEventListener('paste', function(e) {
+  const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+  for (const item of items) {
+    if (item.type.indexOf('image') !== -1) {
+      e.preventDefault();
+      const blob = item.getAsFile();
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const div = document.getElementById('aDesc');
+        const img = document.createElement('img');
+        img.src = ev.target.result;
+        img.style.maxWidth = '100%';
+        img.style.borderRadius = '6px';
+        img.style.margin = '0 0 .5rem 0';
+        img.style.border = '1px solid #1e2330';
+        img.style.display = 'block';
+        div.insertBefore(img, div.firstChild);
+        const range = document.createRange();
+        range.selectNodeContents(div);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      };
+      reader.readAsDataURL(blob);
+      return;
+    }
+  }
+});
+
+</script>
+</body>
+</html>

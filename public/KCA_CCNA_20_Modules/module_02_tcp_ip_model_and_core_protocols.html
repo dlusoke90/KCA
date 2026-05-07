@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCA CCNA — Module 2: TCP/IP Model & Core Protocols</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#060b14;color:#e2e8f0;min-height:100vh}
+
+/* HEADER */
+.topbar{background:rgba(6,11,20,.95);backdrop-filter:blur(10px);padding:.8rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:100}
+.topbar-logo img{height:50px;object-fit:contain}
+.mod-badge{background:#0e8a78;color:#fff;padding:.3rem .9rem;border-radius:20px;font-size:.78rem;font-weight:700;letter-spacing:.05em}
+
+/* BACK BAR */
+.back-bar{padding:.5rem 2rem;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05)}
+.back-bar a{color:#64748b;text-decoration:none;font-size:.82rem;font-weight:500;transition:.2s}
+.back-bar a:hover{color:#0e8a78}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0a0f1a 0%,#0d1929 50%,#0a1628 100%);padding:3rem 2rem 2.5rem;border-bottom:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,#0e8a7815 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative}
+.hero-eyebrow{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.hero-icon{width:48px;height:48px;background:#0e8a7820;border:1px solid #0e8a7840;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.hero-label{color:#0e8a78;font-size:.78rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+.hero h1{font-size:2.8rem;font-weight:900;color:#fff;margin-bottom:1.2rem;line-height:1.1;letter-spacing:-.02em}
+.hero-meta{display:flex;gap:1rem;flex-wrap:wrap}
+.hero-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:.35rem .85rem;border-radius:20px;font-size:.8rem;font-weight:500}
+
+/* CONTAINER */
+.container{max-width:1100px;margin:0 auto;padding:2.5rem 2rem}
+
+/* SECTION HEADER */
+.section-hdr{display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem}
+.section-hdr-line{flex:1;height:1px;background:linear-gradient(to right,rgba(255,255,255,.1),transparent)}
+.section-hdr-label{color:#0e8a78;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
+
+/* CONCEPT CARDS */
+.concepts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:1rem;margin-bottom:3rem}
+.concept-card{background:linear-gradient(135deg,#0d1929,#0a1221);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.5rem;transition:.2s;position:relative;overflow:hidden}
+.concept-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,#0e8a78,#0e8a7800)}
+.concept-card:hover{border-color:#0e8a7840;transform:translateY(-2px)}
+.concept-icon{font-size:1.8rem;margin-bottom:.8rem;display:block}
+.concept-title{color:#fff;font-size:1rem;font-weight:700;margin-bottom:.6rem}
+.concept-desc{color:#94a3b8;font-size:.875rem;line-height:1.75;white-space:pre-line;margin-bottom:1rem}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.tag{background:#0e8a7815;border:1px solid #0e8a7830;color:#0e8a78;padding:.2rem .6rem;border-radius:6px;font-size:.72rem;font-weight:600}
+
+/* CLI SECTION */
+.cli-wrap{background:#0a0d12;border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;margin-bottom:3rem}
+.cli-titlebar{background:#111827;padding:.8rem 1.2rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.cli-dots span{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:.3rem}
+.cli-dots span:nth-child(1){background:#ff5f57}
+.cli-dots span:nth-child(2){background:#febc2e}
+.cli-dots span:nth-child(3){background:#28c840}
+.cli-label{color:#64748b;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.cmd-block{border-bottom:1px solid rgba(255,255,255,.04);font-family:'JetBrains Mono',monospace;font-size:.83rem}
+.cmd-block:last-child{border-bottom:none}
+.cmd-top{display:flex;align-items:center;gap:1rem;padding:.9rem 1.2rem;background:#0d1117}
+.cmd-dots{display:flex;gap:.3rem}
+.cmd-dots span{width:8px;height:8px;border-radius:50%;background:#0e8a7850}
+.cmd-text{color:#0e8a78;flex:1;font-weight:500}
+.run-btn{background:#0e8a78;color:#fff;border:none;padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:700;font-family:'Inter',sans-serif;transition:.2s;white-space:nowrap}
+.run-btn:hover{opacity:.85;transform:scale(1.02)}
+.run-btn.done{background:#1e2d3d;color:#64748b;cursor:default}
+.cmd-output{display:none;padding:.8rem 1.2rem;color:#a8ff78;white-space:pre-wrap;line-height:1.6;background:#000;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* QUIZ */
+.quiz-wrap{background:linear-gradient(135deg,#0d1929,#0a1221);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.5rem;margin-bottom:2rem}
+.quiz-q{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.quiz-q:last-of-type{border-bottom:none;margin-bottom:0}
+.q-num{background:#0e8a78;color:#fff;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin-right:.6rem;flex-shrink:0}
+.q-text{color:#e2e8f0;font-weight:600;margin-bottom:.8rem;display:flex;align-items:flex-start;gap:.3rem}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.opt-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-size:.84rem;font-family:'Inter',sans-serif;transition:.2s}
+.opt-btn:hover{border-color:#0e8a78;color:#0e8a78;background:#0e8a7810}
+.opt-btn.correct{background:#0e8a7820;border-color:#0e8a78;color:#0e8a78}
+.opt-btn.wrong{background:rgba(255,77,77,.1);border-color:#ff4d4d;color:#ff4d4d}
+.q-feedback{font-size:.8rem;margin-top:.5rem;min-height:1.2rem;padding-left:2rem}
+.reset-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:#64748b;padding:.5rem 1.2rem;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:'Inter',sans-serif;margin-top:1rem;transition:.2s}
+.reset-btn:hover{border-color:#0e8a78;color:#0e8a78}
+
+/* PROGRESS */
+.progress-bar{background:rgba(255,255,255,.06);height:3px;border-radius:2px;margin-bottom:3rem;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(to right,#0e8a78,#0e8a7880);border-radius:2px;width:10%;transition:width .5s ease}
+
+/* NAV */
+.module-nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;background:rgba(6,11,20,.95);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08);position:sticky;bottom:0}
+.nav-btn{background:#0e8a78;color:#fff;border:none;padding:.6rem 1.4rem;border-radius:10px;font-weight:700;cursor:pointer;font-size:.875rem;text-decoration:none;display:inline-block;font-family:'Inter',sans-serif;transition:.2s}
+.nav-btn:hover{opacity:.85;transform:translateY(-1px)}
+.nav-btn.disabled{background:rgba(255,255,255,.06);color:#374151;pointer-events:none}
+.nav-info{text-align:center}
+.nav-mod{color:#64748b;font-size:.78rem}
+.nav-title{color:#94a3b8;font-size:.82rem;font-weight:600;max-width:200px;text-align:center}
+
+@media(max-width:768px){
+  .hero h1{font-size:1.8rem}
+  .concepts-grid{grid-template-columns:1fr}
+  .container{padding:1.5rem 1rem}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-logo"><a href="/dashboard.html"><img src="/KCA-LOGO-transparent.png" alt="KCA"></a></div>
+  <div class="mod-badge">MODULE 2 OF 20</div>
+</div>
+<div class="back-bar"><a href="/dashboard.html">← Back to My Courses</a></div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="hero-icon">🔗</div>
+      <span class="hero-label">CCNA 200-301 · Module 2</span>
+    </div>
+    <h1>TCP/IP Model & Core Protocols</h1>
+    <div class="hero-meta">
+      <span class="hero-chip">📚 4 Core Topics</span>
+      <span class="hero-chip">💻 5 CLI Commands</span>
+      <span class="hero-chip">❓ 5 Quiz Questions</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="progress-bar"><div class="progress-fill"></div></div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">Core Concepts</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <div class="concept-icon">📡</div>
+      <h3 class="concept-title">TCP/IP Model Layers</h3>
+      <p class="concept-desc">4 layers: Network Access (L1+L2), Internet (L3), Transport (L4), Application (L5-7). Maps to OSI but simplified. Used in practice for all internet communications.</p>
+      <div class="tags"><span class="tag">Network Access</span><span class="tag">Internet</span><span class="tag">Transport</span><span class="tag">Application</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🔄</div>
+      <h3 class="concept-title">TCP vs UDP</h3>
+      <p class="concept-desc">TCP: reliable, ordered, connection-oriented, 3-way handshake (SYN→SYN-ACK→ACK). UDP: fast, unreliable, connectionless. TCP=HTTP/FTP/SSH. UDP=DNS/DHCP/VoIP/streaming.</p>
+      <div class="tags"><span class="tag">TCP: Reliable</span><span class="tag">UDP: Fast</span><span class="tag">TCP: SYN/ACK</span><span class="tag">UDP: No handshake</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🌍</div>
+      <h3 class="concept-title">Core Protocols</h3>
+      <p class="concept-desc">HTTP/HTTPS (80/443), SSH (22), Telnet (23), FTP (21/20), SMTP (25), DNS (53), DHCP (67/68), SNMP (161), BGP (179), OSPF (89).</p>
+      <div class="tags"><span class="tag">HTTP 80</span><span class="tag">HTTPS 443</span><span class="tag">SSH 22</span><span class="tag">DNS 53</span><span class="tag">DHCP 67/68</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🤝</div>
+      <h3 class="concept-title">TCP Three-Way Handshake</h3>
+      <p class="concept-desc">Step 1: Client sends SYN. Step 2: Server replies SYN-ACK. Step 3: Client sends ACK. Connection established! Used for all TCP sessions before data transfer.</p>
+      <div class="tags"><span class="tag">1. SYN →</span><span class="tag">2. ← SYN-ACK</span><span class="tag">3. ACK →</span><span class="tag">Connected! ✓</span></div>
+    </div></div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">CLI Practice — Click ▶ Run</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="cli-wrap">
+    <div class="cli-titlebar">
+      <div class="cli-dots"><span></span><span></span><span></span></div>
+      <span class="cli-label">Cisco IOS Simulator</span>
+    </div>
+    
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show tcp brief</span>
+        <button class="run-btn" onclick="runCmd(this,'show tcp brief','TCB   Local Address    Foreign Address   (state)\n0x1   192.168.1.10:22  192.168.1.1:54321  ESTABLISHED')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ netstat -an | head -5</span>
+        <button class="run-btn" onclick="runCmd(this,'netstat -an | head -5','Proto  Local Address    Foreign Address  State\nTCP    0.0.0.0:22       0.0.0.0:0        LISTENING\nTCP    192.168.1.10:22  10.0.0.1:443     ESTABLISHED')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ telnet 192.168.1.1 80</span>
+        <button class="run-btn" onclick="runCmd(this,'telnet 192.168.1.1 80','Trying 192.168.1.1...\nConnected to 192.168.1.1.\nEscape character is \'^]\'.')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show ip sockets</span>
+        <button class="run-btn" onclick="runCmd(this,'show ip sockets','Proto  Remote Address  Port  Local Address  Port  State\nTCP    0.0.0.0         0     0.0.0.0        22    LISTEN')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ debug ip tcp transactions</span>
+        <button class="run-btn" onclick="runCmd(this,'debug ip tcp transactions','TCP: sending SYN, seq 12345, ack 0\nTCP: rcv\'d SYN-ACK, seq 67890, ack 12346\nTCP: sending ACK')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+  </div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">Knowledge Check</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="quiz-wrap">
+    
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">1</span>TCP provides which type of delivery?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(0,0)" id="q0o0">Fast</button><button class="opt-btn" onclick="checkAnswer(0,1)" id="q0o1">Unreliable</button><button class="opt-btn" onclick="checkAnswer(0,2)" id="q0o2">Reliable ordered</button><button class="opt-btn" onclick="checkAnswer(0,3)" id="q0o3">Connectionless</button></div>
+      <div class="q-feedback" id="qf0"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">2</span>What port does HTTPS use?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(1,0)" id="q1o0">80</button><button class="opt-btn" onclick="checkAnswer(1,1)" id="q1o1">8080</button><button class="opt-btn" onclick="checkAnswer(1,2)" id="q1o2">443</button><button class="opt-btn" onclick="checkAnswer(1,3)" id="q1o3">22</button></div>
+      <div class="q-feedback" id="qf1"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">3</span>UDP is best for?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(2,0)" id="q2o0">File transfers</button><button class="opt-btn" onclick="checkAnswer(2,1)" id="q2o1">Email</button><button class="opt-btn" onclick="checkAnswer(2,2)" id="q2o2">VoIP/Streaming</button><button class="opt-btn" onclick="checkAnswer(2,3)" id="q2o3">Web browsing</button></div>
+      <div class="q-feedback" id="qf2"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">4</span>First step in TCP handshake?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(3,0)" id="q3o0">ACK</button><button class="opt-btn" onclick="checkAnswer(3,1)" id="q3o1">SYN-ACK</button><button class="opt-btn" onclick="checkAnswer(3,2)" id="q3o2">SYN</button><button class="opt-btn" onclick="checkAnswer(3,3)" id="q3o3">FIN</button></div>
+      <div class="q-feedback" id="qf3"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">5</span>DNS uses which port?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(4,0)" id="q4o0">53</button><button class="opt-btn" onclick="checkAnswer(4,1)" id="q4o1">80</button><button class="opt-btn" onclick="checkAnswer(4,2)" id="q4o2">443</button><button class="opt-btn" onclick="checkAnswer(4,3)" id="q4o3">25</button></div>
+      <div class="q-feedback" id="qf4"></div>
+    </div>
+    <button class="reset-btn" onclick="resetQuiz()">↺ Reset Quiz</button>
+  </div>
+</div>
+
+<div class="module-nav">
+  <a class="nav-btn" href="module_01_network_fundamentals_and_osi_model.html">← Previous</a>
+  <div class="nav-info">
+    <div class="nav-mod">Module 2 of 20</div>
+    <div class="nav-title">TCP/IP Model & Core Protocols</div>
+  </div>
+  <a class="nav-btn" href="module_03_ipv4_addressing_and_subnetting.html">Next →</a>
+</div>
+
+<script>
+const CORRECT = [2, 2, 2, 2, 0];
+let answered = {};
+
+function runCmd(btn, cmd, output) {
+  const block = btn.closest('.cmd-block');
+  const outDiv = block.querySelector('.cmd-output');
+  outDiv.textContent = output.replace(/\\n/g,'\n');
+  outDiv.style.display = 'block';
+  btn.textContent = '✓ Done';
+  btn.classList.add('done');
+  btn.disabled = true;
+}
+
+function checkAnswer(q, choice) {
+  if (answered[q] !== undefined) return;
+  answered[q] = choice;
+  const correct = CORRECT[q];
+  for (let i = 0; i < 4; i++) {
+    const btn = document.getElementById('q' + q + 'o' + i);
+    if (!btn) continue;
+    if (i === correct) btn.classList.add('correct');
+    else if (i === choice && choice !== correct) btn.classList.add('wrong');
+  }
+  const fb = document.getElementById('qf' + q);
+  if (fb) fb.innerHTML = choice === correct
+    ? '<span style="color:#22c55e">✓ Correct!</span>'
+    : '<span style="color:#ef4444">✗ Incorrect — correct answer highlighted in green</span>';
+}
+
+function resetQuiz() {
+  answered = {};
+  document.querySelectorAll('.opt-btn').forEach(b => b.className = 'opt-btn');
+  document.querySelectorAll('.q-feedback').forEach(f => f.innerHTML = '');
+}
+</script>
+</body>
+</html>

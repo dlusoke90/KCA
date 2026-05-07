@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta property="og:title" content="Kuwaha Cloud Academy" />
+  <meta property="og:description" content="Empowering Digital Professionals — Cisco CCNA, AWS, and Linux certification training." />
+  <meta property="og:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+  <meta property="og:url" content="https://kca-cloudnet.com" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard — KCA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0c0f;color:#e2e8f0;min-height:100vh}
+nav{background:#111318;border-bottom:1px solid #1e2330;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.8rem;text-decoration:none}
+.logo img{height:36px}
+.logo span{font-size:1.1rem;font-weight:700;color:#3b9eff}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.user-name{font-size:.9rem;color:#94a3b8}
+.btn-logout{background:transparent;border:1px solid #1e2330;color:#94a3b8;padding:.4rem .9rem;border-radius:6px;cursor:pointer;font-size:.85rem;transition:.2s}
+.btn-logout:hover{border-color:#ff4d4d;color:#ff4d4d}
+.container{max-width:1100px;margin:0 auto;padding:2.5rem 2rem}
+.welcome{margin-bottom:2.5rem}
+.welcome h1{font-size:1.8rem;font-weight:800;margin-bottom:.4rem}
+.welcome p{color:#64748b}
+.tabs{display:flex;gap:0;border-bottom:1px solid #1e2330;margin-bottom:2rem}
+.tab{padding:.75rem 1.5rem;font-size:.9rem;font-weight:600;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;transition:.2s}
+.tab.active{color:#3b9eff;border-bottom-color:#3b9eff}
+.section{display:none}
+.section.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem}
+.card{background:#111318;border:1px solid #1e2330;border-radius:12px;padding:1.6rem;transition:.2s}
+.card:hover{border-color:#3b9eff;transform:translateY(-3px)}
+.card-badge{display:inline-block;padding:.25rem .7rem;border-radius:4px;font-size:.72rem;font-weight:700;color:#fff;margin-bottom:.8rem}
+.card h3{font-size:1rem;font-weight:700;margin-bottom:.5rem}
+.card p{color:#64748b;font-size:.85rem;line-height:1.5;margin-bottom:1rem}
+.card .meta{display:flex;gap:.8rem;font-size:.78rem;color:#94a3b8;margin-bottom:1.2rem}
+.btn-enrol{width:100%;background:#3b9eff;color:#fff;border:none;padding:.65rem;border-radius:7px;font-size:.875rem;font-weight:600;cursor:pointer;transition:.2s}
+.btn-enrol:hover{background:#2980d9}
+.btn-enrol.enrolled{background:#1e2330;color:#3ecf6e;cursor:default;border:1px solid rgba(62,207,110,.3)}
+.btn-enrol.pending{background:#1e2330;color:#ffd54f;cursor:default;border:1px solid rgba(255,213,79,.3)}
+.btn-enrol.approved{background:#0e8a78;color:#fff;border:none;text-decoration:none;display:inline-block;text-align:center}
+.btn-enrol.approved:hover{background:#0a6b5e}
+.empty{text-align:center;padding:4rem 2rem;color:#64748b}
+.empty .icon{font-size:3rem;margin-bottom:1rem}
+.msg{padding:.7rem 1rem;border-radius:8px;font-size:.85rem;margin-bottom:1.5rem;display:none}
+.msg.success{background:rgba(62,207,110,.1);border:1px solid rgba(62,207,110,.3);color:#3ecf6e;display:block}
+.msg.error{background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.3);color:#ff4d4d;display:block}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">
+    <img src="/KCA-LOGO-transparent.png" alt="KCA" onerror="this.style.display='none'">
+    <span>Kuwaha Cloud Academy</span>
+  </a>
+  <div class="nav-right">
+    <span class="user-name" id="userName"></span>
+    <a href="/assignments" style="background:#0a1628;color:#fff;padding:.4rem .9rem;border-radius:6px;font-size:.85rem;font-weight:600;text-decoration:none;margin-right:.5rem">📚 Assignments</a><a href="/tickets.html" style="background:#0e8a78;color:#fff;padding:.4rem .9rem;border-radius:6px;font-size:.85rem;font-weight:600;text-decoration:none;margin-right:.5rem">🎫 KCA-Ticketing</a><button class="btn-logout" onclick="logout()">Sign Out</button>
+  </div>
+</nav>
+<div class="container">
+  <div class="welcome">
+    <h1 id="welcomeMsg">Welcome back!</h1>
+    <p>Continue your certification journey</p>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('courses')">Available Courses</div>
+    <div class="tab" onclick="showTab('enrolled')">My Courses</div>
+  </div>
+  <div id="msg" class="msg"></div>
+  <div id="sec-courses" class="section active">
+    <div class="grid" id="courseGrid"><p style="color:#64748b">Loading courses...</p></div>
+  </div>
+  <div id="sec-enrolled" class="section">
+    <div class="grid" id="enrolledGrid"></div>
+  </div>
+</div>
+<script>
+const token=localStorage.getItem('kca_token');
+const user=JSON.parse(localStorage.getItem('kca_user')||'{}');
+if(!token){window.location.href='login.html';}
+document.getElementById('userName').textContent=user.name||'';
+document.getElementById('welcomeMsg').textContent=`Welcome back, ${user.name||'Student'}!`;
+let enrolledIds=new Set();
+const courseLinks={
+  1:'/KCA_CCNA_20_Modules/module_01_network_fundamentals_and_osi_model.html',
+  2:'/dashboard.html',
+  3:'/dashboard.html',
+  4:'/KCA_Linux_20_Modules/module_01_introduction_to_linux_and_open_source.html'
+};
+
+async function loadCourses(){
+  try{
+    const [cr,er]=await Promise.all([
+      fetch('/api/courses',{headers:{Authorization:'Bearer '+token}}),
+      fetch('/api/enrollments/me',{headers:{Authorization:'Bearer '+token}})
+    ]);
+    const courses=await cr.json();
+    const enrollments=await er.json();
+    enrolledIds=new Map(enrollments.map(e=>[e.course_id, e.status]));
+    const grid=document.getElementById('courseGrid');
+    grid.innerHTML='';
+    courses.forEach(c=>{
+      const enrollStatus=enrolledIds.get(c.id);
+      const enrolled=!!enrollStatus;
+      grid.innerHTML+=`<div class="card">
+        <div class="card-badge" style="background:${c.badge_color}">${c.category}</div>
+        <h3>${c.title}</h3>
+        <p>${c.description}</p>
+        <div class="meta"><span>⏱ ${c.duration}</span><span>📊 ${c.level}</span></div>
+        ${enrollStatus==='approved'
+          ? '<a class="btn-enrol approved" href="'+(courseLinks[c.id]||'/dashboard.html')+'">▶ Start Learning</a>'
+          : '<button class="btn-enrol '+(enrollStatus==='pending'?'pending':'')+'" onclick="'+(enrollStatus?'':'enrol('+c.id+',this)')+'" '+(enrolled?'disabled':'')+'>'+( enrollStatus==='pending'?'⏳ Pending Approval':'Enrol Now')+'</button>'}
+      </div>`;
+    });
+    const eGrid=document.getElementById('enrolledGrid');
+    eGrid.innerHTML='';
+    if(!enrollments.length){
+      eGrid.innerHTML='<div class="empty"><div class="icon">📚</div><p>You have not enrolled in any courses yet.<br>Go to Available Courses to get started.</p></div>';
+    } else {
+      enrollments.forEach(e=>{
+        eGrid.innerHTML+=`<div class="card">
+          <div class="card-badge" style="background:${e.badge_color}">${e.category}</div>
+          <h3>${e.title}</h3>
+          <p>${e.description}</p>
+          <div class="meta"><span>⏱ ${e.duration}</span><span>📊 ${e.level}</span></div>
+          ${e.status==='approved'?'<a class="btn-enrol approved" href="'+(courseLinks[e.course_id]||'/dashboard.html')+'">▶ Start Learning</a>':'<button class="btn-enrol pending" disabled>⏳ Pending Approval</button>'}
+        </div>`;
+      });
+    }
+  }catch(e){console.error(e);}
+}
+
+async function enrol(courseId,btn){
+  try{
+    const r=await fetch('/api/enrollments',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({course_id:courseId})});
+    const d=await r.json();
+    if(r.ok){
+      btn.textContent='⏳ Pending Approval';btn.className='btn-enrol pending';btn.disabled=true;
+      showMsg(d.message,'success');loadCourses();
+    } else showMsg(d.error,'error');
+  }catch(e){showMsg('Enrollment failed.','error');}
+}
+
+function showTab(name){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['courses','enrolled'][i]===name));
+  document.getElementById('sec-courses').classList.toggle('active',name==='courses');
+  document.getElementById('sec-enrolled').classList.toggle('active',name==='enrolled');
+}
+
+function showMsg(t,type){const m=document.getElementById('msg');m.textContent=t;m.className='msg '+type;setTimeout(()=>m.className='msg',4000);}
+function logout(){localStorage.removeItem('kca_token');localStorage.removeItem('kca_user');window.location.href='login.html';}
+loadCourses();
+</script>
+</body>
+</html>

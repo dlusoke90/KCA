@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCA CCNA — Module 18: Wireless Networking 802.11</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#060b14;color:#e2e8f0;min-height:100vh}
+
+/* HEADER */
+.topbar{background:rgba(6,11,20,.95);backdrop-filter:blur(10px);padding:.8rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:100}
+.topbar-logo img{height:50px;object-fit:contain}
+.mod-badge{background:#8e44ad;color:#fff;padding:.3rem .9rem;border-radius:20px;font-size:.78rem;font-weight:700;letter-spacing:.05em}
+
+/* BACK BAR */
+.back-bar{padding:.5rem 2rem;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05)}
+.back-bar a{color:#64748b;text-decoration:none;font-size:.82rem;font-weight:500;transition:.2s}
+.back-bar a:hover{color:#8e44ad}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0a0f1a 0%,#0d1929 50%,#0a1628 100%);padding:3rem 2rem 2.5rem;border-bottom:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,#8e44ad15 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative}
+.hero-eyebrow{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.hero-icon{width:48px;height:48px;background:#8e44ad20;border:1px solid #8e44ad40;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.hero-label{color:#8e44ad;font-size:.78rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+.hero h1{font-size:2.8rem;font-weight:900;color:#fff;margin-bottom:1.2rem;line-height:1.1;letter-spacing:-.02em}
+.hero-meta{display:flex;gap:1rem;flex-wrap:wrap}
+.hero-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:.35rem .85rem;border-radius:20px;font-size:.8rem;font-weight:500}
+
+/* CONTAINER */
+.container{max-width:1100px;margin:0 auto;padding:2.5rem 2rem}
+
+/* SECTION HEADER */
+.section-hdr{display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem}
+.section-hdr-line{flex:1;height:1px;background:linear-gradient(to right,rgba(255,255,255,.1),transparent)}
+.section-hdr-label{color:#8e44ad;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
+
+/* CONCEPT CARDS */
+.concepts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:1rem;margin-bottom:3rem}
+.concept-card{background:linear-gradient(135deg,#0d1929,#0a1221);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.5rem;transition:.2s;position:relative;overflow:hidden}
+.concept-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,#8e44ad,#8e44ad00)}
+.concept-card:hover{border-color:#8e44ad40;transform:translateY(-2px)}
+.concept-icon{font-size:1.8rem;margin-bottom:.8rem;display:block}
+.concept-title{color:#fff;font-size:1rem;font-weight:700;margin-bottom:.6rem}
+.concept-desc{color:#94a3b8;font-size:.875rem;line-height:1.75;white-space:pre-line;margin-bottom:1rem}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.tag{background:#8e44ad15;border:1px solid #8e44ad30;color:#8e44ad;padding:.2rem .6rem;border-radius:6px;font-size:.72rem;font-weight:600}
+
+/* CLI SECTION */
+.cli-wrap{background:#0a0d12;border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;margin-bottom:3rem}
+.cli-titlebar{background:#111827;padding:.8rem 1.2rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.cli-dots span{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:.3rem}
+.cli-dots span:nth-child(1){background:#ff5f57}
+.cli-dots span:nth-child(2){background:#febc2e}
+.cli-dots span:nth-child(3){background:#28c840}
+.cli-label{color:#64748b;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.cmd-block{border-bottom:1px solid rgba(255,255,255,.04);font-family:'JetBrains Mono',monospace;font-size:.83rem}
+.cmd-block:last-child{border-bottom:none}
+.cmd-top{display:flex;align-items:center;gap:1rem;padding:.9rem 1.2rem;background:#0d1117}
+.cmd-dots{display:flex;gap:.3rem}
+.cmd-dots span{width:8px;height:8px;border-radius:50%;background:#8e44ad50}
+.cmd-text{color:#8e44ad;flex:1;font-weight:500}
+.run-btn{background:#8e44ad;color:#fff;border:none;padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:700;font-family:'Inter',sans-serif;transition:.2s;white-space:nowrap}
+.run-btn:hover{opacity:.85;transform:scale(1.02)}
+.run-btn.done{background:#1e2d3d;color:#64748b;cursor:default}
+.cmd-output{display:none;padding:.8rem 1.2rem;color:#a8ff78;white-space:pre-wrap;line-height:1.6;background:#000;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* QUIZ */
+.quiz-wrap{background:linear-gradient(135deg,#0d1929,#0a1221);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.5rem;margin-bottom:2rem}
+.quiz-q{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.quiz-q:last-of-type{border-bottom:none;margin-bottom:0}
+.q-num{background:#8e44ad;color:#fff;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin-right:.6rem;flex-shrink:0}
+.q-text{color:#e2e8f0;font-weight:600;margin-bottom:.8rem;display:flex;align-items:flex-start;gap:.3rem}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.opt-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-size:.84rem;font-family:'Inter',sans-serif;transition:.2s}
+.opt-btn:hover{border-color:#8e44ad;color:#8e44ad;background:#8e44ad10}
+.opt-btn.correct{background:#8e44ad20;border-color:#8e44ad;color:#8e44ad}
+.opt-btn.wrong{background:rgba(255,77,77,.1);border-color:#ff4d4d;color:#ff4d4d}
+.q-feedback{font-size:.8rem;margin-top:.5rem;min-height:1.2rem;padding-left:2rem}
+.reset-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:#64748b;padding:.5rem 1.2rem;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:'Inter',sans-serif;margin-top:1rem;transition:.2s}
+.reset-btn:hover{border-color:#8e44ad;color:#8e44ad}
+
+/* PROGRESS */
+.progress-bar{background:rgba(255,255,255,.06);height:3px;border-radius:2px;margin-bottom:3rem;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(to right,#8e44ad,#8e44ad80);border-radius:2px;width:90%;transition:width .5s ease}
+
+/* NAV */
+.module-nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;background:rgba(6,11,20,.95);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08);position:sticky;bottom:0}
+.nav-btn{background:#8e44ad;color:#fff;border:none;padding:.6rem 1.4rem;border-radius:10px;font-weight:700;cursor:pointer;font-size:.875rem;text-decoration:none;display:inline-block;font-family:'Inter',sans-serif;transition:.2s}
+.nav-btn:hover{opacity:.85;transform:translateY(-1px)}
+.nav-btn.disabled{background:rgba(255,255,255,.06);color:#374151;pointer-events:none}
+.nav-info{text-align:center}
+.nav-mod{color:#64748b;font-size:.78rem}
+.nav-title{color:#94a3b8;font-size:.82rem;font-weight:600;max-width:200px;text-align:center}
+
+@media(max-width:768px){
+  .hero h1{font-size:1.8rem}
+  .concepts-grid{grid-template-columns:1fr}
+  .container{padding:1.5rem 1rem}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-logo"><a href="/dashboard.html"><img src="/KCA-LOGO-transparent.png" alt="KCA"></a></div>
+  <div class="mod-badge">MODULE 18 OF 20</div>
+</div>
+<div class="back-bar"><a href="/dashboard.html">← Back to My Courses</a></div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="hero-icon">📶</div>
+      <span class="hero-label">CCNA 200-301 · Module 18</span>
+    </div>
+    <h1>Wireless Networking 802.11</h1>
+    <div class="hero-meta">
+      <span class="hero-chip">📚 4 Core Topics</span>
+      <span class="hero-chip">💻 5 CLI Commands</span>
+      <span class="hero-chip">❓ 5 Quiz Questions</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="progress-bar"><div class="progress-fill"></div></div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">Core Concepts</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <div class="concept-icon">📡</div>
+      <h3 class="concept-title">802.11 Standards</h3>
+      <p class="concept-desc">802.11a: 5GHz, 54Mbps. 802.11b: 2.4GHz, 11Mbps. 802.11g: 2.4GHz, 54Mbps. 802.11n (WiFi 4): 2.4/5GHz, 600Mbps. 802.11ac (WiFi 5): 5GHz, 3.5Gbps. 802.11ax (WiFi 6): 2.4/5/6GHz, 9.6Gbps.</p>
+      <div class="tags"><span class="tag">WiFi 4 (n): 600Mbps</span><span class="tag">WiFi 5 (ac): 3.5Gbps</span><span class="tag">WiFi 6 (ax): 9.6Gbps</span><span class="tag">WiFi 6E: adds 6GHz</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">📻</div>
+      <h3 class="concept-title">Wireless Channels</h3>
+      <p class="concept-desc">2.4GHz: 11 channels (US), only 3 non-overlapping (1,6,11). 5GHz: more channels, less interference. 6GHz (WiFi 6E): even more spectrum. DFS channels avoid radar. Channel bonding: 40/80/160MHz width.</p>
+      <div class="tags"><span class="tag">2.4GHz: 1,6,11 non-overlap</span><span class="tag">5GHz: more channels</span><span class="tag">Channel bonding</span><span class="tag">DFS avoids radar</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🔒</div>
+      <h3 class="concept-title">Wireless Security</h3>
+      <p class="concept-desc">WEP: broken, never use. WPA: deprecated. WPA2 (802.11i): AES-CCMP, current standard. WPA3: SAE (Simultaneous Authentication of Equals), forward secrecy. Enterprise: 802.1X + RADIUS authentication.</p>
+      <div class="tags"><span class="tag">WEP: broken ✗</span><span class="tag">WPA: deprecated ✗</span><span class="tag">WPA2: AES-CCMP ✓</span><span class="tag">WPA3: SAE ✓ (best)</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">📡</div>
+      <h3 class="concept-title">Wireless Architecture</h3>
+      <p class="concept-desc">Autonomous AP: standalone, self-configured. Lightweight AP (LAP): managed by WLC (Wireless LAN Controller). CAPWAP: tunnel between AP and WLC. Split-MAC: control on WLC, data locally. Cisco DNA Center: modern management.</p>
+      <div class="tags"><span class="tag">Autonomous: standalone</span><span class="tag">Lightweight: WLC-managed</span><span class="tag">CAPWAP tunnel</span><span class="tag">WLC centralized</span></div>
+    </div></div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">CLI Practice — Click ▶ Run</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="cli-wrap">
+    <div class="cli-titlebar">
+      <div class="cli-dots"><span></span><span></span><span></span></div>
+      <span class="cli-label">Cisco IOS Simulator</span>
+    </div>
+    
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show ap summary</span>
+        <button class="run-btn" onclick="runCmd(this,'show ap summary','Number of APs: 3\nAP Name    AP Model    Status  Channel  Clients\nAP-Floor1  AIR-2802I  Up      6        15\nAP-Floor2  AIR-2802I  Up      11       8\nAP-Floor3  AIR-3802I  Up      1        12')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show wireless client summary</span>
+        <button class="run-btn" onclick="runCmd(this,'show wireless client summary','Number of Clients: 35\nMAC Address       AP Name    WLAN  State  Protocol\n0050.7966.6801  AP-Floor1  Corp  Run    11ac\n0050.7966.6802  AP-Floor1  Corp  Run    11ax')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show wireless wlan summary</span>
+        <button class="run-btn" onclick="runCmd(this,'show wireless wlan summary','Number of WLANs: 2\nWLAN ID  Profile Name  SSID           Status  Security\n1        Corp-WLAN     KCA-Corp       UP      WPA2 Enterprise\n2        Guest-WLAN    KCA-Guest      UP      WPA2 Personal')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show ap dot11 5ghz summary</span>
+        <button class="run-btn" onclick="runCmd(this,'show ap dot11 5ghz summary','AP Name    MAC Address    Chan  ChanWidth  TxPwr  Clients\nAP-Floor1  0050.7966.6800  36    80MHz      3      8\nAP-Floor2  0050.7966.6801  149   80MHz      3      12')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show wireless stats ap join summary</span>
+        <button class="run-btn" onclick="runCmd(this,'show wireless stats ap join summary','Number of APs: 3  Joined: 3  Not Joined: 0\nAP Name  IP Address   State    Controller\nAP-1     10.0.0.11   Joined   WLC-1\nAP-2     10.0.0.12   Joined   WLC-1')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+  </div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">Knowledge Check</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="quiz-wrap">
+    
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">1</span>Non-overlapping 2.4GHz channels?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(0,0)" id="q0o0">1,2,3</button><button class="opt-btn" onclick="checkAnswer(0,1)" id="q0o1">1,5,9</button><button class="opt-btn" onclick="checkAnswer(0,2)" id="q0o2">1,6,11</button><button class="opt-btn" onclick="checkAnswer(0,3)" id="q0o3">1,7,13</button></div>
+      <div class="q-feedback" id="qf0"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">2</span>Current recommended wireless security?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(1,0)" id="q1o0">WEP</button><button class="opt-btn" onclick="checkAnswer(1,1)" id="q1o1">WPA</button><button class="opt-btn" onclick="checkAnswer(1,2)" id="q1o2">WPA2/WPA3</button><button class="opt-btn" onclick="checkAnswer(1,3)" id="q1o3">No encryption</button></div>
+      <div class="q-feedback" id="qf1"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">3</span>WiFi 6 is based on which standard?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(2,0)" id="q2o0">802.11n</button><button class="opt-btn" onclick="checkAnswer(2,1)" id="q2o1">802.11ac</button><button class="opt-btn" onclick="checkAnswer(2,2)" id="q2o2">802.11ax</button><button class="opt-btn" onclick="checkAnswer(2,3)" id="q2o3">802.11ad</button></div>
+      <div class="q-feedback" id="qf2"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">4</span>CAPWAP is used between?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(3,0)" id="q3o0">Two switches</button><button class="opt-btn" onclick="checkAnswer(3,1)" id="q3o1">AP and WLC</button><button class="opt-btn" onclick="checkAnswer(3,2)" id="q3o2">Router and AP</button><button class="opt-btn" onclick="checkAnswer(3,3)" id="q3o3">WLC and RADIUS</button></div>
+      <div class="q-feedback" id="qf3"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">5</span>WPA3 uses which authentication?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(4,0)" id="q4o0">PSK</button><button class="opt-btn" onclick="checkAnswer(4,1)" id="q4o1">WEP</button><button class="opt-btn" onclick="checkAnswer(4,2)" id="q4o2">SAE</button><button class="opt-btn" onclick="checkAnswer(4,3)" id="q4o3">TKIP</button></div>
+      <div class="q-feedback" id="qf4"></div>
+    </div>
+    <button class="reset-btn" onclick="resetQuiz()">↺ Reset Quiz</button>
+  </div>
+</div>
+
+<div class="module-nav">
+  <a class="nav-btn" href="module_17_wan_technologies_and_vpns.html">← Previous</a>
+  <div class="nav-info">
+    <div class="nav-mod">Module 18 of 20</div>
+    <div class="nav-title">Wireless Networking 802.11</div>
+  </div>
+  <a class="nav-btn" href="module_19_network_automation_and_programmability.html">Next →</a>
+</div>
+
+<script>
+const CORRECT = [2, 2, 2, 1, 2];
+let answered = {};
+
+function runCmd(btn, cmd, output) {
+  const block = btn.closest('.cmd-block');
+  const outDiv = block.querySelector('.cmd-output');
+  outDiv.textContent = output.replace(/\\n/g,'\n');
+  outDiv.style.display = 'block';
+  btn.textContent = '✓ Done';
+  btn.classList.add('done');
+  btn.disabled = true;
+}
+
+function checkAnswer(q, choice) {
+  if (answered[q] !== undefined) return;
+  answered[q] = choice;
+  const correct = CORRECT[q];
+  for (let i = 0; i < 4; i++) {
+    const btn = document.getElementById('q' + q + 'o' + i);
+    if (!btn) continue;
+    if (i === correct) btn.classList.add('correct');
+    else if (i === choice && choice !== correct) btn.classList.add('wrong');
+  }
+  const fb = document.getElementById('qf' + q);
+  if (fb) fb.innerHTML = choice === correct
+    ? '<span style="color:#22c55e">✓ Correct!</span>'
+    : '<span style="color:#ef4444">✗ Incorrect — correct answer highlighted in green</span>';
+}
+
+function resetQuiz() {
+  answered = {};
+  document.querySelectorAll('.opt-btn').forEach(b => b.className = 'opt-btn');
+  document.querySelectorAll('.q-feedback').forEach(f => f.innerHTML = '');
+}
+</script>
+</body>
+</html>

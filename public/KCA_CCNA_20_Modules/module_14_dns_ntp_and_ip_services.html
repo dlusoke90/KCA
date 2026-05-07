@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCA CCNA — Module 14: DNS, NTP & IP Services</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#060b14;color:#e2e8f0;min-height:100vh}
+
+/* HEADER */
+.topbar{background:rgba(6,11,20,.95);backdrop-filter:blur(10px);padding:.8rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:100}
+.topbar-logo img{height:50px;object-fit:contain}
+.mod-badge{background:#3498db;color:#fff;padding:.3rem .9rem;border-radius:20px;font-size:.78rem;font-weight:700;letter-spacing:.05em}
+
+/* BACK BAR */
+.back-bar{padding:.5rem 2rem;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05)}
+.back-bar a{color:#64748b;text-decoration:none;font-size:.82rem;font-weight:500;transition:.2s}
+.back-bar a:hover{color:#3498db}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0a0f1a 0%,#0d1929 50%,#0a1628 100%);padding:3rem 2rem 2.5rem;border-bottom:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,#3498db15 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative}
+.hero-eyebrow{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.hero-icon{width:48px;height:48px;background:#3498db20;border:1px solid #3498db40;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.hero-label{color:#3498db;font-size:.78rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+.hero h1{font-size:2.8rem;font-weight:900;color:#fff;margin-bottom:1.2rem;line-height:1.1;letter-spacing:-.02em}
+.hero-meta{display:flex;gap:1rem;flex-wrap:wrap}
+.hero-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:.35rem .85rem;border-radius:20px;font-size:.8rem;font-weight:500}
+
+/* CONTAINER */
+.container{max-width:1100px;margin:0 auto;padding:2.5rem 2rem}
+
+/* SECTION HEADER */
+.section-hdr{display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem}
+.section-hdr-line{flex:1;height:1px;background:linear-gradient(to right,rgba(255,255,255,.1),transparent)}
+.section-hdr-label{color:#3498db;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
+
+/* CONCEPT CARDS */
+.concepts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:1rem;margin-bottom:3rem}
+.concept-card{background:linear-gradient(135deg,#0d1929,#0a1221);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.5rem;transition:.2s;position:relative;overflow:hidden}
+.concept-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,#3498db,#3498db00)}
+.concept-card:hover{border-color:#3498db40;transform:translateY(-2px)}
+.concept-icon{font-size:1.8rem;margin-bottom:.8rem;display:block}
+.concept-title{color:#fff;font-size:1rem;font-weight:700;margin-bottom:.6rem}
+.concept-desc{color:#94a3b8;font-size:.875rem;line-height:1.75;white-space:pre-line;margin-bottom:1rem}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.tag{background:#3498db15;border:1px solid #3498db30;color:#3498db;padding:.2rem .6rem;border-radius:6px;font-size:.72rem;font-weight:600}
+
+/* CLI SECTION */
+.cli-wrap{background:#0a0d12;border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;margin-bottom:3rem}
+.cli-titlebar{background:#111827;padding:.8rem 1.2rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.cli-dots span{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:.3rem}
+.cli-dots span:nth-child(1){background:#ff5f57}
+.cli-dots span:nth-child(2){background:#febc2e}
+.cli-dots span:nth-child(3){background:#28c840}
+.cli-label{color:#64748b;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.cmd-block{border-bottom:1px solid rgba(255,255,255,.04);font-family:'JetBrains Mono',monospace;font-size:.83rem}
+.cmd-block:last-child{border-bottom:none}
+.cmd-top{display:flex;align-items:center;gap:1rem;padding:.9rem 1.2rem;background:#0d1117}
+.cmd-dots{display:flex;gap:.3rem}
+.cmd-dots span{width:8px;height:8px;border-radius:50%;background:#3498db50}
+.cmd-text{color:#3498db;flex:1;font-weight:500}
+.run-btn{background:#3498db;color:#fff;border:none;padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:700;font-family:'Inter',sans-serif;transition:.2s;white-space:nowrap}
+.run-btn:hover{opacity:.85;transform:scale(1.02)}
+.run-btn.done{background:#1e2d3d;color:#64748b;cursor:default}
+.cmd-output{display:none;padding:.8rem 1.2rem;color:#a8ff78;white-space:pre-wrap;line-height:1.6;background:#000;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* QUIZ */
+.quiz-wrap{background:linear-gradient(135deg,#0d1929,#0a1221);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.5rem;margin-bottom:2rem}
+.quiz-q{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.quiz-q:last-of-type{border-bottom:none;margin-bottom:0}
+.q-num{background:#3498db;color:#fff;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin-right:.6rem;flex-shrink:0}
+.q-text{color:#e2e8f0;font-weight:600;margin-bottom:.8rem;display:flex;align-items:flex-start;gap:.3rem}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.opt-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-size:.84rem;font-family:'Inter',sans-serif;transition:.2s}
+.opt-btn:hover{border-color:#3498db;color:#3498db;background:#3498db10}
+.opt-btn.correct{background:#3498db20;border-color:#3498db;color:#3498db}
+.opt-btn.wrong{background:rgba(255,77,77,.1);border-color:#ff4d4d;color:#ff4d4d}
+.q-feedback{font-size:.8rem;margin-top:.5rem;min-height:1.2rem;padding-left:2rem}
+.reset-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:#64748b;padding:.5rem 1.2rem;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:'Inter',sans-serif;margin-top:1rem;transition:.2s}
+.reset-btn:hover{border-color:#3498db;color:#3498db}
+
+/* PROGRESS */
+.progress-bar{background:rgba(255,255,255,.06);height:3px;border-radius:2px;margin-bottom:3rem;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(to right,#3498db,#3498db80);border-radius:2px;width:70%;transition:width .5s ease}
+
+/* NAV */
+.module-nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;background:rgba(6,11,20,.95);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08);position:sticky;bottom:0}
+.nav-btn{background:#3498db;color:#fff;border:none;padding:.6rem 1.4rem;border-radius:10px;font-weight:700;cursor:pointer;font-size:.875rem;text-decoration:none;display:inline-block;font-family:'Inter',sans-serif;transition:.2s}
+.nav-btn:hover{opacity:.85;transform:translateY(-1px)}
+.nav-btn.disabled{background:rgba(255,255,255,.06);color:#374151;pointer-events:none}
+.nav-info{text-align:center}
+.nav-mod{color:#64748b;font-size:.78rem}
+.nav-title{color:#94a3b8;font-size:.82rem;font-weight:600;max-width:200px;text-align:center}
+
+@media(max-width:768px){
+  .hero h1{font-size:1.8rem}
+  .concepts-grid{grid-template-columns:1fr}
+  .container{padding:1.5rem 1rem}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-logo"><a href="/dashboard.html"><img src="/KCA-LOGO-transparent.png" alt="KCA"></a></div>
+  <div class="mod-badge">MODULE 14 OF 20</div>
+</div>
+<div class="back-bar"><a href="/dashboard.html">← Back to My Courses</a></div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="hero-icon">🌐</div>
+      <span class="hero-label">CCNA 200-301 · Module 14</span>
+    </div>
+    <h1>DNS, NTP & IP Services</h1>
+    <div class="hero-meta">
+      <span class="hero-chip">📚 4 Core Topics</span>
+      <span class="hero-chip">💻 5 CLI Commands</span>
+      <span class="hero-chip">❓ 5 Quiz Questions</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="progress-bar"><div class="progress-fill"></div></div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">Core Concepts</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <div class="concept-icon">🔍</div>
+      <h3 class="concept-title">DNS (Domain Name System)</h3>
+      <p class="concept-desc">Translates hostnames to IPs. Hierarchical: Root → TLD (.com) → Domain (cisco.com) → Host (www). Records: A (IPv4), AAAA (IPv6), MX (mail), CNAME (alias), PTR (reverse). Port 53 UDP/TCP.</p>
+      <div class="tags"><span class="tag">A record: IPv4</span><span class="tag">AAAA: IPv6</span><span class="tag">MX: mail</span><span class="tag">CNAME: alias</span><span class="tag">PTR: reverse</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">⏰</div>
+      <h3 class="concept-title">NTP (Network Time Protocol)</h3>
+      <p class="concept-desc">Synchronizes clocks across network. Stratum 0 = atomic clock. Stratum 1 = directly connected to stratum 0. Stratum 2 = synced to stratum 1. Port 123 UDP. Critical for logs, certificates, Kerberos.</p>
+      <div class="tags"><span class="tag">Stratum 0: atomic</span><span class="tag">Stratum 1: primary</span><span class="tag">Stratum 2: secondary</span><span class="tag">Port 123 UDP</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">📊</div>
+      <h3 class="concept-title">SNMP (Simple Network Management Protocol)</h3>
+      <p class="concept-desc">Monitors and manages network devices. Manager polls agents. Agent sends traps for alerts. MIB = database of manageable objects. SNMPv3 = encrypted, authenticated (use this!).</p>
+      <div class="tags"><span class="tag">Manager polls agents</span><span class="tag">Traps = alerts</span><span class="tag">MIB database</span><span class="tag">SNMPv3 = secure</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🌐</div>
+      <h3 class="concept-title">Other IP Services</h3>
+      <p class="concept-desc">Syslog: centralized logging (port 514 UDP). TFTP (port 69): transfer IOS images. FTP (21/20): file transfer. SCP: secure file copy. NetFlow: traffic analysis. CDP/LLDP: neighbor discovery.</p>
+      <div class="tags"><span class="tag">Syslog: port 514</span><span class="tag">TFTP: port 69</span><span class="tag">FTP: 21/20</span><span class="tag">CDP/LLDP: discovery</span></div>
+    </div></div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">CLI Practice — Click ▶ Run</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="cli-wrap">
+    <div class="cli-titlebar">
+      <div class="cli-dots"><span></span><span></span><span></span></div>
+      <span class="cli-label">Cisco IOS Simulator</span>
+    </div>
+    
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show ntp status</span>
+        <button class="run-btn" onclick="runCmd(this,'show ntp status','Clock is synchronized, stratum 2, reference is 216.239.35.0\nfrequency is 250.0000 Hz, precision is 2**18\nreference time is E5A12345.12345678 (12:00:00.071 UTC Wed Mar 7 2026)')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show ntp associations</span>
+        <button class="run-btn" onclick="runCmd(this,'show ntp associations','address       ref clock   st  when  poll  reach  delay  offset  disp\n*~216.239.35.0 .GOOG.       1    10    64    377    5.6   -0.123   0.5\n+ = selected, * = current synced')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show hosts</span>
+        <button class="run-btn" onclick="runCmd(this,'show hosts','Default domain is kca-cloudnet.com\nHost         Port  Flags      Age  Type  Address\nkca-router   None  (perm, OK)  0    IP    192.168.1.1')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ ntp server 216.239.35.0</span>
+        <button class="run-btn" onclick="runCmd(this,'ntp server 216.239.35.0','Router(config)# ntp server 216.239.35.0\n% NTP server configured')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show snmp</span>
+        <button class="run-btn" onclick="runCmd(this,'show snmp','Chassis: KCA-Router\n0 SNMP packets input\n  0 Bad SNMP versions\n  0 Unknown community names\nSNMPv3 is enabled')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+  </div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">Knowledge Check</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="quiz-wrap">
+    
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">1</span>DNS port number?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(0,0)" id="q0o0">80</button><button class="opt-btn" onclick="checkAnswer(0,1)" id="q0o1">443</button><button class="opt-btn" onclick="checkAnswer(0,2)" id="q0o2">53</button><button class="opt-btn" onclick="checkAnswer(0,3)" id="q0o3">23</button></div>
+      <div class="q-feedback" id="qf0"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">2</span>NTP stratum 0 is?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(1,0)" id="q1o0">Router</button><button class="opt-btn" onclick="checkAnswer(1,1)" id="q1o1">Switch</button><button class="opt-btn" onclick="checkAnswer(1,2)" id="q1o2">Atomic clock reference</button><button class="opt-btn" onclick="checkAnswer(1,3)" id="q1o3">ISP server</button></div>
+      <div class="q-feedback" id="qf1"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">3</span>Which DNS record maps name to IPv4?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(2,0)" id="q2o0">AAAA</button><button class="opt-btn" onclick="checkAnswer(2,1)" id="q2o1">MX</button><button class="opt-btn" onclick="checkAnswer(2,2)" id="q2o2">PTR</button><button class="opt-btn" onclick="checkAnswer(2,3)" id="q2o3">A</button></div>
+      <div class="q-feedback" id="qf2"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">4</span>SNMPv3 adds which security?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(3,0)" id="q3o0">Nothing new</button><button class="opt-btn" onclick="checkAnswer(3,1)" id="q3o1">Encryption and authentication</button><button class="opt-btn" onclick="checkAnswer(3,2)" id="q3o2">Only authentication</button><button class="opt-btn" onclick="checkAnswer(3,3)" id="q3o3">Only encryption</button></div>
+      <div class="q-feedback" id="qf3"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">5</span>NTP uses which port?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(4,0)" id="q4o0">53</button><button class="opt-btn" onclick="checkAnswer(4,1)" id="q4o1">80</button><button class="opt-btn" onclick="checkAnswer(4,2)" id="q4o2">123</button><button class="opt-btn" onclick="checkAnswer(4,3)" id="q4o3">161</button></div>
+      <div class="q-feedback" id="qf4"></div>
+    </div>
+    <button class="reset-btn" onclick="resetQuiz()">↺ Reset Quiz</button>
+  </div>
+</div>
+
+<div class="module-nav">
+  <a class="nav-btn" href="module_13_dhcp.html">← Previous</a>
+  <div class="nav-info">
+    <div class="nav-mod">Module 14 of 20</div>
+    <div class="nav-title">DNS, NTP & IP Services</div>
+  </div>
+  <a class="nav-btn" href="module_15_acls_access_control_lists.html">Next →</a>
+</div>
+
+<script>
+const CORRECT = [2, 2, 3, 1, 2];
+let answered = {};
+
+function runCmd(btn, cmd, output) {
+  const block = btn.closest('.cmd-block');
+  const outDiv = block.querySelector('.cmd-output');
+  outDiv.textContent = output.replace(/\\n/g,'\n');
+  outDiv.style.display = 'block';
+  btn.textContent = '✓ Done';
+  btn.classList.add('done');
+  btn.disabled = true;
+}
+
+function checkAnswer(q, choice) {
+  if (answered[q] !== undefined) return;
+  answered[q] = choice;
+  const correct = CORRECT[q];
+  for (let i = 0; i < 4; i++) {
+    const btn = document.getElementById('q' + q + 'o' + i);
+    if (!btn) continue;
+    if (i === correct) btn.classList.add('correct');
+    else if (i === choice && choice !== correct) btn.classList.add('wrong');
+  }
+  const fb = document.getElementById('qf' + q);
+  if (fb) fb.innerHTML = choice === correct
+    ? '<span style="color:#22c55e">✓ Correct!</span>'
+    : '<span style="color:#ef4444">✗ Incorrect — correct answer highlighted in green</span>';
+}
+
+function resetQuiz() {
+  answered = {};
+  document.querySelectorAll('.opt-btn').forEach(b => b.className = 'opt-btn');
+  document.querySelectorAll('.q-feedback').forEach(f => f.innerHTML = '');
+}
+</script>
+</body>
+</html>

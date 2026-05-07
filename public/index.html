@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta property="og:title" content="Kuwaha Cloud Academy" />
+  <meta property="og:description" content="Empowering Digital Professionals — Cisco CCNA, AWS, and Linux certification training." />
+  <meta property="og:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+  <meta property="og:url" content="https://kca-cloudnet.com" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuwaha Cloud Academy — CCNA · AWS · Linux</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0c0f;color:#e2e8f0}
+nav{background:#111318;border-bottom:1px solid #1e2330;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.8rem}
+.logo img{height:40px}
+.logo span{font-size:1.2rem;font-weight:700;color:#3b9eff}
+.nav-links{display:flex;gap:1rem;align-items:center}
+.nav-links a{color:#94a3b8;text-decoration:none;font-size:.9rem;padding:.4rem .8rem;border-radius:6px;transition:.2s}
+.nav-links a:hover{color:#e2e8f0;background:#1e2330}
+.btn-login{border:1px solid #3b9eff!important;color:#3b9eff!important}
+.btn-signup{background:#3b9eff;color:#fff!important;padding:.5rem 1.2rem!important;border-radius:8px!important}
+.btn-signup:hover{background:#2980d9!important}
+.hero{min-height:90vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;background:radial-gradient(ellipse at top,#0d1525 0%,#0a0c0f 70%)}
+.hero h1{font-size:clamp(2.5rem,6vw,4rem);font-weight:800;line-height:1.1;margin-bottom:1.5rem}
+.hero h1 span{color:#3b9eff}
+.hero p{font-size:1.15rem;color:#94a3b8;max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:#3b9eff;color:#fff;padding:.85rem 2rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:1rem;transition:.2s}
+.btn-primary:hover{background:#2980d9;transform:translateY(-2px)}
+.btn-secondary{border:1px solid #3b9eff;color:#3b9eff;padding:.85rem 2rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:1rem;transition:.2s}
+.btn-secondary:hover{background:#3b9eff;color:#fff}
+.badge{display:inline-block;background:rgba(59,158,255,.15);border:1px solid rgba(59,158,255,.3);color:#3b9eff;padding:.4rem 1rem;border-radius:20px;font-size:.85rem;margin-bottom:2rem}
+.courses{padding:5rem 2rem;max-width:1100px;margin:0 auto}
+.courses h2{text-align:center;font-size:2rem;font-weight:800;margin-bottom:.8rem}
+.courses p.sub{text-align:center;color:#64748b;margin-bottom:3rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem}
+.card{background:#111318;border:1px solid #1e2330;border-radius:12px;padding:1.8rem;transition:.2s}
+.card:hover{transform:translateY(-4px);border-color:#3b9eff}
+.card-badge{display:inline-block;padding:.3rem .8rem;border-radius:4px;font-size:.75rem;font-weight:700;margin-bottom:1rem;color:#fff}
+.card h3{font-size:1.1rem;font-weight:700;margin-bottom:.6rem}
+.card p{color:#64748b;font-size:.9rem;line-height:1.6;margin-bottom:1rem}
+.card .meta{display:flex;gap:1rem;font-size:.8rem;color:#94a3b8}
+.features{background:#111318;border-top:1px solid #1e2330;border-bottom:1px solid #1e2330;padding:4rem 2rem}
+.features-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;text-align:center}
+.feature-icon{font-size:2.5rem;margin-bottom:1rem}
+.feature h3{font-weight:700;margin-bottom:.5rem}
+.feature p{color:#64748b;font-size:.9rem;line-height:1.6}
+.cta{padding:5rem 2rem;text-align:center}
+.cta h2{font-size:2.2rem;font-weight:800;margin-bottom:1rem}
+.cta p{color:#64748b;margin-bottom:2rem;font-size:1.05rem}
+footer{background:#111318;border-top:1px solid #1e2330;padding:2rem;text-align:center;color:#64748b;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">
+    <img src="/KCA-LOGO-transparent.png" alt="KCA" onerror="this.style.display='none'">
+    <span>Kuwaha Cloud Academy</span>
+  </div>
+  <div class="nav-links">
+    <a href="#courses">Courses</a>
+    <a href="login.html" class="btn-login">Student Login</a>
+    <a href="register.html" class="btn-signup">Sign Up →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div>
+    <div class="badge">🎓 Empowering Digital Professionals</div>
+    <h1>Launch Your <span>IT Career</span><br>with KCA</h1>
+    <p>Master Cisco CCNA, AWS Cloud, and Linux Fundamentals with hands-on training from industry experts.</p>
+    <div class="hero-btns">
+      <a href="register.html" class="btn-primary">Start Learning Today</a>
+      <a href="#courses" class="btn-secondary">View Courses</a>
+    </div>
+  </div>
+</section>
+
+<section class="courses" id="courses">
+  <h2>Our Courses</h2>
+  <p class="sub">Industry-recognized certifications to advance your career</p>
+  <style>
+  .card-img{width:100%;height:160px;border-radius:8px;margin-bottom:1.2rem;overflow:hidden;background:#0a0f1a;display:flex;align-items:center;justify-content:center}
+  .card-img svg{width:100%;height:100%}
+  </style>
+  <div class="grid">
+    <div class="card">
+      <div class="card-img">
+        <svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="340" height="160" fill="#0a0f1a"/>
+          <!-- Desk -->
+          <rect x="20" y="120" width="300" height="8" rx="2" fill="#1e2330"/>
+          <!-- Router box -->
+          <rect x="30" y="88" width="90" height="30" rx="4" fill="#1a3a2a"/>
+          <rect x="30" y="88" width="90" height="8" rx="4" fill="#0e8a78"/>
+          <circle cx="48" cy="108" r="3" fill="#4CAF50"/><circle cx="60" cy="108" r="3" fill="#4CAF50"/><circle cx="72" cy="108" r="3" fill="#f5a623"/>
+          <text x="88" y="107" font-size="7" fill="#64748b" font-family="monospace">RTR</text>
+          <!-- Antenna -->
+          <line x1="55" y1="88" x2="50" y2="72" stroke="#0e8a78" stroke-width="2"/>
+          <line x1="75" y1="88" x2="80" y2="72" stroke="#0e8a78" stroke-width="2"/>
+          <circle cx="50" cy="70" r="3" fill="#0e8a78"/>
+          <circle cx="80" cy="70" r="3" fill="#0e8a78"/>
+          <!-- Switch -->
+          <rect x="140" y="92" width="110" height="22" rx="3" fill="#1a2a3a"/>
+          <rect x="140" y="92" width="110" height="6" rx="3" fill="#1565C0"/>
+          <rect x="148" y="101" width="6" height="10" rx="1" fill="#0a0f1a"/>
+          <rect x="158" y="101" width="6" height="10" rx="1" fill="#0a0f1a"/>
+          <rect x="168" y="101" width="6" height="10" rx="1" fill="#0a0f1a"/>
+          <rect x="178" y="101" width="6" height="10" rx="1" fill="#0a0f1a"/>
+          <rect x="188" y="101" width="6" height="10" rx="1" fill="#0a0f1a"/>
+          <rect x="198" y="101" width="6" height="10" rx="1" fill="#0a0f1a"/>
+          <circle cx="232" cy="103" r="2.5" fill="#4CAF50"/><circle cx="240" cy="103" r="2.5" fill="#4CAF50"/>
+          <text x="143" y="120" font-size="7" fill="#64748b" font-family="monospace">SW-24P</text>
+          <!-- PC -->
+          <rect x="268" y="78" width="50" height="36" rx="3" fill="#111827"/>
+          <rect x="271" y="81" width="44" height="26" rx="2" fill="#0a1628"/>
+          <text x="276" y="97" font-size="8" fill="#0e8a78" font-family="monospace">&gt;_</text>
+          <rect x="283" y="114" width="16" height="4" rx="1" fill="#1e2330"/>
+          <!-- Cables -->
+          <path d="M120 103 C130 103 130 103 140 103" stroke="#0e8a78" stroke-width="1.5" fill="none" stroke-dasharray="3,2"/>
+          <path d="M250 103 C260 103 260 96 268 96" stroke="#3b9eff" stroke-width="1.5" fill="none" stroke-dasharray="3,2"/>
+          <!-- Label -->
+          <text x="170" y="148" font-size="11" fill="#4CAF50" font-family="sans-serif" font-weight="bold" text-anchor="middle">CCNA Lab Environment</text>
+        </svg>
+      </div>
+      <div class="card-badge" style="background:#4CAF50">CISCO</div>
+      <h3>Cisco CCNA (200-301)</h3>
+      <p>Master networking fundamentals, routing, switching, and network security.</p>
+      <div class="meta"><span>⏱ 120 hours</span><span>📊 Intermediate</span></div>
+    </div>
+    <div class="card">
+      <div class="card-img">
+        <svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="340" height="160" fill="#0a0f1a"/>
+          <!-- Cloud shape -->
+          <circle cx="170" cy="68" r="35" fill="#1a2535"/>
+          <circle cx="140" cy="78" r="25" fill="#1a2535"/>
+          <circle cx="200" cy="78" r="25" fill="#1a2535"/>
+          <rect x="130" y="78" width="80" height="25" fill="#1a2535"/>
+          <!-- Cloud outline -->
+          <circle cx="170" cy="68" r="35" fill="none" stroke="#FF9800" stroke-width="1.5"/>
+          <circle cx="140" cy="78" r="25" fill="none" stroke="#FF9800" stroke-width="1.5"/>
+          <circle cx="200" cy="78" r="25" fill="none" stroke="#FF9800" stroke-width="1.5"/>
+          <!-- AWS icons inside cloud -->
+          <rect x="148" y="60" width="18" height="14" rx="2" fill="#FF9800" opacity=".8"/>
+          <text x="152" y="71" font-size="8" fill="#fff" font-family="monospace">S3</text>
+          <rect x="172" y="60" width="18" height="14" rx="2" fill="#1565C0" opacity=".9"/>
+          <text x="175" y="71" font-size="8" fill="#fff" font-family="monospace">EC2</text>
+          <!-- Ground connection lines -->
+          <line x1="140" y1="103" x2="100" y2="128" stroke="#FF9800" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="170" y1="103" x2="170" y2="128" stroke="#FF9800" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="200" y1="103" x2="240" y2="128" stroke="#FF9800" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <!-- Devices -->
+          <rect x="84" y="125" width="32" height="20" rx="2" fill="#111827"/><text x="88" y="138" font-size="7" fill="#94a3b8" font-family="monospace">laptop</text>
+          <rect x="154" y="125" width="32" height="20" rx="2" fill="#111827"/><text x="158" y="138" font-size="7" fill="#94a3b8" font-family="monospace">server</text>
+          <rect x="224" y="125" width="32" height="20" rx="2" fill="#111827"/><text x="228" y="138" font-size="7" fill="#94a3b8" font-family="monospace">mobile</text>
+          <text x="170" y="152" font-size="11" fill="#FF9800" font-family="sans-serif" font-weight="bold" text-anchor="middle">AWS Cloud Infrastructure</text>
+        </svg>
+      </div>
+      <div class="card-badge" style="background:#FF9800">AWS</div>
+      <h3>AWS Cloud Practitioner</h3>
+      <p>Learn core AWS services, cloud concepts and pricing for the CLF-C02 exam.</p>
+      <div class="meta"><span>⏱ 40 hours</span><span>📊 Beginner</span></div>
+    </div>
+    <div class="card">
+      <div class="card-img">
+        <svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="340" height="160" fill="#0a0f1a"/>
+          <!-- VPC box -->
+          <rect x="25" y="25" width="290" height="100" rx="6" fill="none" stroke="#1565C0" stroke-width="1.5" stroke-dasharray="6,3"/>
+          <text x="35" y="40" font-size="9" fill="#1565C0" font-family="monospace">VPC 10.0.0.0/16</text>
+          <!-- Subnet 1 -->
+          <rect x="40" y="48" width="100" height="60" rx="4" fill="#0d1f3a" stroke="#3b9eff" stroke-width="1"/>
+          <text x="50" y="62" font-size="7" fill="#3b9eff" font-family="monospace">Public Subnet</text>
+          <rect x="50" y="67" width="35" height="18" rx="2" fill="#1565C0"/>
+          <text x="53" y="79" font-size="7" fill="#fff" font-family="monospace">ALB</text>
+          <rect x="92" y="67" width="35" height="18" rx="2" fill="#0a4a8a"/>
+          <text x="94" y="79" font-size="7" fill="#fff" font-family="monospace">NAT</text>
+          <!-- Subnet 2 -->
+          <rect x="160" y="48" width="100" height="60" rx="4" fill="#0d1f3a" stroke="#0e8a78" stroke-width="1"/>
+          <text x="168" y="62" font-size="7" fill="#0e8a78" font-family="monospace">Private Subnet</text>
+          <rect x="168" y="67" width="35" height="18" rx="2" fill="#0e8a78"/>
+          <text x="171" y="79" font-size="7" fill="#fff" font-family="monospace">EC2</text>
+          <rect x="210" y="67" width="35" height="18" rx="2" fill="#1a5a3a"/>
+          <text x="213" y="79" font-size="7" fill="#fff" font-family="monospace">RDS</text>
+          <!-- Arrow between subnets -->
+          <line x1="140" y1="78" x2="160" y2="78" stroke="#f5a623" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Internet -->
+          <circle cx="290" cy="78" r="18" fill="#1a1a2a" stroke="#3b9eff" stroke-width="1"/>
+          <text x="282" y="82" font-size="8" fill="#3b9eff" font-family="monospace">IGW</text>
+          <line x1="260" y1="78" x2="272" y2="78" stroke="#3b9eff" stroke-width="1.5"/>
+          <text x="170" y="148" font-size="11" fill="#1565C0" font-family="sans-serif" font-weight="bold" text-anchor="middle">AWS Advanced Networking</text>
+        </svg>
+      </div>
+      <div class="card-badge" style="background:#1565C0">AWS</div>
+      <h3>AWS Advanced Networking</h3>
+      <p>Deep dive into VPC, Direct Connect, Route 53 and load balancers.</p>
+      <div class="meta"><span>⏱ 80 hours</span><span>📊 Advanced</span></div>
+    </div>
+    <div class="card">
+      <div class="card-img">
+        <svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="340" height="160" fill="#0a0f1a"/>
+          <!-- Terminal window -->
+          <rect x="40" y="20" width="260" height="120" rx="6" fill="#111827"/>
+          <rect x="40" y="20" width="260" height="22" rx="6" fill="#1e2330"/>
+          <circle cx="58" cy="31" r="5" fill="#ff5f57"/>
+          <circle cx="74" cy="31" r="5" fill="#febc2e"/>
+          <circle cx="90" cy="31" r="5" fill="#28c840"/>
+          <text x="150" y="35" font-size="8" fill="#64748b" font-family="monospace" text-anchor="middle">root@kca-linux:~</text>
+          <!-- Terminal content -->
+          <text x="55" y="58" font-size="9" fill="#0e8a78" font-family="monospace">$ ls -la /etc/</text>
+          <text x="55" y="72" font-size="8" fill="#94a3b8" font-family="monospace">drwxr-xr-x  passwd  shadow</text>
+          <text x="55" y="84" font-size="9" fill="#0e8a78" font-family="monospace">$ chmod 755 script.sh</text>
+          <text x="55" y="96" font-size="9" fill="#0e8a78" font-family="monospace">$ systemctl start nginx</text>
+          <text x="55" y="108" font-size="8" fill="#4CAF50" font-family="monospace">● nginx active (running)</text>
+          <text x="55" y="122" font-size="9" fill="#0e8a78" font-family="monospace">$ <text fill="#e2e8f0">_</text></text>
+          <!-- Blinking cursor effect -->
+          <rect x="63" y="114" width="7" height="10" fill="#0e8a78" opacity=".8"/>
+          <text x="170" y="152" font-size="11" fill="#9C27B0" font-family="sans-serif" font-weight="bold" text-anchor="middle">Linux Terminal Environment</text>
+        </svg>
+      </div>
+      <div class="card-badge" style="background:#9C27B0">LINUX</div>
+      <h3>Linux Fundamentals</h3>
+      <p>Master the Linux command line, file permissions and shell scripting.</p>
+      <div class="meta"><span>⏱ 60 hours</span><span>📊 Beginner</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="features-inner">
+    <div class="feature"><div class="feature-icon">🎯</div><h3>Exam Focused</h3><p>Content aligned with official certification exam objectives.</p></div>
+    <div class="feature"><div class="feature-icon">💻</div><h3>Hands-On Labs</h3><p>Practice with real equipment simulations and lab exercises.</p></div>
+    <div class="feature"><div class="feature-icon">👨‍🏫</div><h3>Expert Instructors</h3><p>Learn from certified professionals with real-world experience.</p></div>
+    <div class="feature"><div class="feature-icon">📜</div><h3>Certification Ready</h3><p>Graduate fully prepared to pass your certification exam.</p></div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Ready to Start?</h2>
+  <p>Join hundreds of IT professionals who launched their careers with KCA.</p>
+  <a href="register.html" class="btn-primary">Create Free Account →</a>
+</section>
+
+<footer>
+  <p>© 2025 Kuwaha Cloud Academy | kca-cloudnet.com | CCNA · AWS · Linux Fundamentals</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCA Linux — Module 2: The Linux Terminal & Shell Basics</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0a0f1a;color:#e2e8f0;min-height:100vh}
+header{background:linear-gradient(135deg,#0a1628,#0d2040);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #16a085}
+.logo{color:#16a085;font-size:1.3rem;font-weight:900;letter-spacing:.1em}
+.mod-badge{background:#16a085;color:#fff;padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:700}
+.back-bar{padding:.6rem 2rem;background:#0a1628;border-bottom:1px solid #1e3a2e}
+.back-bar a{color:#3b9eff;text-decoration:none;font-size:.85rem;font-weight:600}
+.hero{background:linear-gradient(135deg,#0d2040,#0a3d2e);padding:3rem 2rem;border-bottom:1px solid #1e3a2e}
+.hero-label{color:#16a085;font-size:.8rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem}
+.hero h1{font-size:2.2rem;font-weight:900;color:#fff;margin-bottom:1rem}
+.hero-tags{display:flex;gap:.8rem;flex-wrap:wrap}
+.tag{background:rgba(22,160,133,.15);border:1px solid rgba(22,160,133,.3);color:#16a085;padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:600}
+.container{max-width:1100px;margin:0 auto;padding:2rem}
+.section-label{font-size:.75rem;font-weight:700;color:#16a085;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:1px solid #1e3a2e}
+.concepts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(460px,1fr));gap:1.2rem;margin-bottom:3rem}
+.concept-card{background:#111827;border:1px solid #1e3a2e;border-left:3px solid #16a085;border-radius:10px;padding:1.4rem}
+.concept-title{color:#16a085;font-size:1rem;font-weight:700;margin-bottom:.7rem}
+.concept-desc{color:#94a3b8;font-size:.9rem;line-height:1.8;white-space:pre-line}
+.cli-section{background:#0d1117;border:1px solid #1e3a2e;border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+.cli-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+.cli-title{color:#16a085;font-size:.85rem;font-weight:700;letter-spacing:.1em}
+.cli-dots{display:flex;gap:.4rem}
+.dot{width:12px;height:12px;border-radius:50%}
+.cmd-block{background:#000;border-radius:8px;margin-bottom:.8rem;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.cmd-header{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;border-bottom:1px solid #1a1a1a}
+.cmd-text{color:#16a085;font-weight:600;flex:1}
+.run-btn{background:#16a085;color:#fff;border:none;padding:.3rem .8rem;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700;white-space:nowrap;transition:.2s}
+.run-btn:hover{background:#1abc9c}
+.run-btn.ran{background:#0a5c4a}
+.cmd-output{padding:.8rem 1rem;color:#a8ff78;white-space:pre-wrap;border-top:1px solid #1a1a1a;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.quiz-section{background:#111827;border:1px solid #1e3a2e;border-radius:12px;padding:1.5rem;margin-bottom:2rem}
+.quiz-q{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid #1e3a2e}
+.quiz-q:last-child{border-bottom:none;margin-bottom:0}
+.q-text{color:#e2e8f0;font-weight:600;margin-bottom:.8rem}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.opt-btn{background:#1e2d3d;border:1px solid #2d4a3e;color:#94a3b8;padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-size:.85rem;transition:.2s}
+.opt-btn:hover{border-color:#16a085;color:#16a085}
+.opt-btn.correct{background:rgba(22,160,133,.2);border-color:#16a085;color:#16a085}
+.opt-btn.wrong{background:rgba(255,77,77,.15);border-color:#ff4d4d;color:#ff4d4d}
+.q-feedback{font-size:.82rem;margin-top:.5rem;min-height:1.2rem}
+.reset-btn{background:transparent;border:1px solid #16a085;color:#16a085;padding:.5rem 1.2rem;border-radius:6px;cursor:pointer;margin-top:1rem}
+.module-nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;background:#0a1628;border-top:2px solid #16a085;position:sticky;bottom:0}
+.nav-btn{background:#16a085;color:#fff;border:none;padding:.6rem 1.4rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:.9rem;text-decoration:none;display:inline-block}
+.nav-btn:hover{background:#1abc9c}
+.nav-btn.disabled{background:#1e2d3d;color:#4a5568;pointer-events:none}
+.nav-label{color:#64748b;font-size:.85rem}
+</style>
+</head>
+<body>
+<header>
+  <a href="/dashboard.html"><img src="/KCA-LOGO-transparent.png" alt="KCA Logo" style="height:180px;object-fit:contain"></a>
+  <div class="mod-badge">MODULE 2 OF 20</div>
+</header>
+<div class="back-bar"><a href="/dashboard.html">← Back to My Courses</a></div>
+<div class="hero">
+  <div class="hero-label">Linux Fundamentals · Module 2</div>
+  <h1>The Linux Terminal & Shell Basics</h1>
+  <div class="hero-tags">
+    <span class="tag">🐧 4 Topics</span>
+    <span class="tag">💻 5 CLI Commands</span>
+    <span class="tag">❓ 5 Quiz Questions</span>
+  </div>
+</div>
+<div class="container">
+  <div class="section-label">Core Concepts</div>
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <h3 class="concept-title">What is the Terminal?</h3>
+      <p class="concept-desc">The terminal is a text-based interface to interact with Linux. It's faster and more powerful than a GUI for system administration.</p>
+    </div>
+    <div class="concept-card">
+      <h3 class="concept-title">Shell Types</h3>
+      <p class="concept-desc">bash is the most common shell. Others: zsh, sh, fish. The shell interprets commands and communicates with the kernel.</p>
+    </div>
+    <div class="concept-card">
+      <h3 class="concept-title">Basic Navigation</h3>
+      <p class="concept-desc">pwd: Print working directory
+ls: List files
+cd: Change directory
+clear: Clear screen
+history: Show command history</p>
+    </div>
+    <div class="concept-card">
+      <h3 class="concept-title">Command Structure</h3>
+      <p class="concept-desc">Format: command [options] [arguments]
+Example: ls -la /home
+ls=command, -la=options, /home=argument</p>
+    </div></div>
+
+  <div class="section-label">Live CLI Commands — Click ▶ Run on each command</div>
+  <div class="cli-section">
+    <div class="cli-header">
+      <div class="cli-title">TERMINAL SIMULATOR</div>
+      <div class="cli-dots">
+        <div class="dot" style="background:#ff5f57"></div>
+        <div class="dot" style="background:#febc2e"></div>
+        <div class="dot" style="background:#28c840"></div>
+      </div>
+    </div>
+    
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ pwd</span>
+        <button class="run-btn" onclick="runCmd(this, 'pwd', '/home/student')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ ls -la</span>
+        <button class="run-btn" onclick="runCmd(this, 'ls -la', 'total 32
+drwxr-xr-x 5 student student 4096 .
+-rw-r--r-- 1 student student 220 .bashrc
+-rw-r--r-- 1 student student 3526 .profile')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ echo $SHELL</span>
+        <button class="run-btn" onclick="runCmd(this, 'echo $SHELL', '/bin/bash')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ history | tail -5</span>
+        <button class="run-btn" onclick="runCmd(this, 'history | tail -5', '  1  pwd
+  2  ls -la
+  3  cd Documents
+  4  nano notes.txt
+  5  history')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ echo 'Hello KCA'</span>
+        <button class="run-btn" onclick="runCmd(this, 'echo \'Hello KCA\'', 'Hello KCA')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="section-label">Knowledge Check</div>
+  <div class="quiz-section">
+    
+    <div class="quiz-q">
+      <p class="q-text">1. What shows current directory?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(0,0)" id="q0o0">ls</button><button class="opt-btn" onclick="checkAnswer(0,1)" id="q0o1">cd</button><button class="opt-btn" onclick="checkAnswer(0,2)" id="q0o2">pwd</button><button class="opt-btn" onclick="checkAnswer(0,3)" id="q0o3">mkdir</button></div>
+      <div class="q-feedback" id="qf0"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text">2. Most common Linux shell?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(1,0)" id="q1o0">zsh</button><button class="opt-btn" onclick="checkAnswer(1,1)" id="q1o1">fish</button><button class="opt-btn" onclick="checkAnswer(1,2)" id="q1o2">sh</button><button class="opt-btn" onclick="checkAnswer(1,3)" id="q1o3">bash</button></div>
+      <div class="q-feedback" id="qf1"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text">3. What does 'ls -la' do?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(2,0)" id="q2o0">Delete files</button><button class="opt-btn" onclick="checkAnswer(2,1)" id="q2o1">List all files with details</button><button class="opt-btn" onclick="checkAnswer(2,2)" id="q2o2">Change directory</button><button class="opt-btn" onclick="checkAnswer(2,3)" id="q2o3">Show disk usage</button></div>
+      <div class="q-feedback" id="qf2"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text">4. What key auto-completes?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(3,0)" id="q3o0">Enter</button><button class="opt-btn" onclick="checkAnswer(3,1)" id="q3o1">Ctrl+C</button><button class="opt-btn" onclick="checkAnswer(3,2)" id="q3o2">Tab</button><button class="opt-btn" onclick="checkAnswer(3,3)" id="q3o3">Shift</button></div>
+      <div class="q-feedback" id="qf3"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text">5. What does 'clear' do?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(4,0)" id="q4o0">Deletes files</button><button class="opt-btn" onclick="checkAnswer(4,1)" id="q4o1">Clears terminal screen</button><button class="opt-btn" onclick="checkAnswer(4,2)" id="q4o2">Logs out</button><button class="opt-btn" onclick="checkAnswer(4,3)" id="q4o3">Restarts system</button></div>
+      <div class="q-feedback" id="qf4"></div>
+    </div>
+    <button class="reset-btn" onclick="resetQuiz()">↺ RESET QUIZ</button>
+  </div>
+</div>
+<div class="module-nav">
+  <a class="nav-btn" href="module_01_introduction_to_linux_and_open_source.html">← Previous</a>
+  <span class="nav-label">Module 2 of 20</span>
+  <a class="nav-btn" href="module_03_file_system_hierarchy.html">Next →</a>
+</div>
+<script>
+const CORRECT=[2, 3, 1, 2, 1];
+let answered={};
+function runCmd(btn, cmd, output){
+  const block = btn.closest('.cmd-block');
+  const outDiv = block.querySelector('.cmd-output');
+  outDiv.textContent = output.replace(/\\n/g,'\n');
+  outDiv.style.display = 'block';
+  btn.textContent = '✓ Done';
+  btn.classList.add('ran');
+  btn.disabled = true;
+}
+function checkAnswer(q,choice){
+  if(answered[q]!==undefined)return;
+  answered[q]=choice;
+  const correct=CORRECT[q];
+  for(let i=0;i<4;i++){
+    const btn=document.getElementById('q'+q+'o'+i);
+    if(!btn)continue;
+    if(i===correct)btn.classList.add('correct');
+    else if(i===choice&&choice!==correct)btn.classList.add('wrong');
+  }
+  const fb=document.getElementById('qf'+q);
+  if(fb)fb.innerHTML=choice===correct?'<span style="color:#16a085">✓ Correct!</span>':'<span style="color:#ff4d4d">✗ Incorrect. Correct answer highlighted.</span>';
+}
+function resetQuiz(){
+  answered={};
+  document.querySelectorAll('.opt-btn').forEach(b=>b.className='opt-btn');
+  document.querySelectorAll('.q-feedback').forEach(f=>f.innerHTML='');
+}
+</script>
+</body>
+</html>

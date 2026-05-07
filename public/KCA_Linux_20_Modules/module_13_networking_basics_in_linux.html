@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCA Linux — Module 13: Networking Basics in Linux</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0a0f1a;color:#e2e8f0;min-height:100vh}
+header{background:linear-gradient(135deg,#0a1628,#0d2040);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #16a085}
+.logo{color:#16a085;font-size:1.3rem;font-weight:900;letter-spacing:.1em}
+.mod-badge{background:#16a085;color:#fff;padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:700}
+.back-bar{padding:.6rem 2rem;background:#0a1628;border-bottom:1px solid #1e3a2e}
+.back-bar a{color:#3b9eff;text-decoration:none;font-size:.85rem;font-weight:600}
+.hero{background:linear-gradient(135deg,#0d2040,#0a3d2e);padding:3rem 2rem;border-bottom:1px solid #1e3a2e}
+.hero-label{color:#16a085;font-size:.8rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem}
+.hero h1{font-size:2.2rem;font-weight:900;color:#fff;margin-bottom:1rem}
+.hero-tags{display:flex;gap:.8rem;flex-wrap:wrap}
+.tag{background:rgba(22,160,133,.15);border:1px solid rgba(22,160,133,.3);color:#16a085;padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:600}
+.container{max-width:1100px;margin:0 auto;padding:2rem}
+.section-label{font-size:.75rem;font-weight:700;color:#16a085;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:1px solid #1e3a2e}
+.concepts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(460px,1fr));gap:1.2rem;margin-bottom:3rem}
+.concept-card{background:#111827;border:1px solid #1e3a2e;border-left:3px solid #16a085;border-radius:10px;padding:1.4rem}
+.concept-title{color:#16a085;font-size:1rem;font-weight:700;margin-bottom:.7rem}
+.concept-desc{color:#94a3b8;font-size:.9rem;line-height:1.8;white-space:pre-line}
+.cli-section{background:#0d1117;border:1px solid #1e3a2e;border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+.cli-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+.cli-title{color:#16a085;font-size:.85rem;font-weight:700;letter-spacing:.1em}
+.cli-dots{display:flex;gap:.4rem}
+.dot{width:12px;height:12px;border-radius:50%}
+.cmd-block{background:#000;border-radius:8px;margin-bottom:.8rem;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.cmd-header{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;border-bottom:1px solid #1a1a1a}
+.cmd-text{color:#16a085;font-weight:600;flex:1}
+.run-btn{background:#16a085;color:#fff;border:none;padding:.3rem .8rem;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700;white-space:nowrap;transition:.2s}
+.run-btn:hover{background:#1abc9c}
+.run-btn.ran{background:#0a5c4a}
+.cmd-output{padding:.8rem 1rem;color:#a8ff78;white-space:pre-wrap;border-top:1px solid #1a1a1a;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.quiz-section{background:#111827;border:1px solid #1e3a2e;border-radius:12px;padding:1.5rem;margin-bottom:2rem}
+.quiz-q{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid #1e3a2e}
+.quiz-q:last-child{border-bottom:none;margin-bottom:0}
+.q-text{color:#e2e8f0;font-weight:600;margin-bottom:.8rem}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.opt-btn{background:#1e2d3d;border:1px solid #2d4a3e;color:#94a3b8;padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-size:.85rem;transition:.2s}
+.opt-btn:hover{border-color:#16a085;color:#16a085}
+.opt-btn.correct{background:rgba(22,160,133,.2);border-color:#16a085;color:#16a085}
+.opt-btn.wrong{background:rgba(255,77,77,.15);border-color:#ff4d4d;color:#ff4d4d}
+.q-feedback{font-size:.82rem;margin-top:.5rem;min-height:1.2rem}
+.reset-btn{background:transparent;border:1px solid #16a085;color:#16a085;padding:.5rem 1.2rem;border-radius:6px;cursor:pointer;margin-top:1rem}
+.module-nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;background:#0a1628;border-top:2px solid #16a085;position:sticky;bottom:0}
+.nav-btn{background:#16a085;color:#fff;border:none;padding:.6rem 1.4rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:.9rem;text-decoration:none;display:inline-block}
+.nav-btn:hover{background:#1abc9c}
+.nav-btn.disabled{background:#1e2d3d;color:#4a5568;pointer-events:none}
+.nav-label{color:#64748b;font-size:.85rem}
+</style>
+</head>
+<body>
+<header>
+  <a href="/dashboard.html"><img src="/KCA-LOGO-transparent.png" alt="KCA Logo" style="height:180px;object-fit:contain"></a>
+  <div class="mod-badge">MODULE 13 OF 20</div>
+</header>
+<div class="back-bar"><a href="/dashboard.html">← Back to My Courses</a></div>
+<div class="hero">
+  <div class="hero-label">Linux Fundamentals · Module 13</div>
+  <h1>Networking Basics in Linux</h1>
+  <div class="hero-tags">
+    <span class="tag">🐧 4 Topics</span>
+    <span class="tag">💻 5 CLI Commands</span>
+    <span class="tag">❓ 5 Quiz Questions</span>
+  </div>
+</div>
+<div class="container">
+  <div class="section-label">Core Concepts</div>
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <h3 class="concept-title">Network Commands</h3>
+      <p class="concept-desc">ip addr : Show IP addresses
+ip route : Show routing table
+ping host : Test connectivity
+traceroute host : Trace path
+ss -tuln : Show open ports</p>
+    </div>
+    <div class="concept-card">
+      <h3 class="concept-title">Network Config</h3>
+      <p class="concept-desc">/etc/hosts : Local DNS
+/etc/resolv.conf : DNS servers
+nmcli : NetworkManager CLI
+ifconfig : Old command (use ip instead)</p>
+    </div>
+    <div class="concept-card">
+      <h3 class="concept-title">DNS & hostname</h3>
+      <p class="concept-desc">hostname : Show hostname
+hostname -I : Show all IPs
+dig domain : DNS lookup
+nslookup domain : DNS query</p>
+    </div>
+    <div class="concept-card">
+      <h3 class="concept-title">Firewall — ufw</h3>
+      <p class="concept-desc">ufw enable : Enable firewall
+ufw allow 22 : Allow SSH
+ufw allow 80/tcp : Allow HTTP
+ufw status : Show rules
+ufw deny 23 : Block telnet</p>
+    </div></div>
+
+  <div class="section-label">Live CLI Commands — Click ▶ Run on each command</div>
+  <div class="cli-section">
+    <div class="cli-header">
+      <div class="cli-title">TERMINAL SIMULATOR</div>
+      <div class="cli-dots">
+        <div class="dot" style="background:#ff5f57"></div>
+        <div class="dot" style="background:#febc2e"></div>
+        <div class="dot" style="background:#28c840"></div>
+      </div>
+    </div>
+    
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ hostname</span>
+        <button class="run-btn" onclick="runCmd(this, 'hostname', 'kca-linux-server')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ hostname -I</span>
+        <button class="run-btn" onclick="runCmd(this, 'hostname -I', '172.31.43.129 10.0.0.5')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ ip addr show | grep 'inet '</span>
+        <button class="run-btn" onclick="runCmd(this, 'ip addr show | grep \'inet \'', '    inet 172.31.43.129/20 brd 172.31.47.255 scope global eth0
+    inet 127.0.0.1/8 scope host lo')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ cat /etc/hosts</span>
+        <button class="run-btn" onclick="runCmd(this, 'cat /etc/hosts', '127.0.0.1	localhost
+127.0.1.1	kca-linux-server')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ ss -tuln | head -4</span>
+        <button class="run-btn" onclick="runCmd(this, 'ss -tuln | head -4', 'Netid  State   Local Address:Port
+tcp    LISTEN  0.0.0.0:22
+tcp    LISTEN  0.0.0.0:80
+tcp    LISTEN  0.0.0.0:443')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="section-label">Knowledge Check</div>
+  <div class="quiz-section">
+    
+    <div class="quiz-q">
+      <p class="q-text">1. Show IP addresses?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(0,0)" id="q0o0">ifconfig</button><button class="opt-btn" onclick="checkAnswer(0,1)" id="q0o1">ipconfig</button><button class="opt-btn" onclick="checkAnswer(0,2)" id="q0o2">ip addr</button><button class="opt-btn" onclick="checkAnswer(0,3)" id="q0o3">netstat</button></div>
+      <div class="q-feedback" id="qf0"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text">2. Local DNS file?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(1,0)" id="q1o0">  /etc/dns</button><button class="opt-btn" onclick="checkAnswer(1,1)" id="q1o1">/etc/resolv.conf</button><button class="opt-btn" onclick="checkAnswer(1,2)" id="q1o2">/etc/hosts</button><button class="opt-btn" onclick="checkAnswer(1,3)" id="q1o3">/etc/network</button></div>
+      <div class="q-feedback" id="qf1"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text">3. Test connectivity?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(2,0)" id="q2o0">traceroute</button><button class="opt-btn" onclick="checkAnswer(2,1)" id="q2o1">dig</button><button class="opt-btn" onclick="checkAnswer(2,2)" id="q2o2">nslookup</button><button class="opt-btn" onclick="checkAnswer(2,3)" id="q2o3">ping</button></div>
+      <div class="q-feedback" id="qf2"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text">4. 'ufw allow 22' does?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(3,0)" id="q3o0">Block SSH</button><button class="opt-btn" onclick="checkAnswer(3,1)" id="q3o1">Allow SSH</button><button class="opt-btn" onclick="checkAnswer(3,2)" id="q3o2">Delete rule</button><button class="opt-btn" onclick="checkAnswer(3,3)" id="q3o3">Show rules</button></div>
+      <div class="q-feedback" id="qf3"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text">5. Replaced netstat?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(4,0)" id="q4o0">ip</button><button class="opt-btn" onclick="checkAnswer(4,1)" id="q4o1">ss</button><button class="opt-btn" onclick="checkAnswer(4,2)" id="q4o2">ifconfig</button><button class="opt-btn" onclick="checkAnswer(4,3)" id="q4o3">nmap</button></div>
+      <div class="q-feedback" id="qf4"></div>
+    </div>
+    <button class="reset-btn" onclick="resetQuiz()">↺ RESET QUIZ</button>
+  </div>
+</div>
+<div class="module-nav">
+  <a class="nav-btn" href="module_12_disk_and_storage_management.html">← Previous</a>
+  <span class="nav-label">Module 13 of 20</span>
+  <a class="nav-btn" href="module_14_ssh_and_remote_access.html">Next →</a>
+</div>
+<script>
+const CORRECT=[2, 2, 3, 1, 1];
+let answered={};
+function runCmd(btn, cmd, output){
+  const block = btn.closest('.cmd-block');
+  const outDiv = block.querySelector('.cmd-output');
+  outDiv.textContent = output.replace(/\\n/g,'\n');
+  outDiv.style.display = 'block';
+  btn.textContent = '✓ Done';
+  btn.classList.add('ran');
+  btn.disabled = true;
+}
+function checkAnswer(q,choice){
+  if(answered[q]!==undefined)return;
+  answered[q]=choice;
+  const correct=CORRECT[q];
+  for(let i=0;i<4;i++){
+    const btn=document.getElementById('q'+q+'o'+i);
+    if(!btn)continue;
+    if(i===correct)btn.classList.add('correct');
+    else if(i===choice&&choice!==correct)btn.classList.add('wrong');
+  }
+  const fb=document.getElementById('qf'+q);
+  if(fb)fb.innerHTML=choice===correct?'<span style="color:#16a085">✓ Correct!</span>':'<span style="color:#ff4d4d">✗ Incorrect. Correct answer highlighted.</span>';
+}
+function resetQuiz(){
+  answered={};
+  document.querySelectorAll('.opt-btn').forEach(b=>b.className='opt-btn');
+  document.querySelectorAll('.q-feedback').forEach(f=>f.innerHTML='');
+}
+</script>
+</body>
+</html>

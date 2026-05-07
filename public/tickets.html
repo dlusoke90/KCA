@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta property="og:title" content="Kuwaha Cloud Academy" />
+  <meta property="og:description" content="Empowering Digital Professionals — Cisco CCNA, AWS, and Linux certification training." />
+  <meta property="og:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+  <meta property="og:url" content="https://kca-cloudnet.com" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCA Support Tickets</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0a0f1a;color:#e2e8f0;min-height:100vh}
+header{background:linear-gradient(135deg,#0a1628,#0d2040);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #0e8a78}
+.logo{color:#0e8a78;font-size:1.2rem;font-weight:900}
+.header-right{display:flex;gap:1rem;align-items:center}
+.btn{background:#0e8a78;color:#fff;border:none;padding:.5rem 1.2rem;border-radius:8px;cursor:pointer;font-weight:600;font-size:.875rem;text-decoration:none;display:inline-block}
+.btn:hover{background:#0a6b5e}
+.btn-outline{background:transparent;border:1px solid #0e8a78;color:#0e8a78}
+.btn-outline:hover{background:#0e8a78;color:#fff}
+.back-link{color:#3b9eff;text-decoration:none;font-size:.85rem;font-weight:600}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:2rem}
+.stat-card{background:#111827;border:1px solid #1e2330;border-radius:10px;padding:1.2rem;text-align:center;cursor:pointer;transition:.2s}
+.stat-card:hover{border-color:#0e8a78}
+.stat-card.active{border-color:#0e8a78;background:rgba(14,138,120,.1)}
+.stat-num{font-size:2rem;font-weight:900;margin-bottom:.3rem}
+.stat-lbl{font-size:.75rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em}
+.queue-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.queue-tab{padding:.5rem 1rem;border-radius:20px;border:1px solid #1e2330;color:#64748b;cursor:pointer;font-size:.85rem;font-weight:600;transition:.2s}
+.queue-tab:hover,.queue-tab.active{background:#0e8a78;color:#fff;border-color:#0e8a78}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:gap}
+.search-input{background:#111827;border:1px solid #1e2330;color:#e2e8f0;padding:.5rem 1rem;border-radius:8px;font-size:.875rem;width:250px;outline:none}
+.search-input:focus{border-color:#0e8a78}
+table{width:100%;border-collapse:collapse;font-size:.875rem}
+th{text-align:left;padding:.75rem 1rem;color:#64748b;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #1e2330}
+td{padding:.9rem 1rem;border-bottom:1px solid #0d1117}
+tr:hover td{background:rgba(14,138,120,.05)}
+.ticket-link{color:#3b9eff;text-decoration:none;font-weight:600}
+.ticket-link:hover{text-decoration:underline}
+.badge{padding:.25rem .6rem;border-radius:20px;font-size:.75rem;font-weight:700;text-transform:uppercase}
+.badge.assigned{background:rgba(255,213,79,.15);color:#ffd54f;border:1px solid rgba(255,213,79,.3)}
+.badge.work_in_progress{background:rgba(59,158,255,.15);color:#3b9eff;border:1px solid rgba(59,158,255,.3)}
+.badge.resolved{background:rgba(14,138,120,.15);color:#0e8a78;border:1px solid rgba(14,138,120,.3)}
+.username{color:#94a3b8;font-size:.82rem}
+.queue-badge{background:#1e2330;color:#94a3b8;padding:.2rem .5rem;border-radius:4px;font-size:.75rem}
+.empty{text-align:center;padding:3rem;color:#64748b}
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#111827;border:1px solid #1e2330;border-radius:16px;padding:2rem;width:100%;max-width:580px;max-height:90vh;overflow-y:auto}
+.modal h2{color:#fff;margin-bottom:1.5rem;font-size:1.2rem}
+.form-group{margin-bottom:1.2rem}
+label{display:block;color:#94a3b8;font-size:.8rem;font-weight:600;margin-bottom:.4rem;text-transform:uppercase}
+input,textarea,select{width:100%;padding:.7rem;background:#1e2330;border:1px solid #2d3748;border-radius:8px;color:#e2e8f0;font-size:.9rem;outline:none;font-family:inherit}
+input:focus,textarea:focus,select:focus{border-color:#0e8a78}
+textarea{resize:vertical;min-height:100px}
+.code-area{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:#000;border-color:#1e2330;color:#a8ff78}
+.modal-footer{display:flex;gap:1rem;justify-content:flex-end;margin-top:1.5rem}
+.btn-cancel{background:transparent;border:1px solid #1e2330;color:#94a3b8}
+.btn-cancel:hover{border-color:#ff4d4d;color:#ff4d4d}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">KCA · SUPPORT</div>
+  <div class="header-right">
+    <a href="/dashboard.html" class="back-link">← Dashboard</a>
+    <button class="btn" onclick="openModal()">+ New Ticket</button>
+  </div>
+</header>
+<div class="container">
+  <!-- Stats -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card active" onclick="filterStatus('')">
+      <div class="stat-num" id="st-total" style="color:#e2e8f0">-</div>
+      <div class="stat-lbl">Total Cases</div>
+    </div>
+    <div class="stat-card" onclick="filterStatus('assigned')">
+      <div class="stat-num" id="st-assigned" style="color:#ffd54f">-</div>
+      <div class="stat-lbl">Assigned</div>
+    </div>
+    <div class="stat-card" onclick="filterStatus('work_in_progress')">
+      <div class="stat-num" id="st-wip" style="color:#3b9eff">-</div>
+      <div class="stat-lbl">Work In Progress</div>
+    </div>
+    <div class="stat-card" onclick="filterStatus('resolved')">
+      <div class="stat-num" id="st-resolved" style="color:#0e8a78">-</div>
+      <div class="stat-lbl">Resolved</div>
+    </div>
+  </div>
+
+  <!-- Queue Tabs -->
+  <div class="queue-tabs" id="queueTabs">
+    <div class="queue-tab active" onclick="filterQueue('')">All Queues</div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar" style="display:flex;justify-content:space-between;margin-bottom:1rem">
+    <input class="search-input" id="searchInput" placeholder="Search tickets..." oninput="renderTable()">
+    <select id="statusFilter" onchange="renderTable()" style="width:180px;padding:.5rem;background:#111827;border:1px solid #1e2330;color:#e2e8f0;border-radius:8px">
+      <option value="">All Statuses</option>
+      <option value="assigned">Assigned</option>
+      <option value="work_in_progress">Work In Progress</option>
+      <option value="resolved">Resolved</option>
+    </select>
+  </div>
+
+  <!-- Table -->
+  <div style="background:#111827;border:1px solid #1e2330;border-radius:12px;overflow:hidden">
+    <table>
+      <thead>
+        <tr>
+          <th>Ticket #</th>
+          <th>Title</th>
+          <th>Queue</th>
+          <th>Created By</th>
+          <th>Status</th>
+          <th>Comments</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody id="ticketsBody"><tr><td colspan="7" class="empty">Loading...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- New Ticket Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2>📋 Create New Ticket</h2>
+    <div class="form-group">
+      <label>Select Queue (Class)</label>
+      <select id="newQueue">
+        <option value="">-- Select a queue --</option>
+        <option value="Cisco CCNA (200-301)">Cisco CCNA (200-301)</option>
+        <option value="AWS Cloud Practitioner">AWS Cloud Practitioner</option>
+        <option value="AWS Advanced Networking">AWS Advanced Networking</option>
+        <option value="Linux Fundamentals">Linux Fundamentals</option>
+        <option value="General Support">General Support</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" id="newTitle" placeholder="Brief description of the issue">
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="newDesc" placeholder="Describe your issue in detail..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Command & Output (optional)</label>
+      <textarea id="newCmd" class="code-area" placeholder="Paste your commands and output here..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Topology Image (optional)</label>
+      <input type="file" id="newImage" accept="image/*" style="padding:.5rem;font-size:.85rem">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn" onclick="createTicket()">Create Ticket</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const token = localStorage.getItem('kca_token');
+const isAdmin = JSON.parse(localStorage.getItem('kca_user')||'{}').role === 'admin';
+if(!token) window.location.replace('login.html');
+
+let allTickets = [];
+let currentQueue = '';
+let currentStatus = '';
+
+async function loadStats(){
+  const r = await fetch('/api/tickets/stats', {headers:{Authorization:'Bearer '+token}});
+  const d = await r.json();
+  document.getElementById('st-total').textContent = d.total;
+  document.getElementById('st-assigned').textContent = d.assigned;
+  document.getElementById('st-wip').textContent = d.wip;
+  document.getElementById('st-resolved').textContent = d.resolved;
+  const tabs = document.getElementById('queueTabs');
+  tabs.innerHTML = '<div class="queue-tab active" onclick="filterQueue(\'\')">All Queues</div>';
+  (d.queues||[]).forEach(q => {
+    tabs.innerHTML += `<div class="queue-tab" onclick="filterQueue('${q.queue}')">${q.queue} <span style="background:#0e8a78;color:#fff;padding:.1rem .4rem;border-radius:10px;font-size:.7rem">${q.count}</span></div>`;
+  });
+}
+
+async function loadTickets(){
+  try {
+    const r = await fetch('/api/tickets', {headers:{Authorization:'Bearer '+token}});
+    const data = await r.json();
+    allTickets = Array.isArray(data) ? data : [];
+    if(!Array.isArray(data) && data.error){
+      document.getElementById('ticketsBody').innerHTML = '<tr><td colspan="8" class="empty">⚠️ ' + data.error + '</td></tr>';
+      return;
+    }
+    renderTable();
+  } catch(e) {
+    document.getElementById('ticketsBody').innerHTML = '<tr><td colspan="8" class="empty">⚠️ Failed to load tickets. Please refresh.</td></tr>';
+  }
+}
+
+function renderTable(){
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const statusF = document.getElementById('statusFilter').value;
+  let filtered = allTickets;
+  if(currentQueue) filtered = filtered.filter(t => t.queue === currentQueue);
+  const activeStatus = statusF || currentStatus;
+  if(activeStatus) filtered = filtered.filter(t => t.status === activeStatus);
+  if(search) filtered = filtered.filter(t =>
+    (t.title||'').toLowerCase().includes(search) ||
+    (t.ticket_no||'').toLowerCase().includes(search) ||
+    (t.username||'').toLowerCase().includes(search)
+  );
+  const tbody = document.getElementById('ticketsBody');
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="7" class="empty">No tickets found</td></tr>';return;}
+  tbody.innerHTML = filtered.map(t => `
+    <tr>
+      <td><a class="ticket-link" href="ticket-view.html?id=${t.id}">${t.ticket_no}</a></td>
+      <td><a class="ticket-link" href="ticket-view.html?id=${t.id}">${t.title}</a></td>
+      <td><span class="queue-badge">${t.queue}</span></td>
+      <td><span class="username">${t.username||'deleted-user'}</span></td>
+      <td><span class="badge ${t.status}">${t.status.replace('_',' ')}</span></td>
+      <td style="color:#64748b">${t.comment_count} 💬</td>
+      <td style="color:#64748b">${new Date(t.created_at).toLocaleDateString()}</td>
+      <td>${isAdmin ? `<button onclick="deleteTicket(${t.id})" style="background:#ff4d4d;color:#fff;border:none;padding:.3rem .7rem;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:600">🗑 Delete</button>` : ''}</td>
+    </tr>`).join('');
+}
+
+function filterQueue(q){
+  currentQueue = q;
+  document.querySelectorAll('.queue-tab').forEach(t => t.classList.remove('active'));
+  event.target.closest('.queue-tab').classList.add('active');
+  renderTable();
+}
+
+function filterStatus(s){
+  currentStatus = s;
+  document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active'));
+  event.target.closest('.stat-card').classList.add('active');
+  document.getElementById('statusFilter').value = '';
+  renderTable();
+}
+
+function openModal(){ document.getElementById('modalOverlay').classList.add('open'); }
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
+
+async function deleteTicket(id){
+  if(!confirm('Permanently delete this ticket and all its comments?')) return;
+  const r = await fetch('/api/tickets/'+id, {method:'DELETE', headers:{Authorization:'Bearer '+token}});
+  const d = await r.json();
+  alert(d.message||d.error);
+  loadTickets();
+  loadStats();
+}
+async function createTicket(){
+  const queue = document.getElementById('newQueue').value;
+  const title = document.getElementById('newTitle').value;
+  const description = document.getElementById('newDesc').value;
+  const command_output = document.getElementById('newCmd').value;
+  const imageFile = document.getElementById('newImage').files[0];
+  if(!queue || !title){ alert('Please select a queue and enter a title'); return; }
+  const formData = new FormData();
+  formData.append('queue', queue);
+  formData.append('title', title);
+  formData.append('description', description);
+  formData.append('command_output', command_output);
+  if(imageFile) formData.append('image', imageFile);
+  const r = await fetch('/api/tickets', {
+    method:'POST',
+    headers:{Authorization:'Bearer '+token},
+    body: formData
+  });
+  const d = await r.json();
+  if(r.ok){
+    alert(`Ticket ${d.ticket_no} created!`);
+    closeModal();
+    loadTickets();
+    loadStats();
+    window.location.href = 'ticket-view.html?id=' + d.id;
+  } else {
+    alert(d.error);
+  }
+}
+
+const user = JSON.parse(localStorage.getItem('kca_user')||'{}');
+fetch('/api/enrollments/me', {headers:{Authorization:'Bearer '+token}})
+  .then(r => r.json())
+  .then(enrollments => {
+    const hasApproved = enrollments.some(e => e.status === 'approved');
+    if(!hasApproved && user.role !== 'admin'){
+      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:1rem"><p style="color:#ff4d4d;font-size:1.2rem">⚠️ Access Denied</p><p style="color:#64748b">You must be enrolled in an active course to access support.</p><a href="/dashboard.html" style="color:#3b9eff">← Back to Dashboard</a></div>';
+      return;
+    }
+  })
+  .catch(() => {})
+  .finally(() => {
+    loadStats();
+    loadTickets();
+  });
+</script>
+</body>
+</html>

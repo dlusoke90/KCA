@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCA Linux — Module 14: SSH & Remote Access</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0a0f1a;color:#e2e8f0;min-height:100vh}
+header{background:linear-gradient(135deg,#0a1628,#0d2040);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #16a085}
+.logo{color:#16a085;font-size:1.3rem;font-weight:900;letter-spacing:.1em}
+.mod-badge{background:#16a085;color:#fff;padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:700}
+.back-bar{padding:.6rem 2rem;background:#0a1628;border-bottom:1px solid #1e3a2e}
+.back-bar a{color:#3b9eff;text-decoration:none;font-size:.85rem;font-weight:600}
+.hero{background:linear-gradient(135deg,#0d2040,#0a3d2e);padding:3rem 2rem;border-bottom:1px solid #1e3a2e}
+.hero-label{color:#16a085;font-size:.8rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem}
+.hero h1{font-size:2.2rem;font-weight:900;color:#fff;margin-bottom:1rem}
+.hero-tags{display:flex;gap:.8rem;flex-wrap:wrap}
+.tag{background:rgba(22,160,133,.15);border:1px solid rgba(22,160,133,.3);color:#16a085;padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:600}
+.container{max-width:1100px;margin:0 auto;padding:2rem}
+.section-label{font-size:.75rem;font-weight:700;color:#16a085;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:1px solid #1e3a2e}
+.concepts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(460px,1fr));gap:1.2rem;margin-bottom:3rem}
+.concept-card{background:#111827;border:1px solid #1e3a2e;border-left:3px solid #16a085;border-radius:10px;padding:1.4rem}
+.concept-title{color:#16a085;font-size:1rem;font-weight:700;margin-bottom:.7rem}
+.concept-desc{color:#94a3b8;font-size:.9rem;line-height:1.8;white-space:pre-line}
+.cli-section{background:#0d1117;border:1px solid #1e3a2e;border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+.cli-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+.cli-title{color:#16a085;font-size:.85rem;font-weight:700;letter-spacing:.1em}
+.cli-dots{display:flex;gap:.4rem}
+.dot{width:12px;height:12px;border-radius:50%}
+.cmd-block{background:#000;border-radius:8px;margin-bottom:.8rem;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.cmd-header{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;border-bottom:1px solid #1a1a1a}
+.cmd-text{color:#16a085;font-weight:600;flex:1}
+.run-btn{background:#16a085;color:#fff;border:none;padding:.3rem .8rem;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700;white-space:nowrap;transition:.2s}
+.run-btn:hover{background:#1abc9c}
+.run-btn.ran{background:#0a5c4a}
+.cmd-output{padding:.8rem 1rem;color:#a8ff78;white-space:pre-wrap;border-top:1px solid #1a1a1a;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.quiz-section{background:#111827;border:1px solid #1e3a2e;border-radius:12px;padding:1.5rem;margin-bottom:2rem}
+.quiz-q{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid #1e3a2e}
+.quiz-q:last-child{border-bottom:none;margin-bottom:0}
+.q-text{color:#e2e8f0;font-weight:600;margin-bottom:.8rem}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.opt-btn{background:#1e2d3d;border:1px solid #2d4a3e;color:#94a3b8;padding:.45rem .9rem;border-radius:6px;cursor:pointer;font-size:.85rem;transition:.2s}
+.opt-btn:hover{border-color:#16a085;color:#16a085}
+.opt-btn.correct{background:rgba(22,160,133,.2);border-color:#16a085;color:#16a085}
+.opt-btn.wrong{background:rgba(255,77,77,.15);border-color:#ff4d4d;color:#ff4d4d}
+.q-feedback{font-size:.82rem;margin-top:.5rem;min-height:1.2rem}
+.reset-btn{background:transparent;border:1px solid #16a085;color:#16a085;padding:.5rem 1.2rem;border-radius:6px;cursor:pointer;margin-top:1rem}
+.module-nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;background:#0a1628;border-top:2px solid #16a085;position:sticky;bottom:0}
+.nav-btn{background:#16a085;color:#fff;border:none;padding:.6rem 1.4rem;border-radius:6px;font-weight:700;cursor:pointer;font-size:.9rem;text-decoration:none;display:inline-block}
+.nav-btn:hover{background:#1abc9c}
+.nav-btn.disabled{background:#1e2d3d;color:#4a5568;pointer-events:none}
+.nav-label{color:#64748b;font-size:.85rem}
+</style>
+</head>
+<body>
+<header>
+  <a href="/dashboard.html"><img src="/KCA-LOGO-transparent.png" alt="KCA Logo" style="height:180px;object-fit:contain"></a>
+  <div class="mod-badge">MODULE 14 OF 20</div>
+</header>
+<div class="back-bar"><a href="/dashboard.html">← Back to My Courses</a></div>
+<div class="hero">
+  <div class="hero-label">Linux Fundamentals · Module 14</div>
+  <h1>SSH & Remote Access</h1>
+  <div class="hero-tags">
+    <span class="tag">🐧 4 Topics</span>
+    <span class="tag">💻 5 CLI Commands</span>
+    <span class="tag">❓ 5 Quiz Questions</span>
+  </div>
+</div>
+<div class="container">
+  <div class="section-label">Core Concepts</div>
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <h3 class="concept-title">What is SSH?</h3>
+      <p class="concept-desc">SSH (Secure Shell) securely accesses remote Linux systems.
+Encrypts all traffic.
+Default port: 22.
+OpenSSH is the most common implementation.</p>
+    </div>
+    <div class="concept-card">
+      <h3 class="concept-title">SSH Commands</h3>
+      <p class="concept-desc">ssh user@host : Connect
+ssh -p 2222 user@host : Custom port
+ssh -i key.pem user@host : Use key
+ssh -L 8080:localhost:80 user@host : Port forwarding</p>
+    </div>
+    <div class="concept-card">
+      <h3 class="concept-title">SSH Key Auth</h3>
+      <p class="concept-desc">ssh-keygen -t rsa -b 4096 : Generate keys
+Public key → goes on server
+Private key → stays local
+ssh-copy-id user@host : Copy key</p>
+    </div>
+    <div class="concept-card">
+      <h3 class="concept-title">SCP & SFTP</h3>
+      <p class="concept-desc">scp file.txt user@host:/path : Upload
+scp user@host:/path/file.txt . : Download
+scp -r dir/ user@host:/path : Upload dir
+sftp user@host : Interactive transfer</p>
+    </div></div>
+
+  <div class="section-label">Live CLI Commands — Click ▶ Run on each command</div>
+  <div class="cli-section">
+    <div class="cli-header">
+      <div class="cli-title">TERMINAL SIMULATOR</div>
+      <div class="cli-dots">
+        <div class="dot" style="background:#ff5f57"></div>
+        <div class="dot" style="background:#febc2e"></div>
+        <div class="dot" style="background:#28c840"></div>
+      </div>
+    </div>
+    
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ echo 'SSH Key Types: RSA, ECDSA, Ed25519'</span>
+        <button class="run-btn" onclick="runCmd(this, 'echo \'SSH Key Types: RSA, ECDSA, Ed25519\'', 'SSH Key Types: RSA, ECDSA, Ed25519')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ ssh-keygen -t ed25519 -f /tmp/kca_key -N '' 2>&1 | head -2</span>
+        <button class="run-btn" onclick="runCmd(this, 'ssh-keygen -t ed25519 -f /tmp/kca_key -N \'\' 2>&1 | head -2', 'Generating public/private ed25519 key pair.
+Your identification has been saved in /tmp/kca_key')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ ls -la /tmp/kca_key*</span>
+        <button class="run-btn" onclick="runCmd(this, 'ls -la /tmp/kca_key*', '-rw------- 1 student student 411 May  7 /tmp/kca_key
+-rw-r--r-- 1 student student 105 May  7 /tmp/kca_key.pub')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ cat /tmp/kca_key.pub</span>
+        <button class="run-btn" onclick="runCmd(this, 'cat /tmp/kca_key.pub', 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA... student@kca')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header">
+        <span class="cmd-text">$ rm /tmp/kca_key* && echo 'Keys removed'</span>
+        <button class="run-btn" onclick="runCmd(this, 'rm /tmp/kca_key* && echo \'Keys removed\'', 'Keys removed')">▶ Run</button>
+      </div>
+      <div class="cmd-output" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="section-label">Knowledge Check</div>
+  <div class="quiz-section">
+    
+    <div class="quiz-q">
+      <p class="q-text">1. SSH default port?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(0,0)" id="q0o0">21</button><button class="opt-btn" onclick="checkAnswer(0,1)" id="q0o1">23</button><button class="opt-btn" onclick="checkAnswer(0,2)" id="q0o2">22</button><button class="opt-btn" onclick="checkAnswer(0,3)" id="q0o3">443</button></div>
+      <div class="q-feedback" id="qf0"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text">2. ssh-keygen creates?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(1,0)" id="q1o0">SSH config</button><button class="opt-btn" onclick="checkAnswer(1,1)" id="q1o1">SSH keys</button><button class="opt-btn" onclick="checkAnswer(1,2)" id="q1o2">Tunnel</button><button class="opt-btn" onclick="checkAnswer(1,3)" id="q1o3">VPN</button></div>
+      <div class="q-feedback" id="qf1"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text">3. Public key file?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(2,0)" id="q2o0">~/.ssh/id_rsa</button><button class="opt-btn" onclick="checkAnswer(2,1)" id="q2o1">~/.ssh/authorized_keys</button><button class="opt-btn" onclick="checkAnswer(2,2)" id="q2o2">~/.ssh/id_rsa.pub</button><button class="opt-btn" onclick="checkAnswer(2,3)" id="q2o3">~/.ssh/config</button></div>
+      <div class="q-feedback" id="qf2"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text">4. Copy files over SSH?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(3,0)" id="q3o0">ftp</button><button class="opt-btn" onclick="checkAnswer(3,1)" id="q3o1">rsync</button><button class="opt-btn" onclick="checkAnswer(3,2)" id="q3o2">scp</button><button class="opt-btn" onclick="checkAnswer(3,3)" id="q3o3">wget</button></div>
+      <div class="q-feedback" id="qf3"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text">5. -i flag in ssh?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(4,0)" id="q4o0">IP address</button><button class="opt-btn" onclick="checkAnswer(4,1)" id="q4o1">Identity/key file</button><button class="opt-btn" onclick="checkAnswer(4,2)" id="q4o2">Interface</button><button class="opt-btn" onclick="checkAnswer(4,3)" id="q4o3">Interval</button></div>
+      <div class="q-feedback" id="qf4"></div>
+    </div>
+    <button class="reset-btn" onclick="resetQuiz()">↺ RESET QUIZ</button>
+  </div>
+</div>
+<div class="module-nav">
+  <a class="nav-btn" href="module_13_networking_basics_in_linux.html">← Previous</a>
+  <span class="nav-label">Module 14 of 20</span>
+  <a class="nav-btn" href="module_15_shell_scripting_introduction.html">Next →</a>
+</div>
+<script>
+const CORRECT=[2, 1, 2, 2, 1];
+let answered={};
+function runCmd(btn, cmd, output){
+  const block = btn.closest('.cmd-block');
+  const outDiv = block.querySelector('.cmd-output');
+  outDiv.textContent = output.replace(/\\n/g,'\n');
+  outDiv.style.display = 'block';
+  btn.textContent = '✓ Done';
+  btn.classList.add('ran');
+  btn.disabled = true;
+}
+function checkAnswer(q,choice){
+  if(answered[q]!==undefined)return;
+  answered[q]=choice;
+  const correct=CORRECT[q];
+  for(let i=0;i<4;i++){
+    const btn=document.getElementById('q'+q+'o'+i);
+    if(!btn)continue;
+    if(i===correct)btn.classList.add('correct');
+    else if(i===choice&&choice!==correct)btn.classList.add('wrong');
+  }
+  const fb=document.getElementById('qf'+q);
+  if(fb)fb.innerHTML=choice===correct?'<span style="color:#16a085">✓ Correct!</span>':'<span style="color:#ff4d4d">✗ Incorrect. Correct answer highlighted.</span>';
+}
+function resetQuiz(){
+  answered={};
+  document.querySelectorAll('.opt-btn').forEach(b=>b.className='opt-btn');
+  document.querySelectorAll('.q-feedback').forEach(f=>f.innerHTML='');
+}
+</script>
+</body>
+</html>

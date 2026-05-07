@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta property="og:title" content="Kuwaha Cloud Academy" />
+  <meta property="og:description" content="Empowering Digital Professionals — Cisco CCNA, AWS, and Linux certification training." />
+  <meta property="og:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+  <meta property="og:url" content="https://kca-cloudnet.com" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Registration — KCA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0c0f;color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column}
+nav{background:#111318;border-bottom:1px solid #1e2330;padding:1rem 2rem;display:flex;align-items:center}
+.logo{display:flex;align-items:center;gap:.8rem;text-decoration:none}
+.logo img{height:36px}
+.logo span{font-size:1.1rem;font-weight:700;color:#3b9eff}
+.main{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem}
+.box{background:#111318;border:1px solid #1e2330;border-radius:16px;padding:2.5rem;width:100%;max-width:480px}
+.box h2{font-size:1.6rem;font-weight:800;margin-bottom:.4rem}
+.box p{color:#64748b;font-size:.9rem;margin-bottom:2rem}
+label{display:block;font-size:.85rem;font-weight:600;color:#94a3b8;margin-bottom:.4rem}
+input,select{width:100%;background:#0a0c0f;border:1px solid #1e2330;border-radius:8px;padding:.75rem 1rem;color:#e2e8f0;font-size:.95rem;margin-bottom:1.2rem;outline:none;transition:.2s}
+input:focus,select:focus{border-color:#3b9eff}
+select option{background:#111318}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.btn{width:100%;background:#3b9eff;color:#fff;border:none;padding:.85rem;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:.2s}
+.btn:hover{background:#2980d9}
+.msg{padding:.75rem 1rem;border-radius:8px;font-size:.875rem;margin-bottom:1rem;display:none}
+.msg.error{background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.3);color:#ff4d4d}
+.msg.success{background:rgba(62,207,110,.1);border:1px solid rgba(62,207,110,.3);color:#3ecf6e}
+.footer-link{text-align:center;margin-top:1.5rem;font-size:.875rem;color:#64748b}
+.footer-link a{color:#3b9eff;text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">
+    <img src="/KCA-LOGO-transparent.png" alt="KCA" onerror="this.style.display='none'">
+    <span>Kuwaha Cloud Academy</span>
+  </a>
+</nav>
+<div class="main">
+  <div class="box">
+    <h2>Create Account</h2>
+    <p>Join KCA and start your IT certification journey</p>
+    <div class="msg" id="msg"></div>
+    <label>Full Name</label>
+    <input type="text" id="full_name" placeholder="John Doe">
+    <label>Email Address</label>
+    <input type="email" id="email" placeholder="you@example.com">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Minimum 8 characters">
+    <div class="row">
+      <div>
+        <label>Phone Number *</label>
+        <div style="display:flex;gap:.5rem;align-items:center;width:100%">
+          <select id="phone_code" style="width:105px;flex-shrink:0;margin-bottom:0">
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+1-CA">🇨🇦 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+61">🇦🇺 +61</option>
+            <option value="+91">🇮🇳 +91</option>
+            <option value="+234">🇳🇬 +234</option>
+            <option value="+254">🇰🇪 +254</option>
+            <option value="+243">🇨🇩 +243</option>
+            <option value="+27">🇿🇦 +27</option>
+            <option value="+233">🇬🇭 +233</option>
+            <option value="+255">🇹🇿 +255</option>
+            <option value="+256">🇺🇬 +256</option>
+            <option value="+33">🇫🇷 +33</option>
+            <option value="+49">🇩🇪 +49</option>
+            <option value="+86">🇨🇳 +86</option>
+            <option value="+55">🇧🇷 +55</option>
+            <option value="+52">🇲🇽 +52</option>
+          </select>
+          <input type="tel" id="phone" placeholder="234 567 8900" style="flex:1;min-width:160px;margin-bottom:0;width:100%">
+        </div>
+      </div>
+      
+    </div>
+    <label style="margin-top:.8rem">Country</label>
+    <select id="country">
+      <option value="">Select country</option>
+      <option selected>United States</option><option>Kenya</option><option>Nigeria</option>
+      <option>South Africa</option><option>United Kingdom</option><option>Canada</option>
+      <option>Australia</option><option>India</option><option>Congo (DRC)</option>
+      <option>Ghana</option><option>Tanzania</option><option>Uganda</option>
+      <option>France</option><option>Germany</option><option>Brazil</option>
+      <option>Mexico</option><option>China</option><option>Other</option>
+    </select>
+    <button class="btn" onclick="register()">Create Account</button>
+    <div class="footer-link">Already have an account? <a href="login.html">Sign in</a></div>
+  </div>
+</div>
+<script>
+async function register(){
+  const full_name=document.getElementById('full_name').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value;
+  const phone=document.getElementById('phone').value.trim();
+  const country=document.getElementById('country')?document.getElementById('country').value:'';
+  const phone_code=document.getElementById('phone_code').value;
+if(!full_name||!email||!password){showMsg('Full name, email and password are required.','error');return;}
+  if(!phone){showMsg('Phone number is required.','error');return;}
+  if(password.length<8){showMsg('Password must be at least 8 characters.','error');return;}
+  try{
+    const r=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({full_name,email,password,phone:phone_code+' '+phone,country})});
+    const d=await r.json();
+    if(!r.ok){showMsg(d.error,'error');return;}
+    showMsg('✅ Registration successful! You can now log in.','success');
+    setTimeout(()=>window.location.href='login.html',4000);
+  }catch(e){showMsg('Connection error. Please try again.','error');}
+}
+function showMsg(t,type){const m=document.getElementById('msg');m.textContent=t;m.className='msg '+type;m.style.display='block';}
+</script>
+</body>
+</html>

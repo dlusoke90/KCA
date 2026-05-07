@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta property="og:title" content="Kuwaha Cloud Academy" />
+  <meta property="og:description" content="Empowering Digital Professionals — Cisco CCNA, AWS, and Linux certification training." />
+  <meta property="og:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+  <meta property="og:url" content="https://kca-cloudnet.com" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Login — KCA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0c0f;color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column}
+nav{background:#111318;border-bottom:1px solid #1e2330;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:.8rem;text-decoration:none}
+.logo img{height:36px}
+.logo span{font-size:1.1rem;font-weight:700;color:#3b9eff}
+.main{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem}
+.box{background:#111318;border:1px solid #1e2330;border-radius:16px;padding:2.5rem;width:100%;max-width:420px}
+.box h2{font-size:1.6rem;font-weight:800;margin-bottom:.4rem}
+.box p{color:#64748b;font-size:.9rem;margin-bottom:2rem}
+label{display:block;font-size:.85rem;font-weight:600;color:#94a3b8;margin-bottom:.4rem}
+input{width:100%;background:#0a0c0f;border:1px solid #1e2330;border-radius:8px;padding:.75rem 1rem;color:#e2e8f0;font-size:.95rem;margin-bottom:1.2rem;outline:none;transition:.2s}
+input:focus{border-color:#3b9eff}
+.btn{width:100%;background:#3b9eff;color:#fff;border:none;padding:.85rem;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:.2s}
+.btn:hover{background:#2980d9}
+.msg{padding:.75rem 1rem;border-radius:8px;font-size:.875rem;margin-bottom:1rem;display:none}
+.msg.error{background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.3);color:#ff4d4d}
+.msg.success{background:rgba(62,207,110,.1);border:1px solid rgba(62,207,110,.3);color:#3ecf6e}
+.footer-link{text-align:center;margin-top:1.5rem;font-size:.875rem;color:#64748b}
+.footer-link a{color:#3b9eff;text-decoration:none}
+</style>
+</head>
+<body style="position:relative;background:#0a0f1a">
+<div style="position:fixed;inset:0;z-index:0;overflow:hidden;display:flex;align-items:center;justify-content:center">
+  <img src="/KCA-LOGO-transparent.png" style="width:100%;height:100%;object-fit:cover;opacity:0.08;filter:brightness(0) invert(1)">
+</div>
+
+<nav style="position:relative;z-index:1">
+  <a href="index.html" class="logo">
+    <img src="/KCA-LOGO-transparent.png" alt="KCA" onerror="this.style.display='none'">
+    <span>Kuwaha Cloud Academy</span>
+  </a>
+</nav>
+<div class="main" style="position:relative;z-index:1">
+  <div class="box">
+    <div style="text-align:center;margin-bottom:1.5rem">
+      <img src="/KCA-LOGO-transparent.png" alt="KCA Logo" style="width:180px;object-fit:contain">
+    </div>
+    <h2>Welcome Back</h2>
+    <p>Sign in to access your courses</p>
+    <div class="msg" id="msg"></div>
+    <label>Email Address</label>
+    <input type="email" id="email" placeholder="you@example.com">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="••••••••">
+    <button class="btn" onclick="login()">Sign In</button>
+    <p style="text-align:center;margin-top:1rem">
+      <a href="#" onclick="showForgot()" style="color:#3b9eff;font-size:.85rem;text-decoration:none">Forgot Password?</a>
+    </p>
+    <div id="forgotForm" style="display:none;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid #1e2330">
+      <p style="color:#94a3b8;font-size:.85rem;margin-bottom:.8rem">Enter your registered email to receive a reset link:</p>
+      <input type="email" id="resetEmail" placeholder="your@email.com" style="width:100%;padding:.7rem;background:#1e2330;border:1px solid #2d3748;border-radius:8px;color:#e2e8f0;margin-bottom:.8rem">
+      <button class="btn" onclick="sendReset()" style="background:#0e8a78">Send Reset Link</button>
+    </div>
+    <div class="footer-link">Don't have an account? <a href="register.html">Sign up free</a></div>
+  </div>
+</div>
+<script>
+async function login(){
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value;
+  const msg=document.getElementById('msg');
+  msg.style.display='none';
+  if(!email||!password){showMsg('Please enter your email and password.','error');return;}
+  try{
+    const r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    const d=await r.json();
+    if(!r.ok){showMsg(d.error,'error');return;}
+    localStorage.setItem('kca_token',d.token);
+    localStorage.setItem('kca_user',JSON.stringify(d.user));
+    window.location.href=d.user.role==='admin'?'admin.html':'dashboard.html';
+  }catch(e){showMsg('Connection error. Please try again.','error');}
+}
+function showMsg(t,type){const m=document.getElementById('msg');m.textContent=t;m.className='msg '+type;m.style.display='block';}
+document.addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+function showForgot(){
+  const f=document.getElementById('forgotForm');
+  f.style.display=f.style.display==='none'?'block':'none';
+}
+async function sendReset(){
+  const email=document.getElementById('resetEmail').value;
+  if(!email){alert('Please enter your email');return;}
+  const r=await fetch('/api/auth/forgot-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+  const d=await r.json();
+  alert(d.message||d.error);
+}
+</script>
+</body>
+</html>

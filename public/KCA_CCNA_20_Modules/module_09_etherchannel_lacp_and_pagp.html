@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCA CCNA — Module 9: EtherChannel, LACP & PAgP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#060b14;color:#e2e8f0;min-height:100vh}
+
+/* HEADER */
+.topbar{background:rgba(6,11,20,.95);backdrop-filter:blur(10px);padding:.8rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:100}
+.topbar-logo img{height:50px;object-fit:contain}
+.mod-badge{background:#8e44ad;color:#fff;padding:.3rem .9rem;border-radius:20px;font-size:.78rem;font-weight:700;letter-spacing:.05em}
+
+/* BACK BAR */
+.back-bar{padding:.5rem 2rem;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05)}
+.back-bar a{color:#64748b;text-decoration:none;font-size:.82rem;font-weight:500;transition:.2s}
+.back-bar a:hover{color:#8e44ad}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0a0f1a 0%,#0d1929 50%,#0a1628 100%);padding:3rem 2rem 2.5rem;border-bottom:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,#8e44ad15 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative}
+.hero-eyebrow{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.hero-icon{width:48px;height:48px;background:#8e44ad20;border:1px solid #8e44ad40;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.hero-label{color:#8e44ad;font-size:.78rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+.hero h1{font-size:2.8rem;font-weight:900;color:#fff;margin-bottom:1.2rem;line-height:1.1;letter-spacing:-.02em}
+.hero-meta{display:flex;gap:1rem;flex-wrap:wrap}
+.hero-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:.35rem .85rem;border-radius:20px;font-size:.8rem;font-weight:500}
+
+/* CONTAINER */
+.container{max-width:1100px;margin:0 auto;padding:2.5rem 2rem}
+
+/* SECTION HEADER */
+.section-hdr{display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem}
+.section-hdr-line{flex:1;height:1px;background:linear-gradient(to right,rgba(255,255,255,.1),transparent)}
+.section-hdr-label{color:#8e44ad;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
+
+/* CONCEPT CARDS */
+.concepts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:1rem;margin-bottom:3rem}
+.concept-card{background:linear-gradient(135deg,#0d1929,#0a1221);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.5rem;transition:.2s;position:relative;overflow:hidden}
+.concept-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,#8e44ad,#8e44ad00)}
+.concept-card:hover{border-color:#8e44ad40;transform:translateY(-2px)}
+.concept-icon{font-size:1.8rem;margin-bottom:.8rem;display:block}
+.concept-title{color:#fff;font-size:1rem;font-weight:700;margin-bottom:.6rem}
+.concept-desc{color:#94a3b8;font-size:.875rem;line-height:1.75;white-space:pre-line;margin-bottom:1rem}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.tag{background:#8e44ad15;border:1px solid #8e44ad30;color:#8e44ad;padding:.2rem .6rem;border-radius:6px;font-size:.72rem;font-weight:600}
+
+/* CLI SECTION */
+.cli-wrap{background:#0a0d12;border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;margin-bottom:3rem}
+.cli-titlebar{background:#111827;padding:.8rem 1.2rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.cli-dots span{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:.3rem}
+.cli-dots span:nth-child(1){background:#ff5f57}
+.cli-dots span:nth-child(2){background:#febc2e}
+.cli-dots span:nth-child(3){background:#28c840}
+.cli-label{color:#64748b;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.cmd-block{border-bottom:1px solid rgba(255,255,255,.04);font-family:'JetBrains Mono',monospace;font-size:.83rem}
+.cmd-block:last-child{border-bottom:none}
+.cmd-top{display:flex;align-items:center;gap:1rem;padding:.9rem 1.2rem;background:#0d1117}
+.cmd-dots{display:flex;gap:.3rem}
+.cmd-dots span{width:8px;height:8px;border-radius:50%;background:#8e44ad50}
+.cmd-text{color:#8e44ad;flex:1;font-weight:500}
+.run-btn{background:#8e44ad;color:#fff;border:none;padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:700;font-family:'Inter',sans-serif;transition:.2s;white-space:nowrap}
+.run-btn:hover{opacity:.85;transform:scale(1.02)}
+.run-btn.done{background:#1e2d3d;color:#64748b;cursor:default}
+.cmd-output{display:none;padding:.8rem 1.2rem;color:#a8ff78;white-space:pre-wrap;line-height:1.6;background:#000;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* QUIZ */
+.quiz-wrap{background:linear-gradient(135deg,#0d1929,#0a1221);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.5rem;margin-bottom:2rem}
+.quiz-q{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.quiz-q:last-of-type{border-bottom:none;margin-bottom:0}
+.q-num{background:#8e44ad;color:#fff;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin-right:.6rem;flex-shrink:0}
+.q-text{color:#e2e8f0;font-weight:600;margin-bottom:.8rem;display:flex;align-items:flex-start;gap:.3rem}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.opt-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-size:.84rem;font-family:'Inter',sans-serif;transition:.2s}
+.opt-btn:hover{border-color:#8e44ad;color:#8e44ad;background:#8e44ad10}
+.opt-btn.correct{background:#8e44ad20;border-color:#8e44ad;color:#8e44ad}
+.opt-btn.wrong{background:rgba(255,77,77,.1);border-color:#ff4d4d;color:#ff4d4d}
+.q-feedback{font-size:.8rem;margin-top:.5rem;min-height:1.2rem;padding-left:2rem}
+.reset-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:#64748b;padding:.5rem 1.2rem;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:'Inter',sans-serif;margin-top:1rem;transition:.2s}
+.reset-btn:hover{border-color:#8e44ad;color:#8e44ad}
+
+/* PROGRESS */
+.progress-bar{background:rgba(255,255,255,.06);height:3px;border-radius:2px;margin-bottom:3rem;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(to right,#8e44ad,#8e44ad80);border-radius:2px;width:45%;transition:width .5s ease}
+
+/* NAV */
+.module-nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;background:rgba(6,11,20,.95);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08);position:sticky;bottom:0}
+.nav-btn{background:#8e44ad;color:#fff;border:none;padding:.6rem 1.4rem;border-radius:10px;font-weight:700;cursor:pointer;font-size:.875rem;text-decoration:none;display:inline-block;font-family:'Inter',sans-serif;transition:.2s}
+.nav-btn:hover{opacity:.85;transform:translateY(-1px)}
+.nav-btn.disabled{background:rgba(255,255,255,.06);color:#374151;pointer-events:none}
+.nav-info{text-align:center}
+.nav-mod{color:#64748b;font-size:.78rem}
+.nav-title{color:#94a3b8;font-size:.82rem;font-weight:600;max-width:200px;text-align:center}
+
+@media(max-width:768px){
+  .hero h1{font-size:1.8rem}
+  .concepts-grid{grid-template-columns:1fr}
+  .container{padding:1.5rem 1rem}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-logo"><a href="/dashboard.html"><img src="/KCA-LOGO-transparent.png" alt="KCA"></a></div>
+  <div class="mod-badge">MODULE 9 OF 20</div>
+</div>
+<div class="back-bar"><a href="/dashboard.html">← Back to My Courses</a></div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="hero-icon">🔗</div>
+      <span class="hero-label">CCNA 200-301 · Module 9</span>
+    </div>
+    <h1>EtherChannel, LACP & PAgP</h1>
+    <div class="hero-meta">
+      <span class="hero-chip">📚 4 Core Topics</span>
+      <span class="hero-chip">💻 5 CLI Commands</span>
+      <span class="hero-chip">❓ 5 Quiz Questions</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="progress-bar"><div class="progress-fill"></div></div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">Core Concepts</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <div class="concept-icon">⚡</div>
+      <h3 class="concept-title">What is EtherChannel?</h3>
+      <p class="concept-desc">Bundles multiple physical links into one logical link. Increases bandwidth, provides redundancy. Up to 8 active links. Appears as single interface to STP. Avoids STP blocking redundant links.</p>
+      <div class="tags"><span class="tag">Up to 8 links bundled</span><span class="tag">Single logical interface</span><span class="tag">STP sees one link</span><span class="tag">Bandwidth aggregation</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🤝</div>
+      <h3 class="concept-title">LACP (802.3ad)</h3>
+      <p class="concept-desc">Industry standard (IEEE). Modes: Active (initiates negotiation), Passive (responds only). Active-Active or Active-Passive works. Passive-Passive = NO channel. Preferred over PAgP.</p>
+      <div class="tags"><span class="tag">Active: initiates</span><span class="tag">Passive: responds</span><span class="tag">Active+Active ✓</span><span class="tag">Active+Passive ✓</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🏢</div>
+      <h3 class="concept-title">PAgP (Cisco Proprietary)</h3>
+      <p class="concept-desc">Cisco only. Modes: Desirable (initiates), Auto (responds). Desirable-Desirable or Desirable-Auto works. Auto-Auto = NO channel. Being replaced by LACP in modern networks.</p>
+      <div class="tags"><span class="tag">Desirable: initiates</span><span class="tag">Auto: responds</span><span class="tag">Desirable+Desirable ✓</span><span class="tag">Auto+Auto = NO</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">⚙️</div>
+      <h3 class="concept-title">EtherChannel Configuration</h3>
+      <p class="concept-desc">interface range Gi0/1-4 → channel-group 1 mode active → interface Port-channel1 → configure as normal interface. Load balancing: default src-dst-mac, can change to IP-based.</p>
+      <div class="tags"><span class="tag">interface range</span><span class="tag">channel-group 1</span><span class="tag">Port-channel interface</span><span class="tag">Load balancing options</span></div>
+    </div></div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">CLI Practice — Click ▶ Run</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="cli-wrap">
+    <div class="cli-titlebar">
+      <div class="cli-dots"><span></span><span></span><span></span></div>
+      <span class="cli-label">Cisco IOS Simulator</span>
+    </div>
+    
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show etherchannel summary</span>
+        <button class="run-btn" onclick="runCmd(this,'show etherchannel summary','Flags:  D - down  P - bundled  I - stand-alone  s - suspended\nNumber of channel-groups in use: 1\nGroup  Port-channel  Protocol  Ports\n1      Po1(SU)       LACP     Gi0/1(P)  Gi0/2(P)')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show etherchannel port-channel</span>
+        <button class="run-btn" onclick="runCmd(this,'show etherchannel port-channel','Channel-group listing:\nGroup: 1\nPort-channels in the group:\n  Port-channel: Po1  (Primary Aggregator)\n  Age of the Port-channel = 0d:01h:23m:45s\n  Logical slot/port = 2/1  Number of ports = 2')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ channel-group 1 mode active</span>
+        <button class="run-btn" onclick="runCmd(this,'channel-group 1 mode active','Switch(config-if-range)# channel-group 1 mode active\nCreating a port-channel interface Port-channel 1')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show lacp neighbor</span>
+        <button class="run-btn" onclick="runCmd(this,'show lacp neighbor','Channel group 1 neighbors\n  Partner\'s information:\n  Partner System ID: 32768,0050.7966.6801\n  Partner Port Number: 0x1\n  Partner Oper Port State: 0x3d')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show interfaces port-channel 1</span>
+        <button class="run-btn" onclick="runCmd(this,'show interfaces port-channel 1','Port-channel1 is up, line protocol is up\n  Hardware is EtherChannel, address is 0050.7966.6800\n  MTU 1500 bytes, BW 2000000 Kbit/sec')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+  </div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">Knowledge Check</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="quiz-wrap">
+    
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">1</span>EtherChannel max active links?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(0,0)" id="q0o0">4</button><button class="opt-btn" onclick="checkAnswer(0,1)" id="q0o1">8</button><button class="opt-btn" onclick="checkAnswer(0,2)" id="q0o2">16</button><button class="opt-btn" onclick="checkAnswer(0,3)" id="q0o3">2</button></div>
+      <div class="q-feedback" id="qf0"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">2</span>LACP is defined by?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(1,0)" id="q1o0">Cisco</button><button class="opt-btn" onclick="checkAnswer(1,1)" id="q1o1">IEEE 802.3ad</button><button class="opt-btn" onclick="checkAnswer(1,2)" id="q1o2">IETF RFC</button><button class="opt-btn" onclick="checkAnswer(1,3)" id="q1o3">IEEE 802.1Q</button></div>
+      <div class="q-feedback" id="qf1"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">3</span>LACP Active + Active =?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(2,0)" id="q2o0">No channel</button><button class="opt-btn" onclick="checkAnswer(2,1)" id="q2o1">EtherChannel formed</button><button class="opt-btn" onclick="checkAnswer(2,2)" id="q2o2">Depends on config</button><button class="opt-btn" onclick="checkAnswer(2,3)" id="q2o3">Error</button></div>
+      <div class="q-feedback" id="qf2"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">4</span>PAgP Desirable + Auto =?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(3,0)" id="q3o0">No channel</button><button class="opt-btn" onclick="checkAnswer(3,1)" id="q3o1">EtherChannel formed</button><button class="opt-btn" onclick="checkAnswer(3,2)" id="q3o2">Half channel</button><button class="opt-btn" onclick="checkAnswer(3,3)" id="q3o3">Error</button></div>
+      <div class="q-feedback" id="qf3"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">5</span>What does STP see in EtherChannel?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(4,0)" id="q4o0">Multiple links</button><button class="opt-btn" onclick="checkAnswer(4,1)" id="q4o1">One logical link</button><button class="opt-btn" onclick="checkAnswer(4,2)" id="q4o2">Blocked ports</button><button class="opt-btn" onclick="checkAnswer(4,3)" id="q4o3">Root bridge</button></div>
+      <div class="q-feedback" id="qf4"></div>
+    </div>
+    <button class="reset-btn" onclick="resetQuiz()">↺ Reset Quiz</button>
+  </div>
+</div>
+
+<div class="module-nav">
+  <a class="nav-btn" href="module_08_spanning_tree_protocol_stp.html">← Previous</a>
+  <div class="nav-info">
+    <div class="nav-mod">Module 9 of 20</div>
+    <div class="nav-title">EtherChannel, LACP & PAgP</div>
+  </div>
+  <a class="nav-btn" href="module_10_static_routing.html">Next →</a>
+</div>
+
+<script>
+const CORRECT = [1, 1, 1, 1, 1];
+let answered = {};
+
+function runCmd(btn, cmd, output) {
+  const block = btn.closest('.cmd-block');
+  const outDiv = block.querySelector('.cmd-output');
+  outDiv.textContent = output.replace(/\\n/g,'\n');
+  outDiv.style.display = 'block';
+  btn.textContent = '✓ Done';
+  btn.classList.add('done');
+  btn.disabled = true;
+}
+
+function checkAnswer(q, choice) {
+  if (answered[q] !== undefined) return;
+  answered[q] = choice;
+  const correct = CORRECT[q];
+  for (let i = 0; i < 4; i++) {
+    const btn = document.getElementById('q' + q + 'o' + i);
+    if (!btn) continue;
+    if (i === correct) btn.classList.add('correct');
+    else if (i === choice && choice !== correct) btn.classList.add('wrong');
+  }
+  const fb = document.getElementById('qf' + q);
+  if (fb) fb.innerHTML = choice === correct
+    ? '<span style="color:#22c55e">✓ Correct!</span>'
+    : '<span style="color:#ef4444">✗ Incorrect — correct answer highlighted in green</span>';
+}
+
+function resetQuiz() {
+  answered = {};
+  document.querySelectorAll('.opt-btn').forEach(b => b.className = 'opt-btn');
+  document.querySelectorAll('.q-feedback').forEach(f => f.innerHTML = '');
+}
+</script>
+</body>
+</html>

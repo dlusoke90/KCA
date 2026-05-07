@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCA CCNA — Module 1: Network Fundamentals & OSI Model</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#060b14;color:#e2e8f0;min-height:100vh}
+.topbar{background:rgba(6,11,20,.95);backdrop-filter:blur(10px);padding:.8rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:100}
+.topbar-logo img{height:50px;object-fit:contain}
+.mod-badge{background:#3b9eff;color:#fff;padding:.3rem .9rem;border-radius:20px;font-size:.78rem;font-weight:700}
+.back-bar{padding:.5rem 2rem;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05)}
+.back-bar a{color:#64748b;text-decoration:none;font-size:.82rem;font-weight:500;transition:.2s}
+.back-bar a:hover{color:#3b9eff}
+.hero{background:linear-gradient(135deg,#0a0f1a 0%,#0d1929 50%,#0a1628 100%);padding:3rem 2rem 2.5rem;border-bottom:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,#3b9eff15 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative}
+.hero-eyebrow{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.hero-icon{width:48px;height:48px;background:#3b9eff20;border:1px solid #3b9eff40;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.hero-label{color:#3b9eff;font-size:.78rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+.hero h1{font-size:2.8rem;font-weight:900;color:#fff;margin-bottom:1.2rem;line-height:1.1}
+.hero-meta{display:flex;gap:1rem;flex-wrap:wrap}
+.hero-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:.35rem .85rem;border-radius:20px;font-size:.8rem;font-weight:500}
+.container{max-width:1100px;margin:0 auto;padding:2.5rem 2rem}
+.section-hdr{display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem}
+.section-hdr-line{flex:1;height:1px;background:linear-gradient(to right,rgba(255,255,255,.1),transparent)}
+.section-hdr-label{color:#3b9eff;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
+.concepts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:1rem;margin-bottom:3rem}
+.concept-card{background:linear-gradient(135deg,#0d1929,#0a1221);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.5rem;transition:.2s;position:relative;overflow:hidden}
+.concept-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,#3b9eff,#3b9eff00)}
+.concept-card:hover{border-color:#3b9eff40;transform:translateY(-2px)}
+.concept-icon{font-size:1.8rem;margin-bottom:.8rem;display:block}
+.concept-title{color:#fff;font-size:1rem;font-weight:700;margin-bottom:.6rem}
+.concept-desc{color:#94a3b8;font-size:.875rem;line-height:1.75;white-space:pre-line;margin-bottom:1rem}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.tag{background:#3b9eff15;border:1px solid #3b9eff30;color:#3b9eff;padding:.2rem .6rem;border-radius:6px;font-size:.72rem;font-weight:600}
+.cli-wrap{background:#0a0d12;border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;margin-bottom:3rem}
+.cli-titlebar{background:#111827;padding:.8rem 1.2rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.cli-dots span{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:.3rem}
+.cli-dots span:nth-child(1){background:#ff5f57}
+.cli-dots span:nth-child(2){background:#febc2e}
+.cli-dots span:nth-child(3){background:#28c840}
+.cli-label{color:#64748b;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.cmd-block{border-bottom:1px solid rgba(255,255,255,.04);font-family:'JetBrains Mono',monospace;font-size:.83rem}
+.cmd-block:last-child{border-bottom:none}
+.cmd-top{display:flex;align-items:center;gap:1rem;padding:.9rem 1.2rem;background:#0d1117}
+.cmd-dots{display:flex;gap:.3rem}
+.cmd-dots span{width:8px;height:8px;border-radius:50%;background:#3b9eff50}
+.cmd-text{color:#3b9eff;flex:1;font-weight:500}
+.run-btn{background:#3b9eff;color:#fff;border:none;padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:700;font-family:'Inter',sans-serif;transition:.2s;white-space:nowrap}
+.run-btn:hover{opacity:.85}
+.run-btn.done{background:#1e2d3d;color:#64748b;cursor:default}
+.cmd-output{display:none;padding:.8rem 1.2rem;color:#a8ff78;white-space:pre-wrap;line-height:1.6;background:#000;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.quiz-wrap{background:linear-gradient(135deg,#0d1929,#0a1221);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.5rem;margin-bottom:2rem}
+.quiz-q{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.quiz-q:last-of-type{border-bottom:none;margin-bottom:0}
+.q-num{background:#3b9eff;color:#fff;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin-right:.6rem;flex-shrink:0}
+.q-text{color:#e2e8f0;font-weight:600;margin-bottom:.8rem;display:flex;align-items:flex-start}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.opt-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-size:.84rem;font-family:'Inter',sans-serif;transition:.2s}
+.opt-btn:hover{border-color:#3b9eff;color:#3b9eff;background:#3b9eff10}
+.opt-btn.correct{background:#3b9eff20;border-color:#3b9eff;color:#3b9eff}
+.opt-btn.wrong{background:rgba(255,77,77,.1);border-color:#ff4d4d;color:#ff4d4d}
+.q-feedback{font-size:.8rem;margin-top:.5rem;min-height:1.2rem;padding-left:2rem}
+.reset-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:#64748b;padding:.5rem 1.2rem;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:'Inter',sans-serif;margin-top:1rem;transition:.2s}
+.reset-btn:hover{border-color:#3b9eff;color:#3b9eff}
+.progress-bar{background:rgba(255,255,255,.06);height:3px;border-radius:2px;margin-bottom:3rem;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(to right,#3b9eff,#3b9eff80);border-radius:2px;width:5%}
+.module-nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;background:rgba(6,11,20,.95);border-top:1px solid rgba(255,255,255,.08);position:sticky;bottom:0}
+.nav-btn{background:#3b9eff;color:#fff;border:none;padding:.6rem 1.4rem;border-radius:10px;font-weight:700;cursor:pointer;font-size:.875rem;text-decoration:none;display:inline-block;font-family:'Inter',sans-serif;transition:.2s}
+.nav-btn:hover{opacity:.85}
+.nav-btn.disabled{background:rgba(255,255,255,.06);color:#374151;pointer-events:none}
+.nav-info{text-align:center}
+.nav-mod{color:#64748b;font-size:.78rem}
+.nav-title{color:#94a3b8;font-size:.82rem;font-weight:600}
+.binary-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:.82rem;margin:1rem 0;border-radius:8px;overflow:hidden}
+.binary-table th{background:#3b9eff30;color:#3b9eff;padding:.5rem;text-align:center;font-weight:700}
+.binary-table td{background:rgba(255,255,255,.03);color:#e2e8f0;padding:.5rem;text-align:center;border:1px solid rgba(255,255,255,.06)}
+.binary-table tr:hover td{background:#3b9eff10}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-logo"><a href="/dashboard.html"><img src="/KCA-LOGO-transparent.png" alt="KCA"></a></div>
+  <div class="mod-badge">MODULE 1 OF 20</div>
+</div>
+<div class="back-bar"><a href="/dashboard.html">← Back to My Courses</a></div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="hero-icon">🌐</div>
+      <span class="hero-label">CCNA 200-301 · Module 1</span>
+    </div>
+    <h1>Network Fundamentals & OSI Model</h1>
+    <div class="hero-meta">
+      <span class="hero-chip">📚 6 Core Topics</span>
+      <span class="hero-chip">💻 6 CLI Commands</span>
+      <span class="hero-chip">❓ 8 Quiz Questions</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="progress-bar"><div class="progress-fill"></div></div>
+  <div class="section-hdr"><span class="section-hdr-label">Core Concepts</span><div class="section-hdr-line"></div></div>
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <div class="concept-icon">🌐</div>
+      <h3 class="concept-title">What is a Network?</h3>
+      <p class="concept-desc">A network is a collection of devices connected together to share resources and communicate. Networks range from 2 devices at home to billions on the internet.
+
+Types:
+• LAN (Local Area Network) — same building/campus
+• WAN (Wide Area Network) — across cities/countries
+• MAN (Metro Area Network) — city-wide
+• PAN (Personal Area Network) — Bluetooth, near you
+• WLAN (Wireless LAN) — WiFi network</p>
+      <div class="tags"><span class="tag">LAN: local</span><span class="tag">WAN: wide</span><span class="tag">MAN: metro</span><span class="tag">WLAN: wireless</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🖥️</div>
+      <h3 class="concept-title">End Devices — Host, Client, Server</h3>
+      <p class="concept-desc">End device, Host, Client, and End User all mean the same thing — a device that sends or receives data.
+
+• Host: any device with an IP address (PC, phone, printer)
+• Client: sends requests (your browser asking for a website)
+• Server: responds to requests (web server returning the page)
+• The same PC can be BOTH client and server
+• Examples: PC, laptop, smartphone, IP phone, tablet, printer, IP camera</p>
+      <div class="tags"><span class="tag">Host = End Device</span><span class="tag">Client: sends requests</span><span class="tag">Server: responds</span><span class="tag">Can be both</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🔌</div>
+      <h3 class="concept-title">Network Devices — Infrastructure</h3>
+      <p class="concept-desc">These devices connect end devices and forward traffic:
+
+🔵 Hub (Layer 1): broadcasts to ALL ports — legacy, creates collisions
+🟢 Layer 2 Switch: forwards by MAC address, creates VLANs, no routing
+🟡 Layer 3 Switch: does both switching AND routing, has SVIs, faster than router for inter-VLAN
+🔴 Router: connects different networks, routes by IP address, default gateway
+🛡️ Firewall: filters traffic by rules (ACL), stateful inspection, sits at network edge
+📶 Wireless Access Point (WAP): connects WiFi devices to wired network
+📡 Wireless Modem/Router: home device that combines modem + router + WAP + switch</p>
+      <div class="tags"><span class="tag">Hub: L1 broadcast</span><span class="tag">L2 Switch: MAC-based</span><span class="tag">L3 Switch: routes+switches</span><span class="tag">Router: IP routing</span><span class="tag">Firewall: security</span><span class="tag">WAP: wireless</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🔌</div>
+      <h3 class="concept-title">Network Cables & Connectors</h3>
+      <p class="concept-desc">Copper Cables:
+• UTP Cat5e: up to 1Gbps, 100m, RJ-45 connector
+• UTP Cat6: up to 10Gbps (55m), 100m at 1Gbps, RJ-45
+• UTP Cat6a: up to 10Gbps at 100m, RJ-45
+• Straight-through: PC→Switch, Router→Switch
+• Crossover: Switch→Switch, PC→PC (legacy, auto-MDI-X fixes this)
+• Console/Rollover: RJ-45 to DB-9, for Cisco console access
+
+Fiber Cables:
+• Single-mode (SMF): yellow jacket, long distance (up to 40km), LC/SC connector
+• Multi-mode (MMF): orange/aqua jacket, short distance (550m), LC/SC connector
+
+Connectors: RJ-45 (copper), LC (fiber - small), SC (fiber - square), SFP (transceiver module)</p>
+      <div class="tags"><span class="tag">UTP Cat5e/6: copper</span><span class="tag">RJ-45 connector</span><span class="tag">Straight-through most common</span><span class="tag">LC/SC: fiber</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">📚</div>
+      <h3 class="concept-title">The OSI Model (7 Layers)</h3>
+      <p class="concept-desc">Mnemonic: 'Please Do Not Throw Sausage Pizza Away'
+
+Layer 7 — Application: HTTP, FTP, DNS, SMTP (user-facing protocols)
+Layer 6 — Presentation: encryption, compression, format conversion (SSL/TLS)
+Layer 5 — Session: establish/maintain/terminate sessions (NetBIOS)
+Layer 4 — Transport: TCP/UDP, port numbers, segmentation
+Layer 3 — Network: IP addressing, routing (Router, L3 Switch)
+Layer 2 — Data Link: MAC addresses, frames, switching (L2 Switch)
+Layer 1 — Physical: bits, cables, signals (Hub, NIC, cable)</p>
+      <div class="tags"><span class="tag">L7: Application</span><span class="tag">L4: Transport (TCP/UDP)</span><span class="tag">L3: Network (IP)</span><span class="tag">L2: Data Link (MAC)</span><span class="tag">L1: Physical (bits)</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">🕸️</div>
+      <h3 class="concept-title">Network Topologies</h3>
+      <p class="concept-desc">Physical topology = how cables are laid out
+Logical topology = how data flows
+
+• Bus: all devices on one cable (legacy, single point of failure)
+• Star: all connect to central switch (modern standard) ✓
+• Ring: devices in a loop (Token Ring — legacy)
+• Mesh: every device connects to every other (WAN redundancy)
+• Full Mesh: n*(n-1)/2 links — maximum redundancy
+• Partial Mesh: some redundant links — balance of cost/redundancy
+• Hybrid: combination (most enterprise networks = star + partial mesh)</p>
+      <div class="tags"><span class="tag">Star: modern LAN</span><span class="tag">Mesh: WAN redundancy</span><span class="tag">Bus: legacy</span><span class="tag">Hybrid: enterprise</span></div>
+    </div></div>
+  <div class="section-hdr"><span class="section-hdr-label">CLI Practice — Click ▶ Run</span><div class="section-hdr-line"></div></div>
+  <div class="cli-wrap">
+    <div class="cli-titlebar"><div class="cli-dots"><span></span><span></span><span></span></div><span class="cli-label">Cisco IOS Simulator</span></div>
+    
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show version</span>
+        <button class="run-btn" onclick="runCmd(this,'show version','Cisco IOS Software, Version 15.4(3)M2\nCisco 2911 (revision 1.0) with 491520K bytes of memory.\nProcessor board ID FTX1524X1Z0\nRouter uptime is 2 days, 3 hours, 45 minutes')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show interfaces GigabitEthernet0/0</span>
+        <button class="run-btn" onclick="runCmd(this,'show interfaces GigabitEthernet0/0','GigabitEthernet0/0 is up, line protocol is up\n  Hardware is CN Gigabit Ethernet, address is 0050.7966.6800\n  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec\n  Full-duplex, 1000Mb/s, media type is RJ45')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show cdp neighbors</span>
+        <button class="run-btn" onclick="runCmd(this,'show cdp neighbors','Capability Codes: R-Router, T-Trans Bridge, S-Switch\nDevice ID   Local Intf  Holdtme  Capability  Platform   Port ID\nKCA-SW1     Gi0/0       120      S I         WS-C2960   Gi0/1\nKCA-FW1     Gi0/1       120      R           ASA5505    Gi0/0')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show ip interface brief</span>
+        <button class="run-btn" onclick="runCmd(this,'show ip interface brief','Interface     IP-Address    OK?  Method  Status  Protocol\nGi0/0         192.168.1.1  YES  manual  up      up\nGi0/1         10.0.0.1     YES  manual  up      up\nGi0/2         unassigned   YES  unset   down    down')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show running-config | include hostname</span>
+        <button class="run-btn" onclick="runCmd(this,'show running-config | include hostname','hostname KCA-Router')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ ping 192.168.1.1</span>
+        <button class="run-btn" onclick="runCmd(this,'ping 192.168.1.1','Type escape sequence to abort.\nSending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:\n!!!!!\nSuccess rate is 100 percent (5/5), round-trip min/avg/max = 1/1/2 ms')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+  </div>
+  <div class="section-hdr"><span class="section-hdr-label">Knowledge Check</span><div class="section-hdr-line"></div></div>
+  <div class="quiz-wrap">
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">1</span>What do 'Host', 'End Device', and 'Client' have in common?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(0,0)" id="q0o0">They are all servers</button><button class="opt-btn" onclick="checkAnswer(0,1)" id="q0o1">They all mean the same thing — a device with an IP</button><button class="opt-btn" onclick="checkAnswer(0,2)" id="q0o2">Only hosts have IPs</button><button class="opt-btn" onclick="checkAnswer(0,3)" id="q0o3">Clients never have IPs</button></div>
+      <div class="q-feedback" id="qf0"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">2</span>A Layer 3 Switch differs from a Layer 2 Switch because it can?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(1,0)" id="q1o0">Use MAC addresses</button><button class="opt-btn" onclick="checkAnswer(1,1)" id="q1o1">Only forward broadcasts</button><button class="opt-btn" onclick="checkAnswer(1,2)" id="q1o2">Route traffic between subnets</button><button class="opt-btn" onclick="checkAnswer(1,3)" id="q1o3">Connect to fiber only</button></div>
+      <div class="q-feedback" id="qf1"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">3</span>Which cable type is used to connect a PC directly to a Cisco switch console port?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(2,0)" id="q2o0">Straight-through</button><button class="opt-btn" onclick="checkAnswer(2,1)" id="q2o1">Crossover</button><button class="opt-btn" onclick="checkAnswer(2,2)" id="q2o2">Rollover/Console</button><button class="opt-btn" onclick="checkAnswer(2,3)" id="q2o3">Fiber LC</button></div>
+      <div class="q-feedback" id="qf2"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">4</span>What is the correct OSI layer for IP addressing?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(3,0)" id="q3o0">Layer 2</button><button class="opt-btn" onclick="checkAnswer(3,1)" id="q3o1">Layer 3</button><button class="opt-btn" onclick="checkAnswer(3,2)" id="q3o2">Layer 4</button><button class="opt-btn" onclick="checkAnswer(3,3)" id="q3o3">Layer 1</button></div>
+      <div class="q-feedback" id="qf3"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">5</span>Which device broadcasts ALL traffic out ALL ports?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(4,0)" id="q4o0">Layer 2 Switch</button><button class="opt-btn" onclick="checkAnswer(4,1)" id="q4o1">Router</button><button class="opt-btn" onclick="checkAnswer(4,2)" id="q4o2">Hub</button><button class="opt-btn" onclick="checkAnswer(4,3)" id="q4o3">Firewall</button></div>
+      <div class="q-feedback" id="qf4"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">6</span>Single-mode fiber (SMF) is best used for?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(5,0)" id="q5o0">Short distances in a building</button><button class="opt-btn" onclick="checkAnswer(5,1)" id="q5o1">Long distances up to 40km</button><button class="opt-btn" onclick="checkAnswer(5,2)" id="q5o2">Wireless connections</button><button class="opt-btn" onclick="checkAnswer(5,3)" id="q5o3">Console access</button></div>
+      <div class="q-feedback" id="qf5"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">7</span>UTP Cat6 supports what maximum speed at 100 meters?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(6,0)" id="q6o0">100 Mbps</button><button class="opt-btn" onclick="checkAnswer(6,1)" id="q6o1">10 Gbps</button><button class="opt-btn" onclick="checkAnswer(6,2)" id="q6o2">1 Gbps</button><button class="opt-btn" onclick="checkAnswer(6,3)" id="q6o3">100 Gbps</button></div>
+      <div class="q-feedback" id="qf6"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">8</span>The OSI model mnemonic 'Please Do Not Throw Sausage Pizza Away' starts from Layer?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(7,0)" id="q7o0">Layer 7 down to Layer 1</button><button class="opt-btn" onclick="checkAnswer(7,1)" id="q7o1">Layer 1 up to Layer 7</button><button class="opt-btn" onclick="checkAnswer(7,2)" id="q7o2">Layer 4</button><button class="opt-btn" onclick="checkAnswer(7,3)" id="q7o3">Layer 3</button></div>
+      <div class="q-feedback" id="qf7"></div>
+    </div><button class="reset-btn" onclick="resetQuiz()">↺ Reset Quiz</button></div>
+</div>
+<div class="module-nav">
+  <span class="nav-btn disabled">← Previous</span>
+  <div class="nav-info"><div class="nav-mod">Module 1 of 20</div><div class="nav-title">Network Fundamentals & OSI Model</div></div>
+  <a class="nav-btn" href="module_02_tcp_ip_model_and_core_protocols.html">Next →</a>
+</div>
+<script>
+const CORRECT=[1, 2, 2, 1, 2, 1, 2, 0];
+let answered={};
+function runCmd(btn,cmd,output){
+  const block=btn.closest('.cmd-block');
+  const outDiv=block.querySelector('.cmd-output');
+  outDiv.textContent=output.replace(/\\n/g,'\n');
+  outDiv.style.display='block';
+  btn.textContent='✓ Done';btn.classList.add('done');btn.disabled=true;
+}
+function checkAnswer(q,choice){
+  if(answered[q]!==undefined)return;
+  answered[q]=choice;
+  const correct=CORRECT[q];
+  for(let i=0;i<4;i++){
+    const btn=document.getElementById('q'+q+'o'+i);
+    if(!btn)continue;
+    if(i===correct)btn.classList.add('correct');
+    else if(i===choice&&choice!==correct)btn.classList.add('wrong');
+  }
+  const fb=document.getElementById('qf'+q);
+  if(fb)fb.innerHTML=choice===correct?'<span style="color:#22c55e">✓ Correct!</span>':'<span style="color:#ef4444">✗ Incorrect — correct answer highlighted</span>';
+}
+function resetQuiz(){answered={};document.querySelectorAll('.opt-btn').forEach(b=>b.className='opt-btn');document.querySelectorAll('.q-feedback').forEach(f=>f.innerHTML='');}
+</script>
+</body>
+</html>

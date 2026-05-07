@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCA CCNA — Module 8: Spanning Tree Protocol (STP)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#060b14;color:#e2e8f0;min-height:100vh}
+
+/* HEADER */
+.topbar{background:rgba(6,11,20,.95);backdrop-filter:blur(10px);padding:.8rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:100}
+.topbar-logo img{height:50px;object-fit:contain}
+.mod-badge{background:#2ecc71;color:#fff;padding:.3rem .9rem;border-radius:20px;font-size:.78rem;font-weight:700;letter-spacing:.05em}
+
+/* BACK BAR */
+.back-bar{padding:.5rem 2rem;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05)}
+.back-bar a{color:#64748b;text-decoration:none;font-size:.82rem;font-weight:500;transition:.2s}
+.back-bar a:hover{color:#2ecc71}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0a0f1a 0%,#0d1929 50%,#0a1628 100%);padding:3rem 2rem 2.5rem;border-bottom:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,#2ecc7115 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative}
+.hero-eyebrow{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.hero-icon{width:48px;height:48px;background:#2ecc7120;border:1px solid #2ecc7140;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.hero-label{color:#2ecc71;font-size:.78rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+.hero h1{font-size:2.8rem;font-weight:900;color:#fff;margin-bottom:1.2rem;line-height:1.1;letter-spacing:-.02em}
+.hero-meta{display:flex;gap:1rem;flex-wrap:wrap}
+.hero-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:.35rem .85rem;border-radius:20px;font-size:.8rem;font-weight:500}
+
+/* CONTAINER */
+.container{max-width:1100px;margin:0 auto;padding:2.5rem 2rem}
+
+/* SECTION HEADER */
+.section-hdr{display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem}
+.section-hdr-line{flex:1;height:1px;background:linear-gradient(to right,rgba(255,255,255,.1),transparent)}
+.section-hdr-label{color:#2ecc71;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
+
+/* CONCEPT CARDS */
+.concepts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:1rem;margin-bottom:3rem}
+.concept-card{background:linear-gradient(135deg,#0d1929,#0a1221);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.5rem;transition:.2s;position:relative;overflow:hidden}
+.concept-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,#2ecc71,#2ecc7100)}
+.concept-card:hover{border-color:#2ecc7140;transform:translateY(-2px)}
+.concept-icon{font-size:1.8rem;margin-bottom:.8rem;display:block}
+.concept-title{color:#fff;font-size:1rem;font-weight:700;margin-bottom:.6rem}
+.concept-desc{color:#94a3b8;font-size:.875rem;line-height:1.75;white-space:pre-line;margin-bottom:1rem}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.tag{background:#2ecc7115;border:1px solid #2ecc7130;color:#2ecc71;padding:.2rem .6rem;border-radius:6px;font-size:.72rem;font-weight:600}
+
+/* CLI SECTION */
+.cli-wrap{background:#0a0d12;border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;margin-bottom:3rem}
+.cli-titlebar{background:#111827;padding:.8rem 1.2rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.cli-dots span{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:.3rem}
+.cli-dots span:nth-child(1){background:#ff5f57}
+.cli-dots span:nth-child(2){background:#febc2e}
+.cli-dots span:nth-child(3){background:#28c840}
+.cli-label{color:#64748b;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.cmd-block{border-bottom:1px solid rgba(255,255,255,.04);font-family:'JetBrains Mono',monospace;font-size:.83rem}
+.cmd-block:last-child{border-bottom:none}
+.cmd-top{display:flex;align-items:center;gap:1rem;padding:.9rem 1.2rem;background:#0d1117}
+.cmd-dots{display:flex;gap:.3rem}
+.cmd-dots span{width:8px;height:8px;border-radius:50%;background:#2ecc7150}
+.cmd-text{color:#2ecc71;flex:1;font-weight:500}
+.run-btn{background:#2ecc71;color:#fff;border:none;padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:700;font-family:'Inter',sans-serif;transition:.2s;white-space:nowrap}
+.run-btn:hover{opacity:.85;transform:scale(1.02)}
+.run-btn.done{background:#1e2d3d;color:#64748b;cursor:default}
+.cmd-output{display:none;padding:.8rem 1.2rem;color:#a8ff78;white-space:pre-wrap;line-height:1.6;background:#000;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* QUIZ */
+.quiz-wrap{background:linear-gradient(135deg,#0d1929,#0a1221);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.5rem;margin-bottom:2rem}
+.quiz-q{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.quiz-q:last-of-type{border-bottom:none;margin-bottom:0}
+.q-num{background:#2ecc71;color:#fff;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin-right:.6rem;flex-shrink:0}
+.q-text{color:#e2e8f0;font-weight:600;margin-bottom:.8rem;display:flex;align-items:flex-start;gap:.3rem}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.opt-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-size:.84rem;font-family:'Inter',sans-serif;transition:.2s}
+.opt-btn:hover{border-color:#2ecc71;color:#2ecc71;background:#2ecc7110}
+.opt-btn.correct{background:#2ecc7120;border-color:#2ecc71;color:#2ecc71}
+.opt-btn.wrong{background:rgba(255,77,77,.1);border-color:#ff4d4d;color:#ff4d4d}
+.q-feedback{font-size:.8rem;margin-top:.5rem;min-height:1.2rem;padding-left:2rem}
+.reset-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:#64748b;padding:.5rem 1.2rem;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:'Inter',sans-serif;margin-top:1rem;transition:.2s}
+.reset-btn:hover{border-color:#2ecc71;color:#2ecc71}
+
+/* PROGRESS */
+.progress-bar{background:rgba(255,255,255,.06);height:3px;border-radius:2px;margin-bottom:3rem;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(to right,#2ecc71,#2ecc7180);border-radius:2px;width:40%;transition:width .5s ease}
+
+/* NAV */
+.module-nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;background:rgba(6,11,20,.95);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08);position:sticky;bottom:0}
+.nav-btn{background:#2ecc71;color:#fff;border:none;padding:.6rem 1.4rem;border-radius:10px;font-weight:700;cursor:pointer;font-size:.875rem;text-decoration:none;display:inline-block;font-family:'Inter',sans-serif;transition:.2s}
+.nav-btn:hover{opacity:.85;transform:translateY(-1px)}
+.nav-btn.disabled{background:rgba(255,255,255,.06);color:#374151;pointer-events:none}
+.nav-info{text-align:center}
+.nav-mod{color:#64748b;font-size:.78rem}
+.nav-title{color:#94a3b8;font-size:.82rem;font-weight:600;max-width:200px;text-align:center}
+
+@media(max-width:768px){
+  .hero h1{font-size:1.8rem}
+  .concepts-grid{grid-template-columns:1fr}
+  .container{padding:1.5rem 1rem}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-logo"><a href="/dashboard.html"><img src="/KCA-LOGO-transparent.png" alt="KCA"></a></div>
+  <div class="mod-badge">MODULE 8 OF 20</div>
+</div>
+<div class="back-bar"><a href="/dashboard.html">← Back to My Courses</a></div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="hero-icon">🌳</div>
+      <span class="hero-label">CCNA 200-301 · Module 8</span>
+    </div>
+    <h1>Spanning Tree Protocol (STP)</h1>
+    <div class="hero-meta">
+      <span class="hero-chip">📚 4 Core Topics</span>
+      <span class="hero-chip">💻 5 CLI Commands</span>
+      <span class="hero-chip">❓ 5 Quiz Questions</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="progress-bar"><div class="progress-fill"></div></div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">Core Concepts</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <div class="concept-icon">🔄</div>
+      <h3 class="concept-title">Why STP?</h3>
+      <p class="concept-desc">Redundant links cause Layer 2 loops → broadcast storms → MAC flapping → network failure. STP (802.1D) prevents loops by blocking redundant paths. Creates loop-free logical topology.</p>
+      <div class="tags"><span class="tag">Prevents L2 loops</span><span class="tag">Blocks redundant paths</span><span class="tag">802.1D standard</span><span class="tag">Broadcast storm prevention</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">👑</div>
+      <h3 class="concept-title">STP Election Process</h3>
+      <p class="concept-desc">1. Elect Root Bridge (lowest Bridge ID = priority + MAC). Default priority 32768. 2. All ports on Root Bridge = Designated (forwarding). 3. Non-root: elect Root Port (best path to root). 4. Block redundant paths.</p>
+      <div class="tags"><span class="tag">Lowest BID = Root</span><span class="tag">Priority + MAC = BID</span><span class="tag">Root Port: best to root</span><span class="tag">Designated or Blocked</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">⏱️</div>
+      <h3 class="concept-title">STP Port States</h3>
+      <p class="concept-desc">Blocking (20s) → Listening (15s) → Learning (15s) → Forwarding. Total convergence: 50 seconds! RSTP (802.1w) converges in ~1-2 seconds. PortFast skips states for access ports.</p>
+      <div class="tags"><span class="tag">Blocking 20s</span><span class="tag">Listening 15s</span><span class="tag">Learning 15s</span><span class="tag">Forwarding ✓</span></div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">⚡</div>
+      <h3 class="concept-title">RSTP & Modern STP</h3>
+      <p class="concept-desc">RSTP (802.1w): rapid convergence (<2s). MSTP (802.1s): multiple spanning trees per VLAN group. Cisco's PVST+: separate STP per VLAN. PortFast: skip STP for access ports (use BPDUGuard!).</p>
+      <div class="tags"><span class="tag">RSTP: <2s convergence</span><span class="tag">MSTP: multiple trees</span><span class="tag">PVST+: per VLAN</span><span class="tag">PortFast + BPDUGuard</span></div>
+    </div></div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">CLI Practice — Click ▶ Run</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="cli-wrap">
+    <div class="cli-titlebar">
+      <div class="cli-dots"><span></span><span></span><span></span></div>
+      <span class="cli-label">Cisco IOS Simulator</span>
+    </div>
+    
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show spanning-tree</span>
+        <button class="run-btn" onclick="runCmd(this,'show spanning-tree','VLAN0001\n  Root ID  Priority  32769\n           Address   0050.7966.6800\n           This bridge is the root\n\nInterface  Role  Sts  Cost  Prio.Nbr  Type\nGi0/1      Desg  FWD  4     128.1     P2p')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show spanning-tree summary</span>
+        <button class="run-btn" onclick="runCmd(this,'show spanning-tree summary','Switch is in rapid-pvst mode\nRoot bridge for: VLAN0001, VLAN0010\nPortFast BPDU Guard is disabled\nPortFast BPDU Filter is disabled')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ spanning-tree portfast</span>
+        <button class="run-btn" onclick="runCmd(this,'spanning-tree portfast','Switch(config-if)# spanning-tree portfast\n%Warning: portfast should only be enabled on ports connected to a single host')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ spanning-tree vlan 1 priority 4096</span>
+        <button class="run-btn" onclick="runCmd(this,'spanning-tree vlan 1 priority 4096','Switch(config)# spanning-tree vlan 1 priority 4096\n% This will make the switch root for VLAN 1')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-top">
+        <div class="cmd-dots"><span></span><span></span><span></span></div>
+        <span class="cmd-text">$ show spanning-tree vlan 10 detail</span>
+        <button class="run-btn" onclick="runCmd(this,'show spanning-tree vlan 10 detail','VLAN0010 is executing the rstp compatible Spanning Tree protocol\n  Bridge Identifier has priority 32778, address 0050.7966.6800\n  Current root has priority 4106, address 0050.7966.6801')">▶ Run</button>
+      </div>
+      <div class="cmd-output"></div>
+    </div>
+  </div>
+
+  <div class="section-hdr">
+    <span class="section-hdr-label">Knowledge Check</span>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="quiz-wrap">
+    
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">1</span>What causes STP to be needed?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(0,0)" id="q0o0">IP conflicts</button><button class="opt-btn" onclick="checkAnswer(0,1)" id="q0o1">Layer 2 loops</button><button class="opt-btn" onclick="checkAnswer(0,2)" id="q0o2">Routing loops</button><button class="opt-btn" onclick="checkAnswer(0,3)" id="q0o3">DNS issues</button></div>
+      <div class="q-feedback" id="qf0"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">2</span>Root bridge is elected by?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(1,0)" id="q1o0">Highest MAC address</button><button class="opt-btn" onclick="checkAnswer(1,1)" id="q1o1">Lowest Bridge ID</button><button class="opt-btn" onclick="checkAnswer(1,2)" id="q1o2">Highest priority</button><button class="opt-btn" onclick="checkAnswer(1,3)" id="q1o3">Administrator config</button></div>
+      <div class="q-feedback" id="qf1"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">3</span>Standard STP convergence time?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(2,0)" id="q2o0">1-2 seconds</button><button class="opt-btn" onclick="checkAnswer(2,1)" id="q2o1">10 seconds</button><button class="opt-btn" onclick="checkAnswer(2,2)" id="q2o2">50 seconds</button><button class="opt-btn" onclick="checkAnswer(2,3)" id="q2o3">100 seconds</button></div>
+      <div class="q-feedback" id="qf2"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">4</span>RSTP is defined in?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(3,0)" id="q3o0">802.1D</button><button class="opt-btn" onclick="checkAnswer(3,1)" id="q3o1">802.1w</button><button class="opt-btn" onclick="checkAnswer(3,2)" id="q3o2">802.1s</button><button class="opt-btn" onclick="checkAnswer(3,3)" id="q3o3">802.1Q</button></div>
+      <div class="q-feedback" id="qf3"></div>
+    </div>
+    <div class="quiz-q">
+      <p class="q-text"><span class="q-num">5</span>PortFast should be used on?</p>
+      <div class="quiz-opts"><button class="opt-btn" onclick="checkAnswer(4,0)" id="q4o0">Trunk ports</button><button class="opt-btn" onclick="checkAnswer(4,1)" id="q4o1">Access ports connecting to hosts</button><button class="opt-btn" onclick="checkAnswer(4,2)" id="q4o2">Router ports</button><button class="opt-btn" onclick="checkAnswer(4,3)" id="q4o3">All ports</button></div>
+      <div class="q-feedback" id="qf4"></div>
+    </div>
+    <button class="reset-btn" onclick="resetQuiz()">↺ Reset Quiz</button>
+  </div>
+</div>
+
+<div class="module-nav">
+  <a class="nav-btn" href="module_07_inter-vlan_routing.html">← Previous</a>
+  <div class="nav-info">
+    <div class="nav-mod">Module 8 of 20</div>
+    <div class="nav-title">Spanning Tree Protocol (STP)</div>
+  </div>
+  <a class="nav-btn" href="module_09_etherchannel_lacp_and_pagp.html">Next →</a>
+</div>
+
+<script>
+const CORRECT = [1, 1, 2, 1, 1];
+let answered = {};
+
+function runCmd(btn, cmd, output) {
+  const block = btn.closest('.cmd-block');
+  const outDiv = block.querySelector('.cmd-output');
+  outDiv.textContent = output.replace(/\\n/g,'\n');
+  outDiv.style.display = 'block';
+  btn.textContent = '✓ Done';
+  btn.classList.add('done');
+  btn.disabled = true;
+}
+
+function checkAnswer(q, choice) {
+  if (answered[q] !== undefined) return;
+  answered[q] = choice;
+  const correct = CORRECT[q];
+  for (let i = 0; i < 4; i++) {
+    const btn = document.getElementById('q' + q + 'o' + i);
+    if (!btn) continue;
+    if (i === correct) btn.classList.add('correct');
+    else if (i === choice && choice !== correct) btn.classList.add('wrong');
+  }
+  const fb = document.getElementById('qf' + q);
+  if (fb) fb.innerHTML = choice === correct
+    ? '<span style="color:#22c55e">✓ Correct!</span>'
+    : '<span style="color:#ef4444">✗ Incorrect — correct answer highlighted in green</span>';
+}
+
+function resetQuiz() {
+  answered = {};
+  document.querySelectorAll('.opt-btn').forEach(b => b.className = 'opt-btn');
+  document.querySelectorAll('.q-feedback').forEach(f => f.innerHTML = '');
+}
+</script>
+</body>
+</html>
