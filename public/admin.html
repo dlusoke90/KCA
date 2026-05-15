@@ -80,7 +80,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div class="tab active" onclick="showTab('pending')">Pending Approvals</div>
     <div class="tab" onclick="showTab('students')">All Students</div>
     <div class="tab" onclick="showTab('enrollments')">Enrollments</div>
-    <div class="tab" onclick="showTab('tickets')">Tickets</div><div class="tab" onclick="window.location.href='/instructor'">📚 Assignments</div>
+    <div class="tab" onclick="showTab('tickets')">Tickets</div>
+    <div class="tab" onclick="showTab('netps')">🛡️ Net-PS Team</div><div class="tab" onclick="window.location.href='/instructor'">📚 Assignments</div>
   </div>
   <div id="sec-pending" class="section active">
     <div class="table-wrap"><table>
@@ -120,6 +121,34 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <tbody id="ticketsBody"></tbody>
     </table></div>
   </div>
+
+  <!-- NET-PS TEAM SECTION -->
+  <div id="sec-netps" class="section">
+    <div id="netps-msg" class="msg"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start">
+
+      <!-- Current Net-PS Members -->
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+          <h3 style="color:#0e8a78;font-size:.95rem;letter-spacing:.03em">🛡️ CURRENT NET-PS MEMBERS</h3>
+          <span id="netps-count" style="background:rgba(14,138,120,.15);color:#0e8a78;padding:.2rem .7rem;border-radius:20px;font-size:.78rem;font-weight:700"></span>
+        </div>
+        <div id="netpsTeamList"></div>
+      </div>
+
+      <!-- Eligible Students -->
+      <div>
+        <div style="margin-bottom:1rem">
+          <h3 style="color:#94a3b8;font-size:.95rem;letter-spacing:.03em;margin-bottom:.5rem">👥 ENROLLED STUDENTS</h3>
+          <input type="text" id="netpsSearch" placeholder="Search students..." oninput="filterEligible()"
+            style="width:100%;padding:.5rem .8rem;background:#111318;border:1px solid #1e2330;border-radius:8px;color:#e2e8f0;font-size:.85rem;outline:none">
+        </div>
+        <div id="netpsEligibleList"></div>
+      </div>
+
+    </div>
+  </div>
+  <!-- END NET-PS SECTION -->
 </div>
 <script>
 const token=localStorage.getItem('kca_token');
@@ -167,13 +196,16 @@ async function updateStatus(id,status){
   else showMsg(d.error,'error');
 }
 function showTab(name){
-  ['pending','students','enrollments'].forEach((t,i)=>{
-    document.getElementById('sec-'+t).classList.toggle('active',t===name);
-    document.querySelectorAll('.tab')[i].classList.toggle('active',t===name);
+  ['pending','students','enrollments','tickets','netps'].forEach((t,i)=>{
+    const sec=document.getElementById('sec-'+t);
+    if(sec) sec.classList.toggle('active',t===name);
+    const tab=document.querySelectorAll('.tab')[i];
+    if(tab) tab.classList.toggle('active',t===name);
   });
   if(name==='enrollments') loadEnrollments();
   if(name==='tickets') loadTickets();
   if(name==='students') loadStudents();
+  if(name==='netps'){ loadNetPSTeam(); loadEligibleStudents(); }
 }
 function showMsg(t,type){const m=document.getElementById('msg');m.textContent=t;m.className='msg '+type;setTimeout(()=>m.className='msg',4000);}
 async function deleteStudent(id, name){
@@ -252,6 +284,85 @@ async function deleteTicket(id){
   alert(d.message||d.error);
   loadTickets();
 }
+
+// ─── NET-PS TEAM ────────────────────────────────────────────
+let eligibleAll = [];
+
+async function loadNetPSTeam(){
+  const r = await fetch('/api/netps/team', {headers:{Authorization:'Bearer '+token}});
+  const members = await r.json();
+  document.getElementById('netps-count').textContent = members.length + ' members';
+  const el = document.getElementById('netpsTeamList');
+  if(!members.length){
+    el.innerHTML = '<div style="text-align:center;padding:2rem;color:#64748b">No members yet — add students from the list →</div>';
+    return;
+  }
+  el.innerHTML = members.map(m => `
+    <div style="background:#111318;border:1px solid #0e8a78;border-radius:10px;padding:.9rem 1rem;margin-bottom:.6rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem">
+      <div>
+        <div style="font-weight:700;font-size:.9rem;color:#e2e8f0">${m.full_name}</div>
+        <div style="font-size:.78rem;color:#64748b">${m.email}</div>
+        <div style="font-size:.75rem;color:#0e8a78;margin-top:.2rem">✅ ${m.resolved_tickets || 0} resolved · 📋 ${m.total_tickets || 0} total</div>
+      </div>
+      <button onclick="removeNetPS(${m.id},'${m.full_name.replace("'","\'")}')"
+        style="background:rgba(255,77,77,.1);color:#ff4d4d;border:1px solid rgba(255,77,77,.3);padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:600;white-space:nowrap">
+        ✕ Remove
+      </button>
+    </div>`).join('');
+}
+
+async function loadEligibleStudents(){
+  const r = await fetch('/api/netps/eligible', {headers:{Authorization:'Bearer '+token}});
+  eligibleAll = await r.json();
+  renderEligible(eligibleAll);
+}
+
+function filterEligible(){
+  const q = document.getElementById('netpsSearch').value.toLowerCase();
+  renderEligible(q ? eligibleAll.filter(s => s.full_name.toLowerCase().includes(q) || (s.email||'').toLowerCase().includes(q)) : eligibleAll);
+}
+
+function renderEligible(students){
+  const el = document.getElementById('netpsEligibleList');
+  const nonMembers = students.filter(s => !s.is_netps);
+  if(!nonMembers.length){ el.innerHTML = '<div style="text-align:center;padding:2rem;color:#64748b">All eligible students are already on the team</div>'; return; }
+  el.innerHTML = nonMembers.map(s => `
+    <div style="background:#111318;border:1px solid #1e2330;border-radius:10px;padding:.9rem 1rem;margin-bottom:.6rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem">
+      <div>
+        <div style="font-weight:600;font-size:.9rem;color:#e2e8f0">${s.full_name}</div>
+        <div style="font-size:.78rem;color:#64748b">${s.email}</div>
+        ${s.enrolled_courses ? `<div style="font-size:.75rem;color:#3b9eff;margin-top:.2rem">📚 ${s.enrolled_courses}</div>` : ''}
+      </div>
+      <button onclick="addNetPS(${s.id},'${s.full_name.replace("'","\'")}')"
+        style="background:rgba(14,138,120,.15);color:#0e8a78;border:1px solid rgba(14,138,120,.3);padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:600;white-space:nowrap">
+        + Add to Net-PS
+      </button>
+    </div>`).join('');
+}
+
+async function addNetPS(userId, name){
+  const r = await fetch('/api/netps/team/'+userId, {method:'POST', headers:{Authorization:'Bearer '+token}});
+  const d = await r.json();
+  showNetPSMsg(d.message || d.error, r.ok ? 'success' : 'error');
+  if(r.ok){ loadNetPSTeam(); loadEligibleStudents(); }
+}
+
+async function removeNetPS(userId, name){
+  if(!confirm('Remove ' + name + ' from Net-PS team?')) return;
+  const r = await fetch('/api/netps/team/'+userId, {method:'DELETE', headers:{Authorization:'Bearer '+token}});
+  const d = await r.json();
+  showNetPSMsg(d.message || d.error, r.ok ? 'success' : 'error');
+  if(r.ok){ loadNetPSTeam(); loadEligibleStudents(); }
+}
+
+function showNetPSMsg(text, type){
+  const el = document.getElementById('netps-msg');
+  el.textContent = text;
+  el.className = 'msg ' + type;
+  setTimeout(() => el.className = 'msg', 4000);
+}
+// ─── END NET-PS ──────────────────────────────────────────────
+
 function logout(){localStorage.removeItem('kca_token');localStorage.removeItem('kca_user');window.location.replace('login.html');}
 loadStats();loadPending();
 </script>

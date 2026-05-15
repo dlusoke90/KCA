@@ -47,21 +47,35 @@ tr:hover td{background:rgba(14,138,120,.05)}
 .badge.resolved{background:rgba(14,138,120,.15);color:#0e8a78;border:1px solid rgba(14,138,120,.3)}
 .username{color:#94a3b8;font-size:.82rem}
 .queue-badge{background:#1e2330;color:#94a3b8;padding:.2rem .5rem;border-radius:4px;font-size:.75rem}
+.netps-queue-badge{background:rgba(14,138,120,.2);color:#0e8a78;padding:.2rem .5rem;border-radius:4px;font-size:.75rem;border:1px solid rgba(14,138,120,.4);font-weight:700}
 .empty{text-align:center;padding:3rem;color:#64748b}
 /* Modal */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center}
 .modal-overlay.open{display:flex}
-.modal{background:#111827;border:1px solid #1e2330;border-radius:16px;padding:2rem;width:100%;max-width:580px;max-height:90vh;overflow-y:auto}
+.modal{background:#111827;border:1px solid #1e2330;border-radius:16px;padding:2rem;width:100%;max-width:600px;max-height:90vh;overflow-y:auto}
 .modal h2{color:#fff;margin-bottom:1.5rem;font-size:1.2rem}
 .form-group{margin-bottom:1.2rem}
 label{display:block;color:#94a3b8;font-size:.8rem;font-weight:600;margin-bottom:.4rem;text-transform:uppercase}
-input,textarea,select{width:100%;padding:.7rem;background:#1e2330;border:1px solid #2d3748;border-radius:8px;color:#e2e8f0;font-size:.9rem;outline:none;font-family:inherit}
-input:focus,textarea:focus,select:focus{border-color:#0e8a78}
+input[type=text],textarea,select{width:100%;padding:.7rem;background:#1e2330;border:1px solid #2d3748;border-radius:8px;color:#e2e8f0;font-size:.9rem;outline:none;font-family:inherit}
+input[type=text]:focus,textarea:focus,select:focus{border-color:#0e8a78}
 textarea{resize:vertical;min-height:100px}
 .code-area{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:#000;border-color:#1e2330;color:#a8ff78}
 .modal-footer{display:flex;gap:1rem;justify-content:flex-end;margin-top:1.5rem}
-.btn-cancel{background:transparent;border:1px solid #1e2330;color:#94a3b8}
+.btn-cancel{background:transparent;border:1px solid #1e2330;color:#94a3b8;padding:.5rem 1.2rem;border-radius:8px;cursor:pointer;font-weight:600;font-size:.875rem}
 .btn-cancel:hover{border-color:#ff4d4d;color:#ff4d4d}
+
+/* Image paste zone */
+.paste-zone{border:2px dashed #2d3748;border-radius:10px;padding:1.2rem;text-align:center;color:#64748b;cursor:pointer;transition:.2s;position:relative;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem}
+.paste-zone:hover,.paste-zone.drag-over{border-color:#0e8a78;background:rgba(14,138,120,.05);color:#0e8a78}
+.paste-zone.has-images{border-color:#0e8a78;border-style:solid}
+.paste-zone-icon{font-size:1.6rem}
+.paste-zone-hint{font-size:.8rem}
+.paste-zone-kbd{background:#1e2330;border:1px solid #2d3748;border-radius:4px;padding:.1rem .4rem;font-size:.75rem;font-family:monospace;color:#94a3b8}
+.image-previews{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
+.preview-item{position:relative;width:72px;height:72px;border-radius:8px;overflow:hidden;border:1px solid #2d3748}
+.preview-item img{width:100%;height:100%;object-fit:cover}
+.preview-item .remove-img{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.7);border:none;color:#fff;border-radius:50%;width:18px;height:18px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;font-weight:700}
+.netps-notice{background:rgba(14,138,120,.1);border:1px solid rgba(14,138,120,.3);border-radius:8px;padding:.75rem 1rem;font-size:.82rem;color:#0e8a78;margin-top:.5rem;display:none}
 </style>
 </head>
 <body>
@@ -73,7 +87,6 @@ textarea{resize:vertical;min-height:100px}
   </div>
 </header>
 <div class="container">
-  <!-- Stats -->
   <div class="stats-grid" id="statsGrid">
     <div class="stat-card active" onclick="filterStatus('')">
       <div class="stat-num" id="st-total" style="color:#e2e8f0">-</div>
@@ -93,12 +106,10 @@ textarea{resize:vertical;min-height:100px}
     </div>
   </div>
 
-  <!-- Queue Tabs -->
   <div class="queue-tabs" id="queueTabs">
     <div class="queue-tab active" onclick="filterQueue('')">All Queues</div>
   </div>
 
-  <!-- Toolbar -->
   <div class="toolbar" style="display:flex;justify-content:space-between;margin-bottom:1rem">
     <input class="search-input" id="searchInput" placeholder="Search tickets..." oninput="renderTable()">
     <select id="statusFilter" onchange="renderTable()" style="width:180px;padding:.5rem;background:#111827;border:1px solid #1e2330;color:#e2e8f0;border-radius:8px">
@@ -109,21 +120,15 @@ textarea{resize:vertical;min-height:100px}
     </select>
   </div>
 
-  <!-- Table -->
   <div style="background:#111827;border:1px solid #1e2330;border-radius:12px;overflow:hidden">
     <table>
       <thead>
         <tr>
-          <th>Ticket #</th>
-          <th>Title</th>
-          <th>Queue</th>
-          <th>Created By</th>
-          <th>Status</th>
-          <th>Comments</th>
-          <th>Created</th>
+          <th>Ticket #</th><th>Title</th><th>Queue</th><th>Created By</th>
+          <th>Status</th><th>Comments</th><th>Created</th><th></th>
         </tr>
       </thead>
-      <tbody id="ticketsBody"><tr><td colspan="7" class="empty">Loading...</td></tr></tbody>
+      <tbody id="ticketsBody"><tr><td colspan="8" class="empty">Loading...</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -134,14 +139,18 @@ textarea{resize:vertical;min-height:100px}
     <h2>📋 Create New Ticket</h2>
     <div class="form-group">
       <label>Select Queue (Class)</label>
-      <select id="newQueue">
+      <select id="newQueue" onchange="onQueueChange()">
         <option value="">-- Select a queue --</option>
         <option value="Cisco CCNA (200-301)">Cisco CCNA (200-301)</option>
         <option value="AWS Cloud Practitioner">AWS Cloud Practitioner</option>
         <option value="AWS Advanced Networking">AWS Advanced Networking</option>
         <option value="Linux Fundamentals">Linux Fundamentals</option>
+        <option value="Net-PS">🛡️ Net-PS — Assignment Help (Escalation Team)</option>
         <option value="General Support">General Support</option>
       </select>
+      <div class="netps-notice" id="netpsNotice">
+        ⚡ This ticket will be routed to the <strong>Net-PS (Problem Solver) team</strong> — a group of top students who will review and solve your assignment issue.
+      </div>
     </div>
     <div class="form-group">
       <label>Title</label>
@@ -152,15 +161,26 @@ textarea{resize:vertical;min-height:100px}
       <textarea id="newDesc" placeholder="Describe your issue in detail..."></textarea>
     </div>
     <div class="form-group">
-      <label>Command & Output (optional)</label>
+      <label>Command &amp; Output (optional)</label>
       <textarea id="newCmd" class="code-area" placeholder="Paste your commands and output here..."></textarea>
     </div>
     <div class="form-group">
-      <label>Topology Image (optional)</label>
-      <input type="file" id="newImage" accept="image/*" style="padding:.5rem;font-size:.85rem">
+      <label>Screenshots &amp; Images
+        <span style="color:#64748b;font-weight:400;text-transform:none"> — paste with <kbd class="paste-zone-kbd">Ctrl+V</kbd>, drag &amp; drop, or click to upload</span>
+      </label>
+      <div class="paste-zone" id="pasteZone"
+           onclick="document.getElementById('imgFileInput').click()"
+           ondragover="handleDragOver(event)"
+           ondragleave="handleDragLeave(event)"
+           ondrop="handleDrop(event)">
+        <div class="paste-zone-icon">📸</div>
+        <div class="paste-zone-hint">Click, drag &amp; drop, or press <kbd class="paste-zone-kbd">Ctrl+V</kbd> anywhere to paste a screenshot</div>
+      </div>
+      <input type="file" id="imgFileInput" accept="image/*" multiple style="display:none" onchange="handleFileInput(event)">
+      <div class="image-previews" id="imagePreviews"></div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
       <button class="btn" onclick="createTicket()">Create Ticket</button>
     </div>
   </div>
@@ -174,6 +194,7 @@ if(!token) window.location.replace('login.html');
 let allTickets = [];
 let currentQueue = '';
 let currentStatus = '';
+let pastedImages = []; // array of {blob, url}
 
 async function loadStats(){
   const r = await fetch('/api/tickets/stats', {headers:{Authorization:'Bearer '+token}});
@@ -185,7 +206,8 @@ async function loadStats(){
   const tabs = document.getElementById('queueTabs');
   tabs.innerHTML = '<div class="queue-tab active" onclick="filterQueue(\'\')">All Queues</div>';
   (d.queues||[]).forEach(q => {
-    tabs.innerHTML += `<div class="queue-tab" onclick="filterQueue('${q.queue}')">${q.queue} <span style="background:#0e8a78;color:#fff;padding:.1rem .4rem;border-radius:10px;font-size:.7rem">${q.count}</span></div>`;
+    const isNetPS = q.queue === 'Net-PS';
+    tabs.innerHTML += `<div class="queue-tab" onclick="filterQueue('${q.queue}')">${isNetPS?'🛡️ ':''}${q.queue} <span style="background:#0e8a78;color:#fff;padding:.1rem .4rem;border-radius:10px;font-size:.7rem">${q.count}</span></div>`;
   });
 }
 
@@ -217,17 +239,19 @@ function renderTable(){
     (t.username||'').toLowerCase().includes(search)
   );
   const tbody = document.getElementById('ticketsBody');
-  if(!filtered.length){tbody.innerHTML='<tr><td colspan="7" class="empty">No tickets found</td></tr>';return;}
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No tickets found</td></tr>';return;}
   tbody.innerHTML = filtered.map(t => `
     <tr>
       <td><a class="ticket-link" href="ticket-view.html?id=${t.id}">${t.ticket_no}</a></td>
       <td><a class="ticket-link" href="ticket-view.html?id=${t.id}">${t.title}</a></td>
-      <td><span class="queue-badge">${t.queue}</span></td>
+      <td>${t.queue === 'Net-PS'
+        ? `<span class="netps-queue-badge">🛡️ Net-PS</span>`
+        : `<span class="queue-badge">${t.queue}</span>`}</td>
       <td><span class="username">${t.username||'deleted-user'}</span></td>
       <td><span class="badge ${t.status}">${t.status.replace('_',' ')}</span></td>
       <td style="color:#64748b">${t.comment_count} 💬</td>
       <td style="color:#64748b">${new Date(t.created_at).toLocaleDateString()}</td>
-      <td>${isAdmin ? `<button onclick="deleteTicket(${t.id})" style="background:#ff4d4d;color:#fff;border:none;padding:.3rem .7rem;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:600">🗑 Delete</button>` : ''}</td>
+      <td>${isAdmin ? `<button onclick="deleteTicket(${t.id})" style="background:#ff4d4d;color:#fff;border:none;padding:.3rem .7rem;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:600">🗑</button>` : ''}</td>
     </tr>`).join('');
 }
 
@@ -246,33 +270,101 @@ function filterStatus(s){
   renderTable();
 }
 
-function openModal(){ document.getElementById('modalOverlay').classList.add('open'); }
+function onQueueChange(){
+  const q = document.getElementById('newQueue').value;
+  const notice = document.getElementById('netpsNotice');
+  notice.style.display = q === 'Net-PS' ? 'block' : 'none';
+}
+
+function openModal(){
+  pastedImages = [];
+  renderPreviews();
+  document.getElementById('newQueue').value = '';
+  document.getElementById('newTitle').value = '';
+  document.getElementById('newDesc').value = '';
+  document.getElementById('newCmd').value = '';
+  document.getElementById('netpsNotice').style.display = 'none';
+  document.getElementById('modalOverlay').classList.add('open');
+}
 function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
 
-async function deleteTicket(id){
-  if(!confirm('Permanently delete this ticket and all its comments?')) return;
-  const r = await fetch('/api/tickets/'+id, {method:'DELETE', headers:{Authorization:'Bearer '+token}});
-  const d = await r.json();
-  alert(d.message||d.error);
-  loadTickets();
-  loadStats();
+// ── Image paste / drag-drop ──────────────────────────────────
+document.addEventListener('paste', e => {
+  if(!document.getElementById('modalOverlay').classList.contains('open')) return;
+  const items = [...(e.clipboardData || e.originalEvent.clipboardData).items];
+  const imgItems = items.filter(i => i.type.startsWith('image/'));
+  if(!imgItems.length) return;
+  imgItems.forEach(item => {
+    const blob = item.getAsFile();
+    if(blob) addImageBlob(blob);
+  });
+  e.preventDefault();
+});
+
+function handleDragOver(e){ e.preventDefault(); document.getElementById('pasteZone').classList.add('drag-over'); }
+function handleDragLeave(e){ document.getElementById('pasteZone').classList.remove('drag-over'); }
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('pasteZone').classList.remove('drag-over');
+  const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'));
+  files.forEach(f => addImageBlob(f));
 }
+function handleFileInput(e){
+  [...e.target.files].forEach(f => addImageBlob(f));
+  e.target.value = '';
+}
+
+function addImageBlob(blob){
+  const url = URL.createObjectURL(blob);
+  pastedImages.push({ blob, url });
+  renderPreviews();
+}
+
+function removeImage(i){
+  URL.revokeObjectURL(pastedImages[i].url);
+  pastedImages.splice(i, 1);
+  renderPreviews();
+}
+
+function renderPreviews(){
+  const zone = document.getElementById('pasteZone');
+  const container = document.getElementById('imagePreviews');
+  zone.classList.toggle('has-images', pastedImages.length > 0);
+  if(!pastedImages.length){ container.innerHTML = ''; return; }
+  container.innerHTML = pastedImages.map((img, i) => `
+    <div class="preview-item">
+      <img src="${img.url}" alt="image ${i+1}">
+      <button class="remove-img" onclick="removeImage(${i})">✕</button>
+    </div>`).join('');
+}
+// ─────────────────────────────────────────────────────────────
+
 async function createTicket(){
   const queue = document.getElementById('newQueue').value;
-  const title = document.getElementById('newTitle').value;
+  const title = document.getElementById('newTitle').value.trim();
   const description = document.getElementById('newDesc').value;
   const command_output = document.getElementById('newCmd').value;
-  const imageFile = document.getElementById('newImage').files[0];
   if(!queue || !title){ alert('Please select a queue and enter a title'); return; }
+
   const formData = new FormData();
   formData.append('queue', queue);
   formData.append('title', title);
   formData.append('description', description);
   formData.append('command_output', command_output);
-  if(imageFile) formData.append('image', imageFile);
-  const r = await fetch('/api/tickets', {
-    method:'POST',
-    headers:{Authorization:'Bearer '+token},
+
+  // First image goes as 'image' (topology/main), rest as 'extra_images'
+  if(pastedImages.length > 0){
+    formData.append('image', pastedImages[0].blob, 'screenshot_0.png');
+    for(let i = 1; i < pastedImages.length; i++){
+      formData.append('extra_images', pastedImages[i].blob, `screenshot_${i}.png`);
+    }
+  }
+
+  // Try new multi-image endpoint first, fallback to original
+  const endpoint = '/api/tickets/create';
+  const r = await fetch(endpoint, {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + token },
     body: formData
   });
   const d = await r.json();
@@ -285,6 +377,15 @@ async function createTicket(){
   } else {
     alert(d.error);
   }
+}
+
+async function deleteTicket(id){
+  if(!confirm('Permanently delete this ticket and all its comments?')) return;
+  const r = await fetch('/api/tickets/'+id, {method:'DELETE', headers:{Authorization:'Bearer '+token}});
+  const d = await r.json();
+  alert(d.message||d.error);
+  loadTickets();
+  loadStats();
 }
 
 const user = JSON.parse(localStorage.getItem('kca_user')||'{}');

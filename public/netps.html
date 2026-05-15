@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta property="og:title" content="Kuwaha Cloud Academy" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Net-PS Dashboard — KCA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0a0f1a;color:#e2e8f0;min-height:100vh}
+nav{background:#0a1628;border-bottom:2px solid #0e8a78;padding:.9rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.7rem;text-decoration:none}
+.logo img{height:32px}
+.logo-text{font-size:1rem;font-weight:800;color:#0e8a78}
+.netps-badge{background:rgba(14,138,120,.2);border:1px solid rgba(14,138,120,.5);color:#0e8a78;padding:.25rem .8rem;border-radius:4px;font-size:.75rem;font-weight:800;letter-spacing:.05em}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.btn-logout{background:transparent;border:1px solid #1e2330;color:#94a3b8;padding:.35rem .8rem;border-radius:6px;cursor:pointer;font-size:.82rem}
+.btn-logout:hover{border-color:#ff4d4d;color:#ff4d4d}
+.container{max-width:1100px;margin:0 auto;padding:2rem}
+
+/* Hero banner */
+.hero{background:linear-gradient(135deg,#0a1e1b,#0d2d28);border:1px solid rgba(14,138,120,.3);border-radius:14px;padding:1.5rem 2rem;margin-bottom:2rem;display:flex;align-items:center;gap:1.5rem}
+.hero-icon{width:56px;height:56px;border-radius:50%;background:rgba(14,138,120,.2);border:2px solid rgba(14,138,120,.4);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0}
+.hero-title{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:.2rem}
+.hero-sub{font-size:.85rem;color:#94a3b8}
+.hero-stats{margin-left:auto;display:flex;gap:1.5rem;text-align:center}
+.hero-stat .n{font-size:1.6rem;font-weight:900;color:#0e8a78}
+.hero-stat .l{font-size:.72rem;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.stat{background:#111827;border:1px solid #1e2330;border-radius:10px;padding:1rem;text-align:center;cursor:pointer;transition:.2s}
+.stat:hover{border-color:#0e8a78}
+.stat.active{border-color:#0e8a78;background:rgba(14,138,120,.08)}
+.stat-n{font-size:1.8rem;font-weight:900;margin-bottom:.2rem}
+.stat-l{font-size:.75rem;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
+
+/* Tabs */
+.tabs{display:flex;gap:0;border-bottom:1px solid #1e2330;margin-bottom:1.5rem}
+.tab{padding:.7rem 1.4rem;font-size:.88rem;font-weight:600;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;transition:.2s}
+.tab.active{color:#0e8a78;border-bottom-color:#0e8a78}
+
+/* Ticket cards */
+.ticket-card{background:#111827;border:1px solid #1e2330;border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:.8rem;transition:.2s;cursor:pointer}
+.ticket-card:hover{border-color:#0e8a78}
+.ticket-card.expanded{border-color:#0e8a78;background:#0d1e1a}
+.tc-header{display:flex;align-items:flex-start;gap:1rem;justify-content:space-between}
+.tc-no{font-size:.75rem;color:#0e8a78;font-weight:700;font-family:monospace}
+.tc-title{font-weight:700;font-size:.95rem;color:#e2e8f0;margin:.2rem 0 .4rem}
+.tc-meta{font-size:.78rem;color:#64748b}
+.badge{padding:.2rem .6rem;border-radius:20px;font-size:.72rem;font-weight:700}
+.badge.assigned{background:rgba(255,213,79,.15);color:#ffd54f;border:1px solid rgba(255,213,79,.3)}
+.badge.work_in_progress{background:rgba(59,158,255,.15);color:#3b9eff;border:1px solid rgba(59,158,255,.3)}
+.badge.resolved{background:rgba(14,138,120,.15);color:#0e8a78;border:1px solid rgba(14,138,120,.3)}
+.prio-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.prio-high{background:#ff4d4d}
+.prio-med{background:#ffd54f}
+.prio-low{background:#0e8a78}
+
+/* Workspace */
+.workspace{margin-top:1rem;padding-top:1rem;border-top:1px solid #1e2330}
+.desc-box{background:#0d1117;border:1px solid #1e2330;border-radius:8px;padding:1rem;font-size:.88rem;line-height:1.65;color:#cbd5e0;white-space:pre-wrap;margin-bottom:1rem}
+.img-grid{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+.img-thumb{width:80px;height:80px;border-radius:8px;overflow:hidden;border:1px solid #1e2330;cursor:pointer}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+label.ws-label{display:block;color:#94a3b8;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem}
+textarea.solution{width:100%;padding:.8rem;background:#1e2330;border:1px solid #2d3748;border-radius:8px;color:#e2e8f0;font-size:.88rem;resize:vertical;min-height:120px;outline:none;font-family:'Inter',sans-serif}
+textarea.solution:focus{border-color:#0e8a78}
+.ws-actions{display:flex;gap:.8rem;margin-top:.8rem}
+.btn{padding:.5rem 1.2rem;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;border:none;transition:.15s}
+.btn-primary{background:#0e8a78;color:#fff}
+.btn-primary:hover{background:#0a6b5e}
+.btn-wip{background:rgba(59,158,255,.15);color:#3b9eff;border:1px solid rgba(59,158,255,.3)}
+.btn-wip:hover{background:rgba(59,158,255,.25)}
+.resolved-box{background:rgba(14,138,120,.1);border:1px solid rgba(14,138,120,.3);border-radius:8px;padding:.9rem 1rem;margin-top:.8rem}
+.resolved-box-label{font-size:.75rem;color:#0e8a78;font-weight:700;text-transform:uppercase;margin-bottom:.4rem}
+.resolved-box-text{font-size:.88rem;line-height:1.6;color:#a7f3d0;white-space:pre-wrap}
+
+.empty{text-align:center;padding:3rem;color:#64748b}
+.msg{padding:.7rem 1rem;border-radius:8px;font-size:.85rem;margin-bottom:1rem;display:none}
+.msg.success{background:rgba(62,207,110,.1);border:1px solid rgba(62,207,110,.3);color:#3ecf6e;display:block}
+.msg.error{background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.3);color:#ff4d4d;display:block}
+
+/* Lightbox */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:center;justify-content:center;cursor:zoom-out}
+.lightbox.open{display:flex}
+.lightbox img{max-width:90vw;max-height:90vh;border-radius:8px}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/dashboard.html" class="logo">
+    <img src="/KCA-LOGO-transparent.png" alt="KCA" onerror="this.style.display='none'">
+    <span class="logo-text">Kuwaha Cloud Academy</span>
+  </a>
+  <div class="nav-right">
+    <span class="netps-badge">🛡️ NET-PS AGENT</span>
+    <a href="/tickets.html" style="color:#3b9eff;font-size:.85rem;text-decoration:none">All Tickets</a>
+    <button class="btn-logout" onclick="logout()">Sign Out</button>
+  </div>
+</nav>
+
+<div class="container">
+  <div id="msg" class="msg"></div>
+
+  <div class="hero">
+    <div class="hero-icon">🛡️</div>
+    <div>
+      <div class="hero-title">Net-PS — Problem Solver Dashboard</div>
+      <div class="hero-sub" id="agentName">Loading...</div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="n" id="h-open">-</div><div class="l">In Queue</div></div>
+      <div class="hero-stat"><div class="n" id="h-resolved" style="color:#3ecf6e">-</div><div class="l">Resolved</div></div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat active" onclick="filterStat('')"><div class="stat-n" id="s-all" style="color:#e2e8f0">-</div><div class="stat-l">All Tickets</div></div>
+    <div class="stat" onclick="filterStat('assigned,work_in_progress')"><div class="stat-n" id="s-open" style="color:#ffd54f">-</div><div class="stat-l">Active</div></div>
+    <div class="stat" onclick="filterStat('resolved')"><div class="stat-n" id="s-resolved" style="color:#0e8a78">-</div><div class="stat-l">Resolved</div></div>
+  </div>
+
+  <div id="ticketsList"></div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
+  <img id="lightboxImg" src="" alt="full size">
+</div>
+
+<script>
+const token = localStorage.getItem('kca_token');
+const user = JSON.parse(localStorage.getItem('kca_user') || '{}');
+if(!token) window.location.replace('login.html');
+
+let allTickets = [];
+let expanded = null;
+let statFilter = '';
+
+async function init(){
+  document.getElementById('agentName').textContent = user.name || 'Net-PS Agent';
+
+  const r = await fetch('/api/netps/tickets', {headers:{Authorization:'Bearer '+token}});
+  if(r.status === 403){
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:1rem;text-align:center"><p style="color:#ff4d4d;font-size:1.2rem">🚫 Net-PS Access Required</p><p style="color:#64748b">You are not currently assigned to the Net-PS team.</p><a href="/dashboard.html" style="color:#3b9eff">← Back to Dashboard</a></div>';
+    return;
+  }
+  allTickets = await r.json();
+
+  const all = allTickets.length;
+  const active = allTickets.filter(t => t.status !== 'resolved').length;
+  const resolved = allTickets.filter(t => t.status === 'resolved').length;
+  document.getElementById('s-all').textContent = all;
+  document.getElementById('s-open').textContent = active;
+  document.getElementById('s-resolved').textContent = resolved;
+  document.getElementById('h-open').textContent = active;
+  document.getElementById('h-resolved').textContent = resolved;
+
+  renderTickets();
+}
+
+function filterStat(f){
+  statFilter = f;
+  document.querySelectorAll('.stat').forEach((s,i) => s.classList.remove('active'));
+  event.target.closest('.stat').classList.add('active');
+  expanded = null;
+  renderTickets();
+}
+
+function renderTickets(){
+  let tickets = allTickets;
+  if(statFilter){
+    const statuses = statFilter.split(',');
+    tickets = tickets.filter(t => statuses.includes(t.status));
+  }
+  const el = document.getElementById('ticketsList');
+  if(!tickets.length){ el.innerHTML = '<div class="empty">No tickets in this filter</div>'; return; }
+  el.innerHTML = tickets.map(t => renderCard(t)).join('');
+}
+
+function renderCard(t){
+  const isExpanded = expanded === t.id;
+  const prioClass = {high:'prio-high',med:'prio-med',low:'prio-low',medium:'prio-med'}[t.priority] || 'prio-med';
+  let extraImgs = [];
+  try { extraImgs = t.extra_images ? JSON.parse(t.extra_images) : []; } catch(e){}
+  const allImgs = [t.image_path, ...extraImgs].filter(Boolean);
+
+  return `<div class="ticket-card${isExpanded?' expanded':''}" id="tc-${t.id}">
+    <div class="tc-header" onclick="toggleCard(${t.id})">
+      <div style="display:flex;gap:.8rem;align-items:flex-start;flex:1;min-width:0">
+        <div class="prio-dot ${prioClass}"></div>
+        <div style="min-width:0">
+          <div class="tc-no">${t.ticket_no}</div>
+          <div class="tc-title">${t.title}</div>
+          <div class="tc-meta">From: ${t.username || 'deleted-user'} · ${new Date(t.created_at).toLocaleDateString()} · ${t.comment_count} 💬</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem;flex-shrink:0;margin-left:1rem">
+        <span class="badge ${t.status}">${t.status.replace('_',' ')}</span>
+        <span style="color:#64748b;font-size:.85rem">${isExpanded?'▲':'▼'}</span>
+      </div>
+    </div>
+
+    ${isExpanded ? `
+    <div class="workspace">
+      <div style="margin-bottom:.6rem">
+        <ws-label style="display:block;color:#94a3b8;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem">Student's Issue</ws-label>
+        <div class="desc-box">${t.description || 'No description provided.'}</div>
+      </div>
+
+      ${t.command_output ? `
+      <div style="margin-bottom:.6rem">
+        <ws-label style="display:block;color:#94a3b8;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem">Command Output</ws-label>
+        <div class="desc-box" style="font-family:monospace;color:#a8ff78;font-size:.82rem">${t.command_output}</div>
+      </div>` : ''}
+
+      ${allImgs.length ? `
+      <div style="margin-bottom:.8rem">
+        <ws-label style="display:block;color:#94a3b8;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem">Attachments</ws-label>
+        <div class="img-grid">
+          ${allImgs.map(img => `<div class="img-thumb" onclick="openLightbox('${img}')"><img src="${img}" alt="attachment"></div>`).join('')}
+        </div>
+      </div>` : ''}
+
+      ${t.status === 'resolved' ? `
+      <div class="resolved-box">
+        <div class="resolved-box-label">✅ Your Solution (Submitted)</div>
+        <div class="resolved-box-text">${t.netps_response || 'No response recorded.'}</div>
+      </div>` : `
+      <div>
+        <label class="ws-label">Your Solution / Response</label>
+        <textarea class="solution" id="resp-${t.id}" placeholder="Write your step-by-step solution for the student...">${t.netps_response || ''}</textarea>
+        <div class="ws-actions">
+          ${t.status === 'assigned' ? `<button class="btn btn-wip" onclick="setWIP(${t.id})">▶ Start Working</button>` : ''}
+          <button class="btn btn-primary" onclick="submitSolution(${t.id})">✅ Submit Solution &amp; Resolve</button>
+        </div>
+      </div>`}
+    </div>` : ''}
+  </div>`;
+}
+
+function toggleCard(id){
+  expanded = expanded === id ? null : id;
+  renderTickets();
+}
+
+async function setWIP(id){
+  await fetch('/api/tickets/'+id+'/status', {method:'PUT', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token}, body:JSON.stringify({status:'work_in_progress'})});
+  const t = allTickets.find(x => x.id === id);
+  if(t) t.status = 'work_in_progress';
+  renderTickets();
+}
+
+async function submitSolution(id){
+  const resp = document.getElementById('resp-'+id).value.trim();
+  if(!resp){ alert('Please write a solution before resolving.'); return; }
+  const r = await fetch('/api/tickets/'+id+'/netps-response', {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body: JSON.stringify({netps_response: resp})
+  });
+  const d = await r.json();
+  if(r.ok){
+    const t = allTickets.find(x => x.id === id);
+    if(t){ t.status = 'resolved'; t.netps_response = resp; }
+    showMsg('✅ Solution submitted and ticket resolved!', 'success');
+    // Update counts
+    const active = allTickets.filter(t => t.status !== 'resolved').length;
+    const resolved = allTickets.filter(t => t.status === 'resolved').length;
+    document.getElementById('s-open').textContent = active;
+    document.getElementById('s-resolved').textContent = resolved;
+    document.getElementById('h-open').textContent = active;
+    document.getElementById('h-resolved').textContent = resolved;
+    renderTickets();
+  } else {
+    showMsg(d.error, 'error');
+  }
+}
+
+function openLightbox(src){ document.getElementById('lightboxImg').src = src; document.getElementById('lightbox').classList.add('open'); }
+function showMsg(text, type){ const el=document.getElementById('msg'); el.textContent=text; el.className='msg '+type; setTimeout(()=>el.className='msg',5000); }
+function logout(){ localStorage.removeItem('kca_token'); localStorage.removeItem('kca_user'); window.location.replace('login.html'); }
+
+init();
+</script>
+</body>
+</html>

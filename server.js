@@ -105,7 +105,7 @@ app.post('/api/auth/reset-password', async (req, res) => {
     if (!rows.length) return res.status(400).json({ error: 'Invalid or expired reset link. Please request a new one.' });
     const bcrypt = require('bcryptjs');
     const hash = await bcrypt.hash(password, 10);
-    await pool.query('UPDATE users SET password = ? WHERE email = ?', [hash, email]);
+    await pool.query('UPDATE users SET password_hash = ? WHERE email = ?', [hash, email]);
     await pool.query('DELETE FROM password_resets WHERE email = ?', [email]);
     res.json({ message: 'Password reset successfully! You can now log in.' });
   } catch(e) { console.error(e); res.status(500).json({ error: 'Reset failed' }); }
@@ -578,6 +578,147 @@ app.put('/api/assignments/:id/submissions/:studentId/reply', auth, async (req, r
   } catch(e) { res.status(500).json({ error: 'Failed to send reply' }); }
 });
 // ─── END ASSIGNMENTS ─────────────────────────────────────────
+
+
+// ─── NET-PS TEAM ─────────────────────────────────────────────
+
+// Multi-image upload handler for tickets
+const uploadTicketFields = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/tickets'),
+    filename: (req, file, cb) => cb(null, Date.now() + '_' + Math.random().toString(36).slice(2,7) + path.extname(file.originalname))
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 }
+}).fields([{ name: 'image', maxCount: 1 }, { name: 'extra_images', maxCount: 5 }]);
+
+// Create ticket (multi-image override — replaces existing POST /api/tickets)
+app.post('/api/tickets/create', auth, (req, res) => {
+  uploadTicketFields(req, res, async (err) => {
+    if (err) return res.status(400).json({ error: err.message });
+    const { title, description, queue, command_output } = req.body;
+    if (!title || !queue) return res.status(400).json({ error: 'Title and queue are required' });
+    try {
+      const [enrollments] = await pool.query(
+        "SELECT e.id FROM enrollments e WHERE e.user_id=? AND e.status='approved'", [req.user.id]);
+      if (!enrollments.length && req.user.role !== 'admin')
+        return res.status(403).json({ error: 'You must be enrolled in a course to create tickets' });
+      const ticket_no = 'KCA-' + Date.now().toString().slice(-6);
+      const image_path = req.files?.image?.[0] ? '/uploads/tickets/' + req.files.image[0].filename : null;
+      const extra = req.files?.extra_images?.map(f => '/uploads/tickets/' + f.filename) || [];
+      const extra_images = extra.length ? JSON.stringify(extra) : null;
+
+      // Auto-assign to a Net-PS member if queue is Net-PS
+      let assigned_to = null;
+      if (queue === 'Net-PS') {
+        const [members] = await pool.query(
+          'SELECT nm.user_id FROM netps_members nm ORDER BY (SELECT COUNT(*) FROM tickets WHERE assigned_to=nm.user_id AND status != "resolved") ASC LIMIT 1'
+        );
+        if (members.length) assigned_to = members[0].user_id;
+      }
+
+      const [result] = await pool.query(
+        'INSERT INTO tickets (ticket_no, title, description, queue, status, created_by, image_path, extra_images, assigned_to, command_output) VALUES (?,?,?,?,?,?,?,?,?,?)',
+        [ticket_no, title, description || '', queue, 'assigned', req.user.id, image_path, extra_images, assigned_to, command_output || '']);
+      mailer.sendMail({
+        from: process.env.EMAIL_USER, to: process.env.EMAIL_USER,
+        subject: `KCA Ticket ${ticket_no} — ${title}`,
+        html: `<h2>New Support Ticket</h2><p><b>Ticket:</b> ${ticket_no}</p><p><b>Title:</b> ${title}</p><p><b>Queue:</b> ${queue}</p><p><a href="https://kca-cloudnet.com/ticket-view.html?id=${result.insertId}">View Ticket →</a></p>`
+      }).catch(e => console.error(e));
+      res.status(201).json({ message: 'Ticket created!', id: result.insertId, ticket_no });
+    } catch(e) { console.error(e); res.status(500).json({ error: 'Failed to create ticket' }); }
+  });
+});
+
+// Get all Net-PS members
+app.get('/api/netps/team', auth, async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT u.id, u.full_name, u.email, nm.added_at,
+       (SELECT COUNT(*) FROM tickets WHERE assigned_to=u.id) as total_tickets,
+       (SELECT COUNT(*) FROM tickets WHERE assigned_to=u.id AND status='resolved') as resolved_tickets
+       FROM netps_members nm JOIN users u ON nm.user_id=u.id ORDER BY nm.added_at DESC`
+    );
+    res.json(rows);
+  } catch(e) { res.status(500).json({ error: 'Failed to fetch Net-PS team' }); }
+});
+
+// Get eligible students (approved, not already Net-PS)
+app.get('/api/netps/eligible', auth, adminOnly, async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT u.id, u.full_name, u.email,
+       (SELECT 1 FROM netps_members WHERE user_id=u.id) as is_netps,
+       (SELECT GROUP_CONCAT(c.title ORDER BY c.title SEPARATOR ', ')
+        FROM enrollments e JOIN courses c ON e.course_id=c.id
+        WHERE e.user_id=u.id AND e.status='approved') as enrolled_courses
+       FROM users u WHERE u.role='student' AND u.status='approved'
+       ORDER BY u.full_name`
+    );
+    res.json(rows);
+  } catch(e) { res.status(500).json({ error: 'Failed to fetch eligible students' }); }
+});
+
+// Add to Net-PS team
+app.post('/api/netps/team/:userId', auth, adminOnly, async (req, res) => {
+  try {
+    await pool.query('INSERT IGNORE INTO netps_members (user_id, added_by) VALUES (?,?)', [req.params.userId, req.user.id]);
+    res.json({ message: 'Added to Net-PS team' });
+  } catch(e) { res.status(500).json({ error: 'Failed to add member' }); }
+});
+
+// Remove from Net-PS team
+app.delete('/api/netps/team/:userId', auth, adminOnly, async (req, res) => {
+  try {
+    await pool.query('DELETE FROM netps_members WHERE user_id=?', [req.params.userId]);
+    res.json({ message: 'Removed from Net-PS team' });
+  } catch(e) { res.status(500).json({ error: 'Failed to remove member' }); }
+});
+
+// Get Net-PS tickets (for a logged-in Net-PS member)
+app.get('/api/netps/tickets', auth, async (req, res) => {
+  try {
+    const [member] = await pool.query('SELECT id FROM netps_members WHERE user_id=?', [req.user.id]);
+    if (!member.length && req.user.role !== 'admin')
+      return res.status(403).json({ error: 'Net-PS access required' });
+    const params = [];
+    let where = "WHERE t.queue='Net-PS'";
+    if (req.user.role !== 'admin') { where += ' AND t.assigned_to=?'; params.push(req.user.id); }
+    const [rows] = await pool.query(
+      `SELECT t.*, u.full_name as creator_name,
+       (SELECT COUNT(*) FROM ticket_comments WHERE ticket_id=t.id) as comment_count
+       FROM tickets t LEFT JOIN users u ON t.created_by=u.id ${where}
+       ORDER BY FIELD(t.status,'assigned','work_in_progress','resolved'), t.created_at DESC`, params);
+    rows.forEach(r => r.username = getUsername(r.creator_name));
+    res.json(rows);
+  } catch(e) { res.status(500).json({ error: 'Failed to fetch tickets' }); }
+});
+
+// Assign ticket to a Net-PS member
+app.put('/api/tickets/:id/assign', auth, adminOnly, async (req, res) => {
+  const { assigned_to } = req.body;
+  if (!assigned_to) return res.status(400).json({ error: 'assigned_to is required' });
+  try {
+    await pool.query("UPDATE tickets SET assigned_to=?, status='work_in_progress' WHERE id=?", [assigned_to, req.params.id]);
+    res.json({ message: 'Ticket assigned' });
+  } catch(e) { res.status(500).json({ error: 'Assign failed' }); }
+});
+
+// Net-PS member submits solution + resolves ticket
+app.put('/api/tickets/:id/netps-response', auth, async (req, res) => {
+  const { netps_response } = req.body;
+  if (!netps_response) return res.status(400).json({ error: 'Response is required' });
+  try {
+    const [member] = await pool.query('SELECT id FROM netps_members WHERE user_id=?', [req.user.id]);
+    if (!member.length && req.user.role !== 'admin')
+      return res.status(403).json({ error: 'Net-PS access required' });
+    await pool.query("UPDATE tickets SET netps_response=?, status='resolved' WHERE id=?", [netps_response, req.params.id]);
+    await pool.query('INSERT INTO ticket_comments (ticket_id, user_id, comment) VALUES (?,?,?)',
+      [req.params.id, req.user.id, `✅ Net-PS Solution:\n${netps_response}`]);
+    res.json({ message: 'Solution submitted and ticket resolved' });
+  } catch(e) { res.status(500).json({ error: 'Failed to submit response' }); }
+});
+
+// ─── END NET-PS ───────────────────────────────────────────────
 
 app.use((req, res) => {
   if (!req.path.startsWith('/api')) res.sendFile(path.join(__dirname, 'public', 'index.html'));
