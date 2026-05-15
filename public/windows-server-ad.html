@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Windows Server & Active Directory — KCA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#0A1A3B;--navy2:#0D3B6E;--teal:#0E8A78;--teal2:#0bb89c;
+  --gold:#F5A623;--bg:#0a0f1a;--bg2:#111827;--bg3:#1e2330;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --border:#1e2330;--border2:#2d3748;--green:#3ecf6e;--red:#ff4d4d
+}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+/* NAV */
+nav{background:var(--navy);border-bottom:2px solid var(--teal);padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;flex-shrink:0}
+.nav-logo{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+.nav-logo img{height:30px}
+.nav-logo span{font-weight:800;font-size:1rem;color:var(--teal)}
+.nav-course{color:var(--gold);font-size:.82rem;font-weight:700;letter-spacing:.04em}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.progress-pill{background:rgba(14,138,120,.2);border:1px solid rgba(14,138,120,.4);color:var(--teal);padding:.3rem .8rem;border-radius:20px;font-size:.78rem;font-weight:700}
+.btn-back{background:transparent;border:1px solid var(--border2);color:var(--text2);padding:.35rem .8rem;border-radius:6px;cursor:pointer;font-size:.8rem;text-decoration:none;display:inline-block}
+.btn-back:hover{border-color:var(--teal);color:var(--teal)}
+
+/* LAYOUT */
+.app{display:flex;flex:1;min-height:0}
+
+/* SIDEBAR */
+.sidebar{width:260px;background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;padding:.75rem 0}
+.sidebar-title{font-size:.7rem;font-weight:700;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:.5rem 1rem .75rem}
+.mod-btn{width:100%;background:none;border:none;text-align:left;padding:.6rem 1rem;cursor:pointer;display:flex;align-items:center;gap:.6rem;transition:.15s;border-left:3px solid transparent}
+.mod-btn:hover{background:rgba(255,255,255,.04)}
+.mod-btn.active{background:rgba(14,138,120,.12);border-left-color:var(--teal)}
+.mod-btn .mod-num{min-width:22px;height:22px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:var(--text3);flex-shrink:0}
+.mod-btn.active .mod-num{background:var(--teal);color:#fff}
+.mod-btn.completed .mod-num{background:var(--green);color:#fff}
+.mod-btn .mod-label{font-size:.8rem;color:var(--text2);line-height:1.3}
+.mod-btn.active .mod-label{color:var(--text);font-weight:600}
+.mod-btn.completed .mod-label{color:var(--green)}
+
+/* MAIN CONTENT */
+.content{flex:1;overflow-y:auto;padding:2rem}
+.module-view{max-width:860px;margin:0 auto}
+
+/* MODULE HEADER */
+.mod-header{margin-bottom:1.5rem}
+.mod-tag{display:inline-flex;align-items:center;gap:.4rem;background:rgba(14,138,120,.15);border:1px solid rgba(14,138,120,.3);color:var(--teal);padding:.25rem .7rem;border-radius:20px;font-size:.75rem;font-weight:700;margin-bottom:.6rem}
+.mod-title{font-size:1.6rem;font-weight:800;color:#fff;margin-bottom:.4rem}
+.mod-subtitle{color:var(--text2);font-size:.95rem}
+.mod-divider{height:2px;background:linear-gradient(90deg,var(--teal),transparent);margin:1rem 0 1.5rem;border-radius:2px}
+
+/* SECTIONS */
+.section{margin-bottom:1.5rem}
+.section-title{font-size:1.05rem;font-weight:700;color:var(--gold);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.section-title::before{content:'';width:3px;height:1em;background:var(--gold);border-radius:2px;display:inline-block}
+
+/* CONCEPT CARD */
+.concept{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin-bottom:.75rem}
+.concept-title{font-weight:700;font-size:.92rem;color:var(--teal);margin-bottom:.4rem}
+.concept p,.concept li{font-size:.88rem;color:var(--text2);line-height:1.65}
+.concept ul,.concept ol{padding-left:1.2rem;margin-top:.3rem}
+.concept li{margin-bottom:.2rem}
+
+/* CODE BLOCK */
+.code{background:#000;border:1px solid #333;border-radius:8px;padding:.9rem 1rem;margin:.5rem 0;font-family:'Courier New',monospace;font-size:.82rem;color:#FFD700;line-height:1.7;overflow-x:auto;white-space:pre}
+.code-label{font-size:.7rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem}
+
+/* INFO BOXES */
+.info-box{border-radius:8px;padding:.9rem 1rem;margin:.75rem 0;font-size:.87rem;line-height:1.6;border-left:3px solid}
+.info-box.tip{background:rgba(14,138,120,.1);border-color:var(--teal);color:#a7f3d0}
+.info-box.warn{background:rgba(245,166,35,.1);border-color:var(--gold);color:#fde68a}
+.info-box.note{background:rgba(59,158,255,.1);border-color:#3b9eff;color:#bfdbfe}
+.info-box strong{font-weight:700}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:.85rem;margin:.75rem 0}
+.tbl th{background:var(--navy2);color:var(--gold);padding:.6rem .8rem;text-align:left;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em}
+.tbl td{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--text2)}
+.tbl tr:hover td{background:rgba(255,255,255,.02)}
+
+/* LAB */
+.lab{background:var(--navy);border:1px solid rgba(14,138,120,.3);border-radius:12px;padding:1.2rem;margin-top:1rem}
+.lab-header{display:flex;align-items:center;gap:.6rem;margin-bottom.8rem;margin-bottom:.8rem}
+.lab-icon{width:32px;height:32px;background:rgba(14,138,120,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.lab-title{font-weight:700;color:#fff;font-size:.95rem}
+.lab-sub{font-size:.78rem;color:var(--teal)}
+.lab-step{display:flex;gap:.75rem;margin-bottom:.6rem;align-items:flex-start}
+.lab-step-num{min-width:24px;height:24px;background:var(--teal);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;flex-shrink:0;margin-top:1px}
+.lab-step p{font-size:.86rem;color:var(--text2);line-height:1.5}
+
+/* QUIZ */
+.quiz{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-top:1.5rem}
+.quiz-header{font-size:1rem;font-weight:700;color:#fff;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.quiz-q{margin-bottom:1.2rem}
+.quiz-q-text{font-size:.9rem;color:var(--text);font-weight:600;margin-bottom:.6rem}
+.quiz-q-text .qnum{color:var(--teal);font-weight:800}
+.quiz-opts{display:flex;flex-direction:column;gap:.4rem}
+.quiz-opt{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:.6rem .9rem;font-size:.85rem;color:var(--text2);cursor:pointer;transition:.15s;display:flex;align-items:center;gap:.6rem}
+.quiz-opt:hover{border-color:var(--teal);color:var(--text)}
+.quiz-opt.selected{border-color:var(--teal);background:rgba(14,138,120,.1);color:var(--text)}
+.quiz-opt.correct{border-color:var(--green);background:rgba(62,207,110,.1);color:var(--green)}
+.quiz-opt.wrong{border-color:var(--red);background:rgba(255,77,77,.1);color:var(--red)}
+.quiz-opt input{accent-color:var(--teal)}
+.quiz-feedback{font-size:.82rem;padding:.5rem .8rem;border-radius:6px;margin-top:.4rem}
+.quiz-feedback.correct{background:rgba(62,207,110,.1);color:var(--green)}
+.quiz-feedback.wrong{background:rgba(255,77,77,.1);color:var(--red)}
+.btn-submit{background:var(--teal);color:#fff;border:none;padding:.65rem 1.5rem;border-radius:8px;font-size:.88rem;font-weight:700;cursor:pointer;margin-top:.5rem;transition:.15s}
+.btn-submit:hover{background:var(--teal2)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
+.quiz-result{background:var(--navy);border:1px solid rgba(14,138,120,.3);border-radius:10px;padding:1rem;text-align:center;margin-top:1rem}
+.quiz-score{font-size:1.8rem;font-weight:900;color:var(--gold)}
+.quiz-score-label{font-size:.85rem;color:var(--text2);margin-top:.2rem}
+
+/* NAV BUTTONS */
+.mod-nav{display:flex;justify-content:space-between;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.btn-nav{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.4rem;border-radius:8px;font-size:.88rem;font-weight:700;cursor:pointer;border:none;transition:.15s}
+.btn-prev{background:var(--bg3);color:var(--text2);border:1px solid var(--border2)}
+.btn-prev:hover{border-color:var(--teal);color:var(--teal)}
+.btn-next{background:var(--teal);color:#fff}
+.btn-next:hover{background:var(--teal2)}
+.btn-nav:disabled{opacity:.4;cursor:not-allowed}
+
+/* COMPLETE BADGE */
+.complete-banner{background:linear-gradient(135deg,var(--navy),var(--navy2));border:1px solid rgba(14,138,120,.4);border-radius:12px;padding:2rem;text-align:center;margin-top:2rem}
+.complete-banner h2{color:var(--gold);font-size:1.4rem;margin-bottom:.4rem}
+.complete-banner p{color:var(--text2);font-size:.9rem}
+
+/* RESPONSIVE */
+@media(max-width:700px){.sidebar{display:none}.content{padding:1rem}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/dashboard.html" class="nav-logo">
+    <img src="/KCA-LOGO-transparent.png" alt="KCA" onerror="this.style.display='none'">
+    <span>Kuwaha Cloud Academy</span>
+  </a>
+  <span class="nav-course">Windows Server & Active Directory</span>
+  <div class="nav-right">
+    <div class="progress-pill" id="progressPill">0 / 14 Modules</div>
+    <a href="/dashboard.html" class="btn-back">← Dashboard</a>
+  </div>
+</nav>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content" id="content"></main>
+</div>
+
+<script>
+const MODULES = [
+{
+  id:1, title:'Introduction to Windows Server',
+  subtitle:'What is Windows Server, editions, and core concepts',
+  concepts:[
+    {title:'What is Windows Server?',
+     body:`Windows Server is Microsoft's operating system designed specifically for servers — machines that provide services, resources, and management to other computers on a network. Unlike desktop Windows (Windows 10/11), Windows Server is optimized for stability, security, and scalability in enterprise environments.
+     <br><br>Common roles include: file storage, user authentication, DNS, DHCP, web hosting, and Active Directory.`},
+    {title:'Windows Server Editions (2022)',
+     body:`<ul>
+     <li><strong>Standard</strong> — For physical/minimally virtualized environments. Includes 2 VMs.</li>
+     <li><strong>Datacenter</strong> — Unlimited VMs, advanced features like Storage Spaces Direct.</li>
+     <li><strong>Essentials</strong> — Small businesses (≤25 users, ≤50 devices). Simplified interface.</li>
+     <li><strong>Core</strong> — No GUI — command-line and PowerShell only. Lower attack surface, less resource use.</li>
+     </ul>`,},
+    {title:'Installation Options',
+     body:`<ul>
+     <li><strong>Server with Desktop Experience</strong> — Full GUI, familiar Windows interface.</li>
+     <li><strong>Server Core</strong> — No GUI. Managed via PowerShell or remotely via RSAT tools.</li>
+     <li><strong>Nano Server</strong> — Ultra-minimal, container/cloud workloads only.</li>
+     </ul>`},
+    {title:'Key Terminology',
+     body:`<ul>
+     <li><strong>Domain</strong> — A logical group of computers sharing a centralized directory (AD).</li>
+     <li><strong>Domain Controller (DC)</strong> — Server running Active Directory, authenticates users.</li>
+     <li><strong>Workgroup</strong> — Peer-to-peer network, no centralized authentication (small home/office setups).</li>
+     <li><strong>FQDN</strong> — Fully Qualified Domain Name, e.g. <em>server01.kca.local</em>.</li>
+     <li><strong>SAM Account</strong> — Security Accounts Manager — local user/group database.</li>
+     </ul>`},
+  ],
+  table:{headers:['Feature','Workgroup','Domain'],rows:[
+    ['Max users','~20','Unlimited'],
+    ['Authentication','Local SAM','Active Directory'],
+    ['Central management','No','Yes (GPO, AD)'],
+    ['Best for','Home/small office','Business / Enterprise'],
+  ]},
+  infoboxes:[
+    {type:'note',text:'<strong>For the KCA lab:</strong> We will use Windows Server 2022 Standard with Desktop Experience throughout this course.'},
+    {type:'tip',text:'<strong>Tip:</strong> Always assign a static IP address to your server before promoting it to a Domain Controller.'},
+  ],
+  lab:{title:'Lab 1 — Explore Server Manager',subtitle:'Getting familiar with the Windows Server interface',steps:[
+    'Open Server Manager from the taskbar (it launches automatically on login).',
+    'In the left panel, click Local Server. Note the Computer Name, IP Address, and Windows Firewall status.',
+    'Click Manage → Add Roles and Features. Explore the wizard without installing anything yet.',
+    'Run PowerShell as Administrator and type: Get-WindowsFeature | Where-Object {$_.Installed -eq $true}',
+    'Observe the currently installed roles and features. Record at least 3 in your lab notes.',
+  ]},
+  quiz:[
+    {q:'Which Windows Server edition allows unlimited virtual machines?',opts:['Standard','Essentials','Datacenter','Core'],ans:2,exp:'Datacenter edition provides unlimited VM licensing.'},
+    {q:'What is a Domain Controller?',opts:['A router managing traffic','A server running Active Directory that authenticates users','A backup server','A DNS-only server'],ans:1,exp:'A DC runs Active Directory Domain Services and handles authentication.'},
+    {q:'Which installation option has no graphical user interface?',opts:['Desktop Experience','Essentials','Server Core','Standard'],ans:2,exp:'Server Core omits the GUI — managed by PowerShell or remote tools.'},
+    {q:'What does FQDN stand for?',opts:['Full Quality Domain Name','Fully Qualified Domain Name','Fast Queue DNS Name','Forwarded Queue Domain Node'],ans:1,exp:'FQDN = Fully Qualified Domain Name, e.g. server01.kca.local'},
+    {q:'In a Workgroup, where are user accounts stored?',opts:['Active Directory','DNS Server','Local SAM database','Domain Controller'],ans:2,exp:'Workgroups use the local Security Accounts Manager (SAM) database on each machine.'},
+  ]
+},
+{
+  id:2, title:'Installing & Initial Configuration',
+  subtitle:'Installing Windows Server 2022 and post-install setup',
+  concepts:[
+    {title:'Pre-Installation Checklist',body:`<ul>
+    <li>Minimum: 1.4 GHz 64-bit CPU, 512 MB RAM (2 GB for Desktop Experience), 32 GB disk</li>
+    <li>Recommended lab: 4 GB RAM, 60 GB disk, 2 vCPUs</li>
+    <li>Note the hardware: network adapter model, disk controller</li>
+    <li>Have your product key and bootable ISO/USB ready</li>
+    </ul>`},
+    {title:'Post-Install Configuration Steps',body:`After installation completes, always perform these steps in order:
+    <ol>
+    <li>Set a strong local Administrator password</li>
+    <li>Rename the computer to a meaningful name (e.g. KCA-DC01)</li>
+    <li>Assign a static IP address</li>
+    <li>Set DNS to point to itself (127.0.0.1) after AD install</li>
+    <li>Configure time zone</li>
+    <li>Run Windows Update</li>
+    <li>Enable Remote Desktop (optional for lab)</li>
+    </ol>`},
+    {title:'Renaming the Server via PowerShell',body:''},
+    {title:'Setting a Static IP via PowerShell',body:''},
+  ],
+  codes:[
+    {label:'Rename the server',code:`# Rename computer (requires restart)
+Rename-Computer -NewName "KCA-DC01" -Restart`},
+    {label:'Set static IP address',code:`# Get adapter name first
+Get-NetAdapter
+
+# Set static IP
+New-NetIPAddress -InterfaceAlias "Ethernet" \`
+  -IPAddress 192.168.1.10 \`
+  -PrefixLength 24 \`
+  -DefaultGateway 192.168.1.1
+
+# Set DNS server
+Set-DnsClientServerAddress -InterfaceAlias "Ethernet" \`
+  -ServerAddresses 192.168.1.10`},
+    {label:'Check current IP configuration',code:`ipconfig /all
+# or in PowerShell:
+Get-NetIPAddress`},
+  ],
+  infoboxes:[
+    {type:'warn',text:'<strong>Important:</strong> Always set a static IP BEFORE promoting a server to a Domain Controller. Changing IPs on a DC after promotion causes DNS and replication issues.'},
+    {type:'tip',text:'<strong>Naming convention:</strong> Use a clear naming scheme like KCA-DC01 (location-role-number). Avoid renaming after domain join.'},
+  ],
+  lab:{title:'Lab 2 — Configure Server Identity',subtitle:'Rename server and set static IP',steps:[
+    'Open PowerShell as Administrator.',
+    'Run: Get-NetAdapter to find your network adapter name.',
+    'Rename the server: Rename-Computer -NewName "KCA-DC01" -Force (no restart yet)',
+    'Assign static IP: New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.10 -PrefixLength 24 -DefaultGateway 192.168.1.1',
+    'Set DNS: Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses 127.0.0.1',
+    'Verify: ipconfig /all — confirm IP, mask, gateway, and DNS are correct.',
+    'Restart the server: Restart-Computer',
+  ]},
+  quiz:[
+    {q:'What is the minimum RAM for Windows Server 2022 with Desktop Experience?',opts:['512 MB','1 GB','2 GB','4 GB'],ans:2,exp:'Desktop Experience requires at least 2 GB RAM; Server Core only needs 512 MB.'},
+    {q:'Which PowerShell command renames a computer?',opts:['Set-ComputerName','Rename-Computer','Change-Hostname','Set-Hostname'],ans:1,exp:'Rename-Computer -NewName "NewName" -Restart is the correct cmdlet.'},
+    {q:'What should you set BEFORE promoting a server to a Domain Controller?',opts:['Install IIS','Set a static IP','Enable Remote Desktop','Install SQL Server'],ans:1,exp:'A DC needs a static IP for consistent DNS resolution and AD replication.'},
+    {q:'Which command shows all network adapter names in PowerShell?',opts:['ipconfig /all','Get-NetAdapter','netstat -r','Get-NetworkInterface'],ans:1,exp:'Get-NetAdapter lists all adapters with their names and status.'},
+    {q:'After setting a static IP, what DNS server should a DC point to?',opts:['8.8.8.8','The router IP','Itself (127.0.0.1 or its own IP)','The ISP DNS'],ans:2,exp:'A DC should point DNS to itself since it will host the DNS zone for the domain.'},
+  ]
+},
+{
+  id:3, title:'Server Roles & Features',
+  subtitle:'Understanding and installing roles with Server Manager',
+  concepts:[
+    {title:'What are Roles and Features?',body:`<ul>
+    <li><strong>Role</strong> — A major function: DNS Server, DHCP Server, AD DS, File Server, Web Server (IIS), etc.</li>
+    <li><strong>Role Service</strong> — Sub-component of a role (e.g. IIS has Web Server, FTP Server as role services).</li>
+    <li><strong>Feature</strong> — Supporting software: .NET Framework, RSAT tools, Windows Backup, Failover Clustering.</li>
+    </ul>`},
+    {title:'Most Important Server Roles',body:`<table class='tbl'><tr><th>Role</th><th>Purpose</th></tr>
+    <tr><td>AD DS</td><td>Active Directory — user/computer management</td></tr>
+    <tr><td>DNS Server</td><td>Name resolution for the domain</td></tr>
+    <tr><td>DHCP Server</td><td>Automatic IP assignment</td></tr>
+    <tr><td>File and Storage Services</td><td>Shared folders, DFS, quotas</td></tr>
+    <tr><td>Web Server (IIS)</td><td>Host web applications</td></tr>
+    <tr><td>Remote Desktop Services</td><td>Allow remote connections</td></tr>
+    <tr><td>Print and Document Services</td><td>Manage printers on network</td></tr>
+    </table>`},
+    {title:'Installing Roles via PowerShell',body:''},
+    {title:'RSAT — Remote Server Administration Tools',body:`RSAT lets you manage server roles from a remote Windows 10/11 workstation — no need to log into the server directly. Install on admin workstations to manage AD, DNS, DHCP from a desktop.`},
+  ],
+  codes:[
+    {label:'Install AD DS and DNS via PowerShell',code:`Install-WindowsFeature -Name AD-Domain-Services,DNS \`
+  -IncludeManagementTools`},
+    {label:'Install DHCP Server role',code:`Install-WindowsFeature -Name DHCP \`
+  -IncludeManagementTools`},
+    {label:'List all available roles',code:`Get-WindowsFeature | Where-Object {$_.FeatureType -eq 'Role'} | \`
+  Select-Object Name, DisplayName, Installed`},
+    {label:'Verify installed roles',code:`Get-WindowsFeature | Where-Object {$_.Installed} | \`
+  Select-Object DisplayName`},
+  ],
+  infoboxes:[
+    {type:'note',text:'<strong>Best practice:</strong> Install only the roles you need. Every role increases the attack surface of the server.'},
+    {type:'tip',text:'<strong>Management Tools:</strong> Always include -IncludeManagementTools when installing roles so you get the MMC snap-ins.'},
+  ],
+  lab:{title:'Lab 3 — Install AD DS and DNS Roles',subtitle:'Prepare the server for domain promotion',steps:[
+    'Open Server Manager → Manage → Add Roles and Features.',
+    'Select Role-based or feature-based installation → select your server.',
+    'Check Active Directory Domain Services. Accept the additional features prompt.',
+    'Also check DNS Server on the roles list.',
+    'Click Install. Wait for completion.',
+    'Verify via PowerShell: Get-WindowsFeature AD-Domain-Services,DNS',
+    'Note the yellow warning flag in Server Manager — this means post-deployment configuration is needed (promoting to DC).',
+  ]},
+  quiz:[
+    {q:'What is the difference between a Role and a Feature?',opts:['No difference','A Role is a major server function; a Feature is supporting software','A Feature is installed first, then the Role','Roles are for GUIs only'],ans:1,exp:'Roles are primary server functions (DNS, AD DS); Features are supporting components (.NET, RSAT).'},
+    {q:'Which PowerShell command installs a Windows Server role?',opts:['Add-Role','Install-WindowsFeature','Enable-WindowsRole','Set-WindowsFeature'],ans:1,exp:'Install-WindowsFeature is the correct cmdlet for installing roles and features.'},
+    {q:'What does RSAT stand for?',opts:['Remote Server Administration Tools','Role Server Access Terminal','Remote System Admin Toolkit','Routing Server Application Tools'],ans:0,exp:'RSAT = Remote Server Administration Tools — manage servers from a workstation.'},
+    {q:'Which flag includes GUI management tools when installing a role?',opts:['-WithGUI','-IncludeManagementTools','-AddConsole','-WithSnapin'],ans:1,exp:'-IncludeManagementTools installs the MMC snap-ins alongside the role.'},
+    {q:'After installing AD DS, what does the yellow flag in Server Manager indicate?',opts:['Server needs reboot','Post-deployment configuration is needed','A security vulnerability was found','The role is corrupted'],ans:1,exp:'The yellow flag means the role is installed but not yet configured — you need to run the AD DS Configuration Wizard (promote to DC).'},
+  ]
+},
+{
+  id:4, title:'Active Directory Domain Services',
+  subtitle:'Understanding AD DS architecture and promoting a Domain Controller',
+  concepts:[
+    {title:'What is Active Directory?',body:`Active Directory Domain Services (AD DS) is Microsoft's directory service. It stores information about users, computers, groups, and other network objects and provides authentication and authorization across a Windows domain.
+    <br><br>Think of it as a <strong>phone book + security system</strong> for your network — every user and computer is listed, and access to resources is controlled centrally.`},
+    {title:'AD DS Key Components',body:`<ul>
+    <li><strong>Domain</strong> — Administrative boundary. Example: <em>kca.local</em></li>
+    <li><strong>Tree</strong> — One or more domains sharing a contiguous namespace (kca.local, us.kca.local)</li>
+    <li><strong>Forest</strong> — Collection of one or more trees. The forest is the security boundary.</li>
+    <li><strong>Domain Controller (DC)</strong> — Server hosting AD DS. At least one per domain.</li>
+    <li><strong>Schema</strong> — Blueprint defining what objects and attributes can exist in AD.</li>
+    <li><strong>Global Catalog</strong> — Index of all objects in the forest. Needed for logon and searches.</li>
+    <li><strong>SYSVOL</strong> — Shared folder replicated between DCs. Holds Group Policy templates and logon scripts.</li>
+    <li><strong>NTDS.dit</strong> — The AD database file. Located at C:\\Windows\\NTDS\\ntds.dit</li>
+    </ul>`},
+    {title:'Promoting a Server to Domain Controller',body:'Use the AD DS Configuration Wizard after installing the role, or use PowerShell (preferred in production).'},
+    {title:'Functional Levels',body:`Forest and domain functional levels control which AD features are available. Higher levels require all DCs to run a minimum OS version. Windows Server 2022 supports up to <strong>Windows Server 2016</strong> functional level (2022 level coming in future updates).`},
+  ],
+  codes:[
+    {label:'Promote server to Domain Controller (new forest)',code:`Install-ADDSForest \`
+  -DomainName "kca.local" \`
+  -DomainNetbiosName "KCA" \`
+  -ForestMode "WinThreshold" \`
+  -DomainMode "WinThreshold" \`
+  -InstallDns:$true \`
+  -SafeModeAdministratorPassword (ConvertTo-SecureString \`
+    "P@ssw0rd2024!" -AsPlainText -Force) \`
+  -Force:$true`},
+    {label:'Add a replica DC to existing domain',code:`Install-ADDSDomainController \`
+  -DomainName "kca.local" \`
+  -InstallDns:$true \`
+  -Credential (Get-Credential) \`
+  -SafeModeAdministratorPassword (ConvertTo-SecureString \`
+    "P@ssw0rd2024!" -AsPlainText -Force) \`
+  -Force:$true`},
+    {label:'Verify AD DS is running',code:`Get-Service ADWS,KDC,Netlogon,NTDS | Select-Object Name,Status
+# Check domain info
+Get-ADDomain`},
+  ],
+  infoboxes:[
+    {type:'warn',text:'<strong>DSRM Password:</strong> The Safe Mode Administrator Password (Directory Services Restore Mode) is used to recover AD. Store it securely — if you lose it, AD recovery is extremely difficult.'},
+    {type:'tip',text:'<strong>Best practice:</strong> Always have at least 2 Domain Controllers per domain for redundancy. If one DC fails, the other continues authenticating users.'},
+    {type:'note',text:'<strong>DNS integration:</strong> AD DS is tightly coupled with DNS. When you promote to DC, DNS is automatically configured to support AD. Ensure DNS is working before domain-joining computers.'},
+  ],
+  lab:{title:'Lab 4 — Promote to Domain Controller',subtitle:'Create the kca.local domain',steps:[
+    'In Server Manager, click the yellow flag → Promote this server to a domain controller.',
+    'Select Add a new forest. Enter Root domain name: kca.local',
+    'Set Forest and Domain functional levels to Windows Server 2016.',
+    'Check DNS Server (should be checked by default).',
+    'Set a DSRM password (e.g. P@ssw0rd2024!) — write it down!',
+    'Accept the default paths for database, log files, and SYSVOL.',
+    'Click Install. Server will restart automatically.',
+    'After restart, log in as KCA\\Administrator. Open Active Directory Users and Computers (ADUC) to verify.',
+  ]},
+  quiz:[
+    {q:'What is the AD database file called?',opts:['addb.mdf','ntds.dit','adstore.db','directory.edb'],ans:1,exp:'ntds.dit is the Active Directory database file located at C:\\Windows\\NTDS\\'},
+    {q:'What is SYSVOL used for?',opts:['Storing the AD database','Holding GPO templates and logon scripts, replicated between DCs','Backup storage','Virtual machine images'],ans:1,exp:'SYSVOL is a shared folder replicated between DCs containing Group Policy templates and logon scripts.'},
+    {q:'What is the forest in Active Directory?',opts:['A single domain','The security boundary containing one or more trees','The DNS zone','A group of computers'],ans:1,exp:'The forest is the outermost security boundary in AD, containing one or more domain trees.'},
+    {q:'What is the DSRM password used for?',opts:['Logging into the server normally','Recovering Active Directory in Directory Services Restore Mode','Resetting user passwords','Remote server access'],ans:1,exp:'DSRM password is used to access the DC for AD recovery when normal authentication is unavailable.'},
+    {q:'Which PowerShell command promotes a server to a DC in a new forest?',opts:['Promote-ADDomainController','Install-ADDSForest','Add-DomainController','New-ADForest'],ans:1,exp:'Install-ADDSForest creates a new AD forest and promotes the server to its first DC.'},
+  ]
+},
+{
+  id:5, title:'Users, Groups & Organizational Units',
+  subtitle:'Managing AD objects: users, groups, and OUs',
+  concepts:[
+    {title:'Organizational Units (OUs)',body:`OUs are containers in AD used to organize objects (users, computers, groups) and to apply Group Policy. Think of them like folders in a filing cabinet.
+    <br><br><strong>Design tip:</strong> Structure OUs by department or function, not by geography — unless you have different GPO requirements per location.
+    <br>Example structure:
+    <ul>
+    <li>kca.local → KCA → Users → (IT, HR, Students, Instructors)</li>
+    <li>kca.local → KCA → Computers → (Workstations, Servers, Labs)</li>
+    <li>kca.local → KCA → Groups</li>
+    </ul>`},
+    {title:'User Account Types',body:`<ul>
+    <li><strong>Domain User</strong> — Stored in AD, can log into any domain computer.</li>
+    <li><strong>Local User</strong> — Stored in local SAM, can only log into that one machine.</li>
+    <li><strong>Service Account</strong> — Used by applications/services (e.g. SQL Server, IIS app pools).</li>
+    <li><strong>Computer Account</strong> — Created when a computer joins the domain.</li>
+    </ul>`},
+    {title:'Group Types and Scopes',body:`<strong>Group Types:</strong>
+    <ul>
+    <li><strong>Security Group</strong> — Assign permissions to resources. Used for access control.</li>
+    <li><strong>Distribution Group</strong> — Email distribution lists only (Exchange). No security.</li>
+    </ul>
+    <strong>Group Scopes (AGDLP rule):</strong>
+    <ul>
+    <li><strong>Global</strong> — Members from same domain. Used to group users by role/department.</li>
+    <li><strong>Domain Local</strong> — Assign permissions to resources. Can have members from any domain.</li>
+    <li><strong>Universal</strong> — Members from any domain in forest. Used in multi-domain forests.</li>
+    </ul>`},
+    {title:'AGDLP Best Practice',body:`The AGDLP nesting strategy:
+    <ul>
+    <li><strong>A</strong>ccounts → <strong>G</strong>lobal groups → <strong>D</strong>omain <strong>L</strong>ocal groups → <strong>P</strong>ermissions</li>
+    </ul>
+    Example: Student users → GG_Students (Global) → DL_FileShare_Read (DomLocal) → File share permissions.`},
+  ],
+  codes:[
+    {label:'Create an OU',code:`New-ADOrganizationalUnit -Name "Students" \`
+  -Path "OU=KCA,DC=kca,DC=local" \`
+  -ProtectedFromAccidentalDeletion $true`},
+    {label:'Create a user account',code:`New-ADUser \`
+  -Name "John Smith" \`
+  -GivenName "John" \`
+  -Surname "Smith" \`
+  -SamAccountName "jsmith" \`
+  -UserPrincipalName "jsmith@kca.local" \`
+  -Path "OU=Students,OU=KCA,DC=kca,DC=local" \`
+  -AccountPassword (ConvertTo-SecureString "Welcome2024!" -AsPlainText -Force) \`
+  -Enabled $true \`
+  -ChangePasswordAtLogon $true`},
+    {label:'Create a security group',code:`New-ADGroup \`
+  -Name "GG_Students" \`
+  -GroupScope Global \`
+  -GroupCategory Security \`
+  -Path "OU=Groups,OU=KCA,DC=kca,DC=local"`},
+    {label:'Add user to group',code:`Add-ADGroupMember -Identity "GG_Students" -Members "jsmith"
+
+# Add multiple users at once
+Get-ADUser -Filter {Department -eq "Students"} | \`
+  Add-ADGroupMember -Identity "GG_Students"`},
+    {label:'Bulk create users from CSV',code:`# CSV format: Name,First,Last,Username,Department
+Import-Csv C:\\users.csv | ForEach-Object {
+  New-ADUser -Name $_.Name \`
+    -GivenName $_.First -Surname $_.Last \`
+    -SamAccountName $_.Username \`
+    -Department $_.Department \`
+    -Path "OU=Students,OU=KCA,DC=kca,DC=local" \`
+    -AccountPassword (ConvertTo-SecureString "Welcome2024!" -AsPlainText -Force) \`
+    -Enabled $true
+}`},
+  ],
+  infoboxes:[
+    {type:'tip',text:'<strong>OU Protection:</strong> Always enable ProtectedFromAccidentalDeletion on OUs. It prevents accidental deletion from wiping users and computers.'},
+    {type:'note',text:'<strong>UPN vs SAM:</strong> UserPrincipalName (jsmith@kca.local) is used for modern logins. SamAccountName (jsmith) is the older DOMAIN\\username format. Both should be set.'},
+  ],
+  lab:{title:'Lab 5 — Create OU Structure and Users',subtitle:'Build the KCA organizational structure in AD',steps:[
+    'Open Active Directory Users and Computers (ADUC) from Server Manager → Tools.',
+    'Right-click kca.local → New → Organizational Unit. Create: KCA',
+    'Inside KCA, create sub-OUs: Students, Instructors, IT, Computers, Groups.',
+    'In the Students OU, create 3 user accounts: astudent1, astudent2, astudent3.',
+    'Create a Global Security Group "GG_Students" in the Groups OU.',
+    'Add all 3 student users to GG_Students.',
+    'Verify: Get-ADGroupMember -Identity "GG_Students" | Select-Object Name',
+  ]},
+  quiz:[
+    {q:'What is an Organizational Unit (OU) used for in AD?',opts:['Connecting to the internet','Organizing AD objects and applying Group Policy','Storing the AD database','Routing network traffic'],ans:1,exp:'OUs are containers for organizing users/computers and applying GPOs to specific groups.'},
+    {q:'Which group type is used to assign permissions to resources?',opts:['Distribution Group','Universal Group','Domain Local Security Group','Global Distribution Group'],ans:2,exp:'Domain Local Security Groups are assigned to resource permissions (files, printers, etc.).'},
+    {q:'What does AGDLP stand for?',opts:['Accounts, Groups, Distribution, Local, Policies','Accounts, Global, Domain Local, Permissions','Authentication, Global, Domain, Links, Policies','Admin, Groups, DCs, Local, Primary'],ans:1,exp:'AGDLP: Accounts → Global groups → Domain Local groups → Permissions.'},
+    {q:'Which PowerShell command creates a new AD user?',opts:['Add-ADUser','Create-ADUser','New-ADUser','Set-ADUser'],ans:2,exp:'New-ADUser is the correct cmdlet to create Active Directory user accounts.'},
+    {q:'Which user account type can log into any domain-joined computer?',opts:['Local User','Service Account','Domain User','Administrator'],ans:2,exp:'Domain Users are stored in AD and can authenticate on any computer in the domain.'},
+  ]
+},
+{
+  id:6, title:'Group Policy Objects (GPO)',
+  subtitle:'Centrally manage settings and security with GPO',
+  concepts:[
+    {title:'What is Group Policy?',body:`Group Policy allows administrators to centrally manage settings for users and computers across the entire domain. Settings can control: desktop appearance, password policies, software installation, drive mappings, startup scripts, firewall rules, and hundreds of other options.`},
+    {title:'GPO Processing Order (LSDOU)',body:`GPOs are applied in this order — later ones override earlier ones:
+    <ol>
+    <li><strong>L</strong>ocal — local computer policy</li>
+    <li><strong>S</strong>ite — GPOs linked to the AD site</li>
+    <li><strong>D</strong>omain — GPOs linked to the domain</li>
+    <li><strong>O</strong>U — GPOs linked to OUs (child OUs override parent OUs)</li>
+    </ol>
+    <strong>Remember:</strong> The last applied policy wins (unless enforced).`},
+    {title:'Key GPO Settings Locations',body:`<ul>
+    <li><strong>Computer Configuration</strong> — Applied at machine startup regardless of who logs in.</li>
+    <li><strong>User Configuration</strong> — Applied at user login, follows the user.</li>
+    <li><strong>Security Settings</strong> → Account Policies → Password Policy (minimum length, complexity, history)</li>
+    <li><strong>Administrative Templates</strong> — Registry-based settings (Control Panel, Start Menu, etc.)</li>
+    <li><strong>Software Installation</strong> — Deploy MSI packages automatically</li>
+    </ul>`},
+    {title:'Useful Default Policies',body:`<ul>
+    <li><strong>Default Domain Policy</strong> — Linked to domain root. Sets domain-wide password policy.</li>
+    <li><strong>Default Domain Controllers Policy</strong> — Applies to the Domain Controllers OU. Audit settings.</li>
+    </ul>`},
+  ],
+  codes:[
+    {label:'Create a new GPO and link it to an OU',code:`# Create GPO
+New-GPO -Name "KCA-Student-Policy" -Comment "Policy for student computers"
+
+# Link GPO to OU
+New-GPLink -Name "KCA-Student-Policy" \`
+  -Target "OU=Students,OU=KCA,DC=kca,DC=local"`},
+    {label:'Set password policy via GPO (PowerShell)',code:`# Set domain password policy
+Set-ADDefaultDomainPasswordPolicy -Identity kca.local \`
+  -MinPasswordLength 12 \`
+  -PasswordHistoryCount 24 \`
+  -MaxPasswordAge 90.00:00:00 \`
+  -MinPasswordAge 1.00:00:00 \`
+  -ComplexityEnabled $true \`
+  -LockoutThreshold 5 \`
+  -LockoutObservationWindow 0.00:30:00 \`
+  -LockoutDuration 0.00:30:00`},
+    {label:'Force GPO refresh on a computer',code:`# On the target machine
+gpupdate /force
+
+# Remotely
+Invoke-GPUpdate -Computer "PC01" -Force`},
+    {label:'Check which GPOs are applied to a user',code:`gpresult /r
+# Detailed HTML report
+gpresult /h C:\GPO_Report.html /f`},
+  ],
+  infoboxes:[
+    {type:'warn',text:'<strong>Default Domain Policy:</strong> Never edit the Default Domain Policy for anything other than account/password policies. Create new GPOs for all other settings.'},
+    {type:'tip',text:'<strong>Block Inheritance:</strong> You can block a child OU from inheriting parent GPOs, or enforce a GPO so it cannot be blocked. Use enforce sparingly.'},
+    {type:'note',text:'<strong>Refresh interval:</strong> GPOs refresh automatically every 90 minutes (+30 min random offset). Computer GPOs also refresh at startup; user GPOs at login.'},
+  ],
+  lab:{title:'Lab 6 — Create and Apply a GPO',subtitle:'Deploy a password policy and desktop restriction',steps:[
+    'Open Group Policy Management Console (GPMC) from Server Manager → Tools.',
+    'Right-click Group Policy Objects → New → Name: "KCA-Security-Policy".',
+    'Right-click KCA-Security-Policy → Edit.',
+    'Navigate to: Computer Configuration → Policies → Windows Settings → Security Settings → Account Policies → Password Policy.',
+    'Set: Minimum password length = 10, Password must meet complexity requirements = Enabled.',
+    'Close the editor. Right-click the Students OU → Link an Existing GPO → Select KCA-Security-Policy.',
+    'On a domain-joined computer run: gpupdate /force, then gpresult /r to verify.',
+  ]},
+  quiz:[
+    {q:'What does LSDOU stand for in GPO processing?',opts:['Login, Site, Domain, OU','Local, Site, Domain, OU','Local, Schema, DNS, OU','Layer, Site, DC, Object Unit'],ans:1,exp:'LSDOU: Local → Site → Domain → OU. Later applied GPOs override earlier ones.'},
+    {q:'Which GPO section applies settings at machine startup regardless of who logs in?',opts:['User Configuration','Administrative Templates','Computer Configuration','Security Settings'],ans:2,exp:'Computer Configuration applies at machine startup, not tied to any user login.'},
+    {q:'Which command forces an immediate GPO refresh on the local computer?',opts:['gpupdate /force','gprefresh /now','gpapply -force','gpo /update'],ans:0,exp:'gpupdate /force immediately reapplies all Group Policy settings.'},
+    {q:'Where should you configure the domain-wide password policy?',opts:['On each user account','In any OU-linked GPO','In the Default Domain Policy','In the Domain Controllers Policy'],ans:2,exp:'The Default Domain Policy is the correct place for domain-wide account/password policies.'},
+    {q:'Which command generates a detailed GPO report for the current user?',opts:['gpresult /r','gpreport /full','gpshow /detail','gpcheck /report'],ans:0,exp:'gpresult /r shows which GPOs are applied to the current user and computer.'},
+  ]
+},
+{
+  id:7, title:'DNS Server Role',
+  subtitle:'Configuring DNS for Active Directory and name resolution',
+  concepts:[
+    {title:'DNS in Windows Server',body:`Active Directory depends entirely on DNS. Computers find Domain Controllers by querying DNS for SRV records. Without properly functioning DNS, domain logon and AD replication fail.
+    <br><br>When you promote a DC, AD automatically creates a DNS zone matching the domain name (e.g. kca.local) and registers the DC's SRV, A, and PTR records.`},
+    {title:'DNS Record Types',body:`<ul>
+    <li><strong>A</strong> — Maps hostname to IPv4 address (kca-dc01 → 192.168.1.10)</li>
+    <li><strong>AAAA</strong> — Maps hostname to IPv6 address</li>
+    <li><strong>PTR</strong> — Reverse lookup: IP → hostname</li>
+    <li><strong>CNAME</strong> — Alias: mail.kca.local → kca-dc01.kca.local</li>
+    <li><strong>MX</strong> — Mail exchanger record</li>
+    <li><strong>SRV</strong> — Service locator — AD uses these so computers find DCs</li>
+    <li><strong>SOA</strong> — Start of Authority — authoritative info about zone</li>
+    <li><strong>NS</strong> — Name Server record</li>
+    </ul>`},
+    {title:'Zone Types',body:`<ul>
+    <li><strong>Primary Zone</strong> — Writable master copy of zone data.</li>
+    <li><strong>Secondary Zone</strong> — Read-only copy from primary (zone transfer).</li>
+    <li><strong>Stub Zone</strong> — Contains only NS and SOA records. Used for delegation.</li>
+    <li><strong>AD-Integrated Zone</strong> — Zone data stored in AD (replicated automatically). Best for DCs.</li>
+    </ul>`},
+    {title:'DNS Forwarders & Root Hints',body:`<ul>
+    <li><strong>Forwarders</strong> — DNS servers to forward queries for external names (e.g. 8.8.8.8 for internet).</li>
+    <li><strong>Root Hints</strong> — Used if no forwarder is set. Queries the internet root DNS servers directly.</li>
+    <li><strong>Conditional Forwarder</strong> — Forward queries for a specific domain to a specific DNS server (useful for inter-domain trust).</li>
+    </ul>`},
+  ],
+  codes:[
+    {label:'Create a DNS A record',code:`Add-DnsServerResourceRecordA \`
+  -ZoneName "kca.local" \`
+  -Name "webserver" \`
+  -IPv4Address "192.168.1.50"`},
+    {label:'Create a CNAME alias',code:`Add-DnsServerResourceRecordCName \`
+  -ZoneName "kca.local" \`
+  -Name "www" \`
+  -HostNameAlias "webserver.kca.local"`},
+    {label:'Add a forwarder (e.g. Google DNS)',code:`Add-DnsServerForwarder -IPAddress 8.8.8.8
+Add-DnsServerForwarder -IPAddress 8.8.4.4`},
+    {label:'Test DNS resolution',code:`# Resolve a name
+Resolve-DnsName webserver.kca.local
+
+# Query specific DNS server
+nslookup webserver.kca.local 192.168.1.10
+
+# Check SRV records AD depends on
+nslookup -type=SRV _ldap._tcp.kca.local`},
+  ],
+  infoboxes:[
+    {type:'warn',text:'<strong>Split DNS:</strong> If your domain name is the same as your public domain (kca.com not kca.local), you need split-brain DNS so internal clients resolve to internal IPs, not public ones.'},
+    {type:'tip',text:'<strong>AD-Integrated zones</strong> are always preferred on DCs — they replicate with AD, support secure dynamic updates, and provide multi-master DNS (all DCs can update records).'},
+  ],
+  lab:{title:'Lab 7 — Configure DNS and Add Records',subtitle:'Manage DNS zones and verify AD SRV records',steps:[
+    'Open DNS Manager from Server Manager → Tools → DNS.',
+    'Expand Forward Lookup Zones → verify kca.local zone exists.',
+    'Right-click kca.local → New Host (A or AAAA) → Name: fileserver, IP: 192.168.1.20 → Add Host.',
+    'Right-click kca.local → New Alias (CNAME) → Alias: files, FQDN: fileserver.kca.local.',
+    'Right-click kca.local server → Properties → Forwarders → Add 8.8.8.8.',
+    'Open PowerShell: nslookup fileserver.kca.local — verify it resolves.',
+    'Test internet: Resolve-DnsName google.com — should resolve via forwarder.',
+  ]},
+  quiz:[
+    {q:'Which DNS record type maps a hostname to an IPv4 address?',opts:['PTR','CNAME','A','MX'],ans:2,exp:'A record maps a hostname (e.g. server01) to an IPv4 address.'},
+    {q:'Which zone type is stored in Active Directory and replicated automatically?',opts:['Primary Zone','Secondary Zone','Stub Zone','AD-Integrated Zone'],ans:3,exp:'AD-Integrated Zones store DNS data in AD and replicate automatically between DCs.'},
+    {q:'What are DNS forwarders used for?',opts:['Forwarding email','Resolving external/internet domain names','Replicating AD data','Load balancing DNS queries'],ans:1,exp:'Forwarders send queries for names the local DNS cannot resolve (like google.com) to external DNS servers.'},
+    {q:'Which DNS record type does Active Directory use to locate Domain Controllers?',opts:['A','PTR','CNAME','SRV'],ans:3,exp:'SRV (Service) records allow computers to find AD services like LDAP and Kerberos on DCs.'},
+    {q:'Which command tests DNS resolution in PowerShell?',opts:['Test-DNS','nslookup','Resolve-DnsName','Get-DnsRecord'],ans:2,exp:'Resolve-DnsName is the PowerShell cmdlet for DNS lookups.'},
+  ]
+},
+{
+  id:8, title:'DHCP Server Role',
+  subtitle:'Automatic IP address assignment across your network',
+  concepts:[
+    {title:'How DHCP Works (DORA)',body:`DHCP uses a 4-step process called DORA:
+    <ol>
+    <li><strong>D</strong>iscover — Client broadcasts: "Is there a DHCP server?"</li>
+    <li><strong>O</strong>ffer — DHCP server responds with an available IP address</li>
+    <li><strong>R</strong>equest — Client requests the offered IP</li>
+    <li><strong>A</strong>cknowledge — Server confirms the lease</li>
+    </ol>`},
+    {title:'DHCP Key Concepts',body:`<ul>
+    <li><strong>Scope</strong> — IP address range for a subnet (e.g. 192.168.1.100–200)</li>
+    <li><strong>Exclusions</strong> — IPs within the scope range that won't be leased (servers, printers)</li>
+    <li><strong>Reservations</strong> — Specific IP always assigned to a specific MAC address</li>
+    <li><strong>Lease Duration</strong> — How long a client keeps the IP (default: 8 days)</li>
+    <li><strong>Options</strong> — Additional info sent with IP (default gateway, DNS server, domain name)</li>
+    <li><strong>DHCP Relay Agent</strong> — Forwards DHCP broadcasts across routers</li>
+    </ul>`},
+    {title:'DHCP Scope Options',body:`<ul>
+    <li><strong>Option 3</strong> — Router (default gateway)</li>
+    <li><strong>Option 6</strong> — DNS server addresses</li>
+    <li><strong>Option 15</strong> — DNS domain name</li>
+    <li><strong>Option 51</strong> — Lease time</li>
+    </ul>`},
+    {title:'DHCP Failover',body:`Windows Server DHCP supports failover between two DHCP servers — one active, one standby (or load-balanced 50/50). If the primary fails, the secondary takes over automatically.`},
+  ],
+  codes:[
+    {label:'Create and activate a DHCP scope',code:`# Add DHCP scope
+Add-DhcpServerv4Scope \`
+  -Name "KCA-LAN" \`
+  -StartRange 192.168.1.100 \`
+  -EndRange 192.168.1.200 \`
+  -SubnetMask 255.255.255.0 \`
+  -LeaseDuration 8.00:00:00
+
+# Exclude IPs for static devices
+Add-DhcpServerv4ExclusionRange \`
+  -ScopeId 192.168.1.0 \`
+  -StartRange 192.168.1.100 \`
+  -EndRange 192.168.1.109
+
+# Add scope options
+Set-DhcpServerv4OptionValue -ScopeId 192.168.1.0 \`
+  -DnsServer 192.168.1.10 \`
+  -DnsDomain kca.local \`
+  -Router 192.168.1.1
+
+# Activate the scope
+Set-DhcpServerv4Scope -ScopeId 192.168.1.0 -State Active`},
+    {label:'Create a reservation (IP always for same MAC)',code:`Add-DhcpServerv4Reservation \`
+  -ScopeId 192.168.1.0 \`
+  -IPAddress 192.168.1.50 \`
+  -ClientId "00-1A-2B-3C-4D-5E" \`
+  -Description "Printer01"`},
+    {label:'Authorize DHCP server in AD',code:`# Must be done — unauthorized DHCP servers don't give leases
+Add-DhcpServerInDC -DnsName "KCA-DC01.kca.local"`},
+  ],
+  infoboxes:[
+    {type:'warn',text:'<strong>Authorization required:</strong> A DHCP server must be authorized in Active Directory before it will respond to client requests. Unauthorized servers are silently blocked.'},
+    {type:'note',text:'<strong>Rogue DHCP:</strong> An unauthorized DHCP server (e.g. a home router someone plugged in) can hand out wrong gateway/DNS settings, breaking connectivity for all clients.'},
+  ],
+  lab:{title:'Lab 8 — Configure DHCP Scope',subtitle:'Set up automatic IP assignment for the KCA LAN',steps:[
+    'Open DHCP Manager: Server Manager → Tools → DHCP.',
+    'Expand your server → IPv4 → right-click → New Scope.',
+    'Name: KCA-LAN, Start: 192.168.1.100, End: 192.168.1.200, Mask: 255.255.255.0.',
+    'Exclusions: 192.168.1.100 to 192.168.1.109 (reserved for servers/printers).',
+    'Scope options: Router = 192.168.1.1, DNS = 192.168.1.10, Domain = kca.local.',
+    'Activate the scope.',
+    'In PowerShell: Add-DhcpServerInDC -DnsName "KCA-DC01.kca.local" to authorize.',
+    'Test: On a client VM set to DHCP, run ipconfig /release then ipconfig /renew. Verify it gets an IP in 192.168.1.110-200 range.',
+  ]},
+  quiz:[
+    {q:'What does DORA stand for in DHCP?',opts:['Deploy, Offer, Request, Activate','Discover, Offer, Request, Acknowledge','Domain, OU, Role, Authorize','Detect, Open, Request, Assign'],ans:1,exp:'DORA = Discover, Offer, Request, Acknowledge — the 4 steps of DHCP IP assignment.'},
+    {q:'What is a DHCP reservation?',opts:['An IP range excluded from leasing','A specific IP always assigned to the same MAC address','A backup of DHCP settings','A lease that never expires'],ans:1,exp:'Reservations bind a specific IP address to a specific client MAC address permanently.'},
+    {q:'Which DHCP option number sets the default gateway?',opts:['Option 6','Option 15','Option 3','Option 51'],ans:2,exp:'Option 3 is the Router (default gateway) option in DHCP.'},
+    {q:'What must be done before a Windows DHCP server responds to client requests in an AD domain?',opts:['Install DNS','Authorize the DHCP server in AD','Create a computer account','Enable DHCP Relay Agent'],ans:1,exp:'DHCP servers must be authorized in Active Directory — unauthorized servers are blocked from leasing IPs.'},
+    {q:'What command releases and renews a DHCP lease on Windows?',opts:['ipconfig /flush then /get','ipconfig /release then /renew','dhcp release then renew','ipconfig /refresh'],ans:1,exp:'ipconfig /release drops the current lease; ipconfig /renew requests a new one.'},
+  ]
+},
+{
+  id:9, title:'File Server & NTFS Permissions',
+  subtitle:'Sharing files and controlling access with NTFS and Share permissions',
+  concepts:[
+    {title:'NTFS vs Share Permissions',body:`There are two layers of permissions on Windows:
+    <ul>
+    <li><strong>NTFS Permissions</strong> — Applied to the file system. Control access whether accessed locally or over the network. Granular (Full Control, Modify, Read & Execute, Read, Write, etc.)</li>
+    <li><strong>Share Permissions</strong> — Only apply when accessing over the network (UNC path: \\\\server\\share). Simpler (Full Control, Change, Read).</li>
+    </ul>
+    <strong>Rule:</strong> When both apply, the more restrictive permission wins.`},
+    {title:'NTFS Permission Levels',body:`<ul>
+    <li><strong>Full Control</strong> — Read, write, delete, change permissions, take ownership</li>
+    <li><strong>Modify</strong> — Read, write, delete files/folders</li>
+    <li><strong>Read & Execute</strong> — View and run executables</li>
+    <li><strong>Read</strong> — View files and folder contents</li>
+    <li><strong>Write</strong> — Create files and write data</li>
+    </ul>`},
+    {title:'Inheritance and ACLs',body:`By default, NTFS permissions are inherited from parent folders. You can break inheritance on a folder and set explicit permissions. The ACL (Access Control List) stores all permission entries for an object.`},
+    {title:'Best Practice — Apply to Groups',body:`Never assign NTFS permissions directly to individual users. Always assign to groups:
+    <br><code>GG_Students → DL_Folder_Read → Folder permissions</code>
+    <br>This way, to grant access you just add the user to the appropriate group.`},
+  ],
+  codes:[
+    {label:'Create a shared folder',code:`# Create folder
+New-Item -Path "C:\Shares\StudentFiles" -ItemType Directory
+
+# Share the folder
+New-SmbShare -Name "StudentFiles" \`
+  -Path "C:\Shares\StudentFiles" \`
+  -FullAccess "KCA\Domain Admins" \`
+  -ReadAccess "KCA\GG_Students"`},
+    {label:'Set NTFS permissions with icacls',code:`# Grant Students Modify permission
+icacls "C:\Shares\StudentFiles" /grant "KCA\GG_Students:(OI)(CI)M"
+
+# Remove inherited permissions and set fresh
+icacls "C:\Shares\StudentFiles" /inheritance:d
+icacls "C:\Shares\StudentFiles" /grant "BUILTIN\Administrators:(OI)(CI)F"
+icacls "C:\Shares\StudentFiles" /grant "KCA\GG_Students:(OI)(CI)M"
+
+# View current permissions
+icacls "C:\Shares\StudentFiles"`},
+    {label:'Map a network drive via GPO (PowerShell preview)',code:`# Users can map manually or via GPO drive map
+# Manual mapping:
+New-PSDrive -Name "S" -PSProvider FileSystem \`
+  -Root "\\KCA-DC01\StudentFiles" -Persist`},
+  ],
+  infoboxes:[
+    {type:'tip',text:'<strong>The most restrictive wins:</strong> If Share = Read and NTFS = Full Control, effective permission over network = Read. If Share = Full Control and NTFS = Read, effective = Read.'},
+    {type:'note',text:'<strong>Best practice for shares:</strong> Set Share Permission to Everyone = Full Control, then use NTFS permissions for granular access control. This simplifies troubleshooting.'},
+    {type:'warn',text:'<strong>Never put sensitive data in C:\\Users\\Public or unprotected shares.</strong> Always set explicit NTFS ACLs and audit access.'},
+  ],
+  lab:{title:'Lab 9 — Create File Share with NTFS Permissions',subtitle:'Build a shared folder with proper access control',steps:[
+    'Create folder: C:\\Shares\\StudentWork',
+    'PowerShell: New-SmbShare -Name "StudentWork" -Path "C:\\Shares\\StudentWork" -FullAccess "KCA\\Domain Admins" -ChangeAccess "KCA\\GG_Students"',
+    'Open File Explorer → right-click the folder → Properties → Security tab.',
+    'Remove default "Users" permission. Add GG_Students with Modify rights.',
+    'From a client PC: open Run → \\\\KCA-DC01\\StudentWork — verify students can read/write.',
+    'Test that a non-member of GG_Students cannot access the share.',
+    'View permissions in PowerShell: Get-SmbShareAccess StudentWork && icacls "C:\\Shares\\StudentWork"',
+  ]},
+  quiz:[
+    {q:'When NTFS and Share permissions conflict, which applies?',opts:['Share permission always wins','NTFS permission always wins','The most restrictive of the two','The most permissive of the two'],ans:2,exp:'The effective permission is the most restrictive combination of NTFS and Share permissions.'},
+    {q:'Which NTFS permission level allows a user to delete files and folders?',opts:['Read','Write','Modify','Read & Execute'],ans:2,exp:'Modify includes read, write, and delete. Write alone does not allow deletion.'},
+    {q:'What does icacls stand for?',opts:['Integrated Control Access List Settings','Integrity Control Access Control List','Internet Control ACL Service','Inheritable Control ACL List'],ans:1,exp:'icacls = Integrity Control Access Control List — the command-line tool for NTFS permissions.'},
+    {q:'What is the recommended best practice for assigning NTFS permissions?',opts:['Assign directly to individual users','Assign to security groups','Use Share permissions only','Disable NTFS and use only Share permissions'],ans:1,exp:'Always assign NTFS permissions to security groups, not individual users, for easier management.'},
+    {q:'Which PowerShell command creates an SMB share?',opts:['New-FileShare','Add-SmbShare','New-SmbShare','Create-Share'],ans:2,exp:'New-SmbShare creates a new SMB (Windows file) share.'},
+  ]
+},
+{
+  id:10, title:'Remote Desktop Services (RDS)',
+  subtitle:'Enable and secure remote access to your server',
+  concepts:[
+    {title:'Remote Desktop Protocol (RDP)',body:`RDP (port 3389 TCP) allows users to connect to and control a Windows Server desktop remotely. It's essential for server administration and can be used to host applications for thin-client environments.`},
+    {title:'RDS vs Simple Remote Desktop',body:`<ul>
+    <li><strong>Remote Desktop (basic)</strong> — Allows 2 concurrent admin connections. Built into all Windows Server versions. Used for admin purposes only.</li>
+    <li><strong>Remote Desktop Services (full RDS)</strong> — Multiple concurrent user sessions. Requires licensing. Components: RD Session Host, RD Licensing, RD Gateway, RD Web Access, RD Connection Broker.</li>
+    </ul>`},
+    {title:'Enabling Remote Desktop',body:'Enable via Server Manager or PowerShell. By default, only members of the Administrators group can connect. Add others via Remote Desktop Users group.'},
+    {title:'RD Gateway',body:`RD Gateway allows RDP connections from the internet over HTTPS (port 443) without exposing port 3389 publicly. Clients connect to the Gateway, which forwards to internal servers — much more secure than opening RDP to the internet.`},
+    {title:'Network Level Authentication (NLA)',body:`NLA requires users to authenticate before a full RDP session is established. This reduces resource usage and protects against brute-force attacks. Always enable NLA.`},
+  ],
+  codes:[
+    {label:'Enable Remote Desktop via PowerShell',code:`# Enable RDP
+Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" \`
+  -Name "fDenyTSConnections" -Value 0
+
+# Enable NLA (Network Level Authentication)
+Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" \`
+  -Name "UserAuthentication" -Value 1
+
+# Allow RDP through firewall
+Enable-NetFirewallRule -DisplayGroup "Remote Desktop"`},
+    {label:'Add a user to Remote Desktop Users group',code:`Add-LocalGroupMember -Group "Remote Desktop Users" -Member "KCA\jsmith"
+# Or add a domain group
+Add-LocalGroupMember -Group "Remote Desktop Users" -Member "KCA\GG_Students"`},
+    {label:'Check active RDP sessions',code:`# List all sessions
+query session /server:KCA-DC01
+
+# Disconnect a session (SessionID from above)
+logoff 2 /server:KCA-DC01`},
+    {label:'Connect to remote server via PowerShell',code:`# Enter remote PowerShell session
+Enter-PSSession -ComputerName KCA-DC01 -Credential (Get-Credential)
+
+# Run command remotely without entering session
+Invoke-Command -ComputerName KCA-DC01 -ScriptBlock {Get-Service}`},
+  ],
+  infoboxes:[
+    {type:'warn',text:'<strong>Security:</strong> Never expose RDP (port 3389) directly to the internet. Use RD Gateway, VPN, or Azure Bastion instead. RDP brute-force attacks are extremely common.'},
+    {type:'tip',text:'<strong>Admin connections:</strong> Windows Server allows up to 2 concurrent admin RDP sessions without RDS licensing. For more users, RDS CALs are required.'},
+  ],
+  lab:{title:'Lab 10 — Enable and Test Remote Desktop',subtitle:'Configure RDP access with proper security',steps:[
+    'PowerShell: Set-ItemProperty -Path "HKLM:\\System\\CurrentControlSet\\Control\\Terminal Server" -Name fDenyTSConnections -Value 0',
+    'Enable firewall rule: Enable-NetFirewallRule -DisplayGroup "Remote Desktop"',
+    'Ensure NLA is enabled: check System Properties → Remote tab → "Allow connections only from computers running Remote Desktop with NLA"',
+    'Add a test user to Remote Desktop Users group.',
+    'From another VM, open mstsc → enter the server IP → log in as the test user.',
+    'Verify session appears: query session /server:KCA-DC01',
+    'Disconnect the test session: logoff <SessionID> /server:KCA-DC01',
+  ]},
+  quiz:[
+    {q:'What port does RDP use by default?',opts:['22','443','3389','8080'],ans:2,exp:'RDP uses TCP port 3389 by default.'},
+    {q:'What is NLA in the context of Remote Desktop?',opts:['Network Logon Authentication','Network Level Authentication — requires auth before the full session starts','No Login Allowed','Nested Local Access'],ans:1,exp:'NLA = Network Level Authentication. Requires credentials before the RDP desktop loads, saving server resources and blocking brute force.'},
+    {q:'How many concurrent admin RDP sessions does Windows Server support without RDS licensing?',opts:['1','2','5','Unlimited'],ans:1,exp:'Windows Server allows exactly 2 concurrent administrator RDP sessions without RDS licensing.'},
+    {q:'Which group must a non-admin user be in to use Remote Desktop?',opts:['Remote Administrators','Domain Users','Remote Desktop Users','RDP Access Group'],ans:2,exp:'Users must be members of the "Remote Desktop Users" local group to connect via RDP.'},
+    {q:'What is the safest way to allow RDP access from the internet?',opts:['Open port 3389 on the firewall','Use an RD Gateway or VPN','Set a complex password and open port 3389','Disable NLA for compatibility'],ans:1,exp:'RD Gateway or VPN tunnels RDP traffic securely, avoiding direct exposure of port 3389 to the internet.'},
+  ]
+},
+{
+  id:11, title:'Windows Defender & Firewall',
+  subtitle:'Securing Windows Server with built-in security tools',
+  concepts:[
+    {title:'Windows Defender Antivirus',body:`Windows Defender is built into Windows Server 2022 and provides real-time malware protection. In Server Core, it runs headless. On Domain Controllers, make sure to configure exclusions for AD-related files (NTDS.dit, SYSVOL) to avoid performance issues or false positives.`},
+    {title:'Windows Defender Firewall with Advanced Security',body:`The Windows Firewall has three profiles:
+    <ul>
+    <li><strong>Domain</strong> — Active when connected to your AD domain network.</li>
+    <li><strong>Private</strong> — Home/trusted networks.</li>
+    <li><strong>Public</strong> — Untrusted/unknown networks. Most restrictive by default.</li>
+    </ul>
+    Rules can be inbound or outbound, and can filter by port, program, service, IP, or protocol.`},
+    {title:'Windows Defender ATP / Microsoft Defender for Endpoint',body:`For enterprise environments, Microsoft Defender for Endpoint adds:
+    <ul>
+    <li>Endpoint Detection and Response (EDR)</li>
+    <li>Threat intelligence integration</li>
+    <li>Behavioral analysis and attack surface reduction</li>
+    <li>Integration with Microsoft Sentinel SIEM</li>
+    </ul>`},
+    {title:'Security Baselines',body:`Microsoft provides Security Baselines via LGPO or GPO — pre-configured hardening settings for Windows Server. Download from the Microsoft Security Compliance Toolkit. Apply via GPO for consistent hardening across all servers.`},
+  ],
+  codes:[
+    {label:'Manage Windows Firewall via PowerShell',code:`# Check firewall status across all profiles
+Get-NetFirewallProfile | Select-Object Name,Enabled
+
+# Enable all profiles
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+
+# Create inbound rule for custom app
+New-NetFirewallRule \`
+  -DisplayName "Allow KCA App Port 8080" \`
+  -Direction Inbound \`
+  -Protocol TCP \`
+  -LocalPort 8080 \`
+  -Action Allow \`
+  -Profile Domain`},
+    {label:'Block outbound traffic to an IP',code:`New-NetFirewallRule \`
+  -DisplayName "Block Suspicious IP" \`
+  -Direction Outbound \`
+  -RemoteAddress 1.2.3.4 \`
+  -Action Block`},
+    {label:'Windows Defender scan via PowerShell',code:`# Quick scan
+Start-MpScan -ScanType QuickScan
+
+# Full scan
+Start-MpScan -ScanType FullScan
+
+# Check protection status
+Get-MpComputerStatus | Select-Object \`
+  AntivirusEnabled,RealTimeProtectionEnabled,\`
+  AntivirusSignatureLastUpdated`},
+    {label:'Update Defender signatures',code:`Update-MpSignature
+# Check signature version
+Get-MpComputerStatus | Select-Object AntivirusSignatureVersion`},
+  ],
+  infoboxes:[
+    {type:'tip',text:'<strong>Exclusions on DCs:</strong> Add exclusions for C:\\Windows\\NTDS\\, C:\\Windows\\SYSVOL\\, and the AD log folder to prevent Defender from scanning AD database files.'},
+    {type:'warn',text:'<strong>Never disable the firewall</strong> to fix a connectivity issue — always add specific rules instead. A disabled firewall on a server is a major security risk.'},
+    {type:'note',text:'<strong>GPO Firewall:</strong> Configure firewall rules via GPO (Computer Configuration → Windows Settings → Security Settings → Windows Firewall) for consistent settings across all servers.'},
+  ],
+  lab:{title:'Lab 11 — Firewall Rules and Defender Check',subtitle:'Configure security and verify protection',steps:[
+    'Check Defender status: Get-MpComputerStatus | Select-Object AntivirusEnabled,RealTimeProtectionEnabled',
+    'Update signatures: Update-MpSignature',
+    'Check firewall profiles: Get-NetFirewallProfile | Select-Object Name,Enabled',
+    'Create a test rule: New-NetFirewallRule -DisplayName "Test-Allow-8080" -Direction Inbound -Protocol TCP -LocalPort 8080 -Action Allow',
+    'Verify the rule: Get-NetFirewallRule -DisplayName "Test-Allow-8080"',
+    'Remove the test rule: Remove-NetFirewallRule -DisplayName "Test-Allow-8080"',
+    'Via GPMC, create a GPO that enables the firewall Domain profile for all domain computers.',
+  ]},
+  quiz:[
+    {q:'How many firewall profiles does Windows Defender Firewall have?',opts:['1','2','3','5'],ans:2,exp:'Three profiles: Domain, Private, and Public — each with separate rules and settings.'},
+    {q:'Which PowerShell command starts a Defender antivirus scan?',opts:['Start-Defender','Invoke-MpScan','Start-MpScan','Start-AVScan'],ans:2,exp:'Start-MpScan -ScanType QuickScan or FullScan is the correct cmdlet.'},
+    {q:'Which files on a Domain Controller should be excluded from Defender scans?',opts:['System32 folder','ntds.dit and SYSVOL','Boot.ini','Registry hives'],ans:1,exp:'NTDS.dit (AD database) and SYSVOL should be excluded to prevent performance issues.'},
+    {q:'Which profile is active when a server is connected to the AD domain network?',opts:['Public','Private','Domain','Corporate'],ans:2,exp:'The Domain profile activates automatically when connected to a network with a domain controller.'},
+    {q:'What is the correct approach when a port is being blocked by the firewall?',opts:['Disable the firewall','Reboot the server','Add a specific firewall rule for that port','Uninstall Windows Firewall'],ans:2,exp:'Always add a specific rule — never disable the firewall to solve connectivity problems.'},
+  ]
+},
+{
+  id:12, title:'PowerShell Administration',
+  subtitle:'Master Windows Server management from the command line',
+  concepts:[
+    {title:'Why PowerShell?',body:`PowerShell is the primary tool for Windows Server administration. GUI tools are wrappers around PowerShell cmdlets. Using PowerShell allows:
+    <ul>
+    <li>Automation of repetitive tasks</li>
+    <li>Bulk operations (create 500 users from a CSV)</li>
+    <li>Remote management of multiple servers simultaneously</li>
+    <li>Auditing and reporting</li>
+    <li>Integration with scripts and CI/CD pipelines</li>
+    </ul>`},
+    {title:'PowerShell Fundamentals',body:`<ul>
+    <li><strong>Cmdlet</strong> — Verb-Noun format: Get-Service, Set-ADUser, Remove-Item</li>
+    <li><strong>Pipeline (|)</strong> — Pass output of one cmdlet to another</li>
+    <li><strong>Variables</strong> — $var = "value"</li>
+    <li><strong>Where-Object</strong> — Filter objects: Where-Object {$_.Status -eq "Running"}</li>
+    <li><strong>Select-Object</strong> — Choose specific properties to display</li>
+    <li><strong>ForEach-Object</strong> — Loop through each item in pipeline</li>
+    <li><strong>Get-Help</strong> — Built-in help: Get-Help Get-ADUser -Examples</li>
+    </ul>`},
+    {title:'PowerShell Remoting',body:`PowerShell Remoting (WinRM) allows running commands on remote computers. Enabled by default on Windows Server 2012+.`},
+    {title:'Execution Policy',body:`Scripts are blocked by default. Set the policy to allow scripts:
+    <ul>
+    <li><strong>Restricted</strong> — No scripts allowed (default on desktops)</li>
+    <li><strong>RemoteSigned</strong> — Local scripts OK; downloaded scripts need signature</li>
+    <li><strong>Unrestricted</strong> — All scripts run (not recommended for production)</li>
+    </ul>`},
+  ],
+  codes:[
+    {label:'Essential daily administration commands',code:`# Get all running services
+Get-Service | Where-Object {$_.Status -eq "Running"}
+
+# Restart a service
+Restart-Service -Name "wuauserv"
+
+# Get all AD users in an OU
+Get-ADUser -Filter * -SearchBase "OU=Students,OU=KCA,DC=kca,DC=local" \`
+  -Properties * | Select-Object Name,Enabled,LastLogonDate
+
+# Find disabled user accounts
+Get-ADUser -Filter {Enabled -eq $false} | Select-Object Name,SamAccountName
+
+# Get system info
+Get-ComputerInfo | Select-Object WindowsProductName,TotalPhysicalMemory,OsUptime`},
+    {label:'Disk and performance monitoring',code:`# Check disk space
+Get-PSDrive | Where-Object {$_.Provider -like "*FileSystem*"} | \`
+  Select-Object Name,@{N="FreeGB";E={[math]::Round($_.Free/1GB,2)}},\`
+  @{N="UsedGB";E={[math]::Round(($_.Used)/1GB,2)}}
+
+# Top CPU processes
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 10
+
+# Event log errors (last 20)
+Get-EventLog -LogName System -EntryType Error -Newest 20 | \`
+  Select-Object TimeGenerated,Source,Message`},
+    {label:'Remote management',code:`# Enable PowerShell Remoting
+Enable-PSRemoting -Force
+
+# Run command on remote server
+Invoke-Command -ComputerName KCA-DC01 \`
+  -ScriptBlock { Get-ADUser -Filter * | Measure-Object }
+
+# Enter interactive remote session
+Enter-PSSession -ComputerName KCA-DC01`},
+    {label:'Scheduled task via PowerShell',code:`$action = New-ScheduledTaskAction -Execute "PowerShell.exe" \`
+  -Argument "-File C:\Scripts\cleanup.ps1"
+$trigger = New-ScheduledTaskTrigger -Daily -At 2am
+Register-ScheduledTask -Action $action -Trigger $trigger \`
+  -TaskName "NightlyCleanup" -RunLevel Highest`},
+  ],
+  infoboxes:[
+    {type:'tip',text:'<strong>Get-Help:</strong> Always use Get-Help <cmdlet> -Examples when learning a new cmdlet. It shows real-world usage examples built into PowerShell.'},
+    {type:'note',text:'<strong>ISE vs VS Code:</strong> Windows PowerShell ISE is being phased out. Use Visual Studio Code with the PowerShell extension for modern script development.'},
+  ],
+  lab:{title:'Lab 12 — PowerShell Administration Tasks',subtitle:'Automate common admin tasks',steps:[
+    'Set execution policy: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser',
+    'List all stopped services: Get-Service | Where-Object {$_.Status -eq "Stopped"}',
+    'Find all disabled AD users: Get-ADUser -Filter {Enabled -eq $false} | Select-Object Name',
+    'Check disk space: Get-PSDrive | Where {$_.Provider -like "*FileSystem*"} | Select Name,Free,Used',
+    'Enable remoting: Enable-PSRemoting -Force',
+    'Run a remote command: Invoke-Command -ComputerName localhost -ScriptBlock {hostname; Get-Date}',
+    'Create a script: Write-Host "Users in domain:" ; (Get-ADUser -Filter *).Count — save as count-users.ps1 and run it.',
+  ]},
+  quiz:[
+    {q:'What is the format of PowerShell cmdlets?',opts:['Noun-Verb','Verb-Noun','Command-Target','Action.Object'],ans:1,exp:'PowerShell cmdlets follow the Verb-Noun format: Get-ADUser, Set-Service, Remove-Item.'},
+    {q:'Which cmdlet filters objects in a pipeline?',opts:['Select-Object','Sort-Object','Where-Object','Filter-Object'],ans:2,exp:'Where-Object filters pipeline objects based on a condition: Where-Object {$_.Status -eq "Running"}'},
+    {q:'What execution policy allows locally created scripts but requires signatures on downloaded ones?',opts:['Restricted','AllSigned','RemoteSigned','Bypass'],ans:2,exp:'RemoteSigned allows local scripts without signature; downloaded scripts must be signed.'},
+    {q:'Which command enables PowerShell Remoting on a server?',opts:['Start-PSRemoting','Enable-WinRM','Enable-PSRemoting -Force','Set-PSRemoting -Enable'],ans:2,exp:'Enable-PSRemoting -Force enables WinRM and configures firewall rules for PS Remoting.'},
+    {q:'Which cmdlet runs a command on a remote computer?',opts:['Send-Command','Remote-Execute','Invoke-Command','Start-RemoteCommand'],ans:2,exp:'Invoke-Command -ComputerName runs commands on remote machines via WinRM.'},
+  ]
+},
+{
+  id:13, title:'Backup & Disaster Recovery',
+  subtitle:'Windows Server Backup, VSS, and recovery strategies',
+  concepts:[
+    {title:'Backup Strategy — 3-2-1 Rule',body:`<ul>
+    <li><strong>3</strong> copies of data</li>
+    <li><strong>2</strong> different storage media types</li>
+    <li><strong>1</strong> offsite or cloud copy</li>
+    </ul>
+    For Windows Server: local backup + external drive + Azure Backup is a solid 3-2-1 implementation.`},
+    {title:'Windows Server Backup (WSB)',body:`Built-in backup solution. Supports:
+    <ul>
+    <li>Full server backup (bare metal recovery)</li>
+    <li>Volume-level and file/folder backup</li>
+    <li>System state backup (critical for DCs — backs up AD database, SYSVOL, Registry)</li>
+    <li>Scheduled or on-demand backups</li>
+    <li>Backup to local disk, external drive, or network share</li>
+    </ul>`},
+    {title:'System State Backup (Critical for AD)',body:`For Domain Controllers, the System State backup includes:
+    <ul>
+    <li>Active Directory database (ntds.dit)</li>
+    <li>SYSVOL</li>
+    <li>Registry</li>
+    <li>Boot files</li>
+    </ul>
+    This is what you restore when AD is corrupted or accidentally deleted.`},
+    {title:'Volume Shadow Copy Service (VSS)',body:`VSS creates point-in-time snapshots of volumes without taking the server offline. Applications (SQL, Exchange) can remain running during backup. VSS is used by Windows Server Backup, Azure Backup, and most backup software.`},
+    {title:'AD Tombstone and Authoritative Restore',body:`When an AD object (user, OU) is deleted, it becomes a tombstone for 180 days before permanent deletion. To restore deleted AD objects:
+    <ul>
+    <li><strong>AD Recycle Bin</strong> — Restore deleted objects quickly from ADAC (if enabled).</li>
+    <li><strong>Authoritative restore</strong> — Boot DC into DSRM, restore System State, mark objects authoritative with ntdsutil.</li>
+    </ul>`},
+  ],
+  codes:[
+    {label:'Install Windows Server Backup feature',code:`Install-WindowsFeature Windows-Server-Backup`},
+    {label:'Create a one-time backup',code:`# Backup to external drive (e:)
+wbadmin start backup -backuptarget:E: -include:C: -allCritical -quiet
+
+# System State backup only (for DCs)
+wbadmin start systemstatebackup -backuptarget:E: -quiet`},
+    {label:'Schedule daily backup',code:`$policy = New-WBPolicy
+$fileSpec = New-WBFileSpec -FileSpec "C:"
+Add-WBVolume -Policy $policy -Volume (Get-WBVolume -VolumePath "C:")
+$backupTarget = New-WBBackupTarget -VolumePath "E:"
+Add-WBBackupTarget -Policy $policy -Target $backupTarget
+Set-WBSchedule -Policy $policy -Schedule 02:00
+Set-WBPolicy -Policy $policy`},
+    {label:'Enable AD Recycle Bin',code:`# Enable (requires Forest Functional Level 2008 R2+)
+Enable-ADOptionalFeature "Recycle Bin Feature" \`
+  -Scope ForestOrConfigurationSet \`
+  -Target "kca.local" -Confirm:$false
+
+# Restore deleted AD user
+Get-ADObject -Filter {displayName -eq "John Smith"} \`
+  -IncludeDeletedObjects | Restore-ADObject`},
+  ],
+  infoboxes:[
+    {type:'warn',text:'<strong>Test your backups!</strong> A backup that has never been tested is not a real backup. Schedule quarterly restore tests on a lab server.'},
+    {type:'tip',text:'<strong>Enable AD Recycle Bin immediately</strong> after creating a new domain. It is much easier to restore deleted AD objects with Recycle Bin than with an authoritative restore.'},
+    {type:'note',text:'<strong>RTO vs RPO:</strong> Recovery Time Objective (how long to recover) and Recovery Point Objective (how much data loss is acceptable) should drive your backup frequency and strategy.'},
+  ],
+  lab:{title:'Lab 13 — Backup and Restore',subtitle:'Configure Windows Server Backup and enable AD Recycle Bin',steps:[
+    'Install backup: Install-WindowsFeature Windows-Server-Backup',
+    'Open Windows Server Backup from Server Manager → Tools.',
+    'Configure Backup Schedule: Backup Once → Full Server → backup to a second volume or folder.',
+    'Enable AD Recycle Bin: Enable-ADOptionalFeature "Recycle Bin Feature" -Scope ForestOrConfigurationSet -Target "kca.local" -Confirm:$false',
+    'Test Recycle Bin: Delete a test user in ADUC. Then restore via Active Directory Administrative Center → Deleted Objects.',
+    'Check backup status: wbadmin get status',
+    'Verify: wbadmin get versions — lists all available backups.',
+  ]},
+  quiz:[
+    {q:'What does the 3-2-1 backup rule mean?',opts:['3 backups, 2 servers, 1 admin','3 copies, 2 media types, 1 offsite','3 disks, 2 clouds, 1 tape','3 schedules, 2 locations, 1 restore point'],ans:1,exp:'3-2-1: 3 copies of data, on 2 different media types, with 1 copy offsite.'},
+    {q:'What does the System State backup include on a Domain Controller?',opts:['Only the C: drive','AD database, SYSVOL, Registry, and boot files','SQL databases and IIS config','All installed applications'],ans:1,exp:'System State on a DC includes the AD database (ntds.dit), SYSVOL, Registry, and boot files — critical for AD recovery.'},
+    {q:'What is VSS?',opts:['Virtual Security System','Volume Shadow Copy Service — creates point-in-time snapshots','Virtual Server Software','Verified Secure Storage'],ans:1,exp:'VSS (Volume Shadow Copy Service) creates consistent point-in-time snapshots without taking applications offline.'},
+    {q:'What is the AD Recycle Bin used for?',opts:['Deleting old GPOs','Restoring accidentally deleted AD objects','Archiving old user accounts','Storing backup files'],ans:1,exp:'The AD Recycle Bin allows easy restoration of deleted AD objects (users, groups, OUs) without authoritative restore.'},
+    {q:'What is the tombstone lifetime in Active Directory?',opts:['30 days','60 days','90 days','180 days'],ans:3,exp:'Deleted AD objects are kept as tombstones for 180 days before permanent deletion.'},
+  ]
+},
+{
+  id:14, title:'Troubleshooting & Best Practices',
+  subtitle:'Diagnosing common Windows Server issues and hardening tips',
+  concepts:[
+    {title:'Troubleshooting Methodology',body:`Always follow a structured approach:
+    <ol>
+    <li><strong>Identify</strong> — What exactly is the symptom? When did it start?</li>
+    <li><strong>Gather info</strong> — Event Viewer, logs, user reports</li>
+    <li><strong>Isolate</strong> — Is it one machine or many? One user or all?</li>
+    <li><strong>Hypothesize</strong> — What changed recently? Updates, config changes?</li>
+    <li><strong>Test</strong> — Change one thing at a time and test</li>
+    <li><strong>Document</strong> — Record the problem and solution</li>
+    </ol>`},
+    {title:'Event Viewer — Your First Stop',body:`<ul>
+    <li><strong>Windows Logs → System</strong> — Hardware, service, and driver events</li>
+    <li><strong>Windows Logs → Application</strong> — Application errors and warnings</li>
+    <li><strong>Windows Logs → Security</strong> — Logon/logoff, privilege use, object access</li>
+    <li><strong>Applications and Services Logs → Directory Service</strong> — AD replication events</li>
+    <li><strong>Applications and Services Logs → DNS Server</strong> — DNS errors</li>
+    </ul>
+    Key Event IDs: 4624 (logon success), 4625 (logon failure), 4740 (account lockout), 1644 (LDAP query), 4726 (user deleted).`},
+    {title:'Common Issues and Fixes',body:`<ul>
+    <li><strong>User can't log in</strong> — Check: account locked (4740), password expired, account disabled, DNS issue, DC reachability</li>
+    <li><strong>GPO not applying</strong> — gpresult /r, check OU link, check WMI filter, gpupdate /force</li>
+    <li><strong>AD replication failing</strong> — repadmin /replsummary, check DNS, network, firewall ports</li>
+    <li><strong>DNS not resolving</strong> — nslookup, ipconfig /flushdns, check zone, check forwarders</li>
+    <li><strong>Time sync issues</strong> — AD requires time within 5 minutes (Kerberos). Check w32tm /query /status</li>
+    </ul>`},
+    {title:'Hardening Best Practices',body:`<ul>
+    <li>Apply Microsoft Security Baselines via GPO</li>
+    <li>Use Just Enough Administration (JEA) — limit admin rights to minimum needed</li>
+    <li>Enable audit policies (logon, account management, policy change)</li>
+    <li>Patch regularly — use WSUS or Windows Update for Business</li>
+    <li>Use separate accounts: domain admin ≠ daily user account</li>
+    <li>Protect the Tier 0 (DCs) — never browse internet or install apps on DCs</li>
+    <li>Enable Protected Users security group for privileged accounts</li>
+    </ul>`},
+  ],
+  codes:[
+    {label:'AD replication health check',code:`# Replication summary
+repadmin /replsummary
+
+# Detailed replication status
+repadmin /showrepl
+
+# Force replication
+repadmin /syncall /AdeP
+
+# Check domain controller diagnostics
+dcdiag /test:all /v`},
+    {label:'User account lockout investigation',code:`# Find locked accounts
+Search-ADAccount -LockedOut | Select-Object Name,SamAccountName
+
+# Unlock account
+Unlock-ADAccount -Identity "jsmith"
+
+# Find where lockouts are coming from
+Get-EventLog -LogName Security -InstanceId 4740 -Newest 10 | \`
+  Select-Object TimeGenerated,Message`},
+    {label:'DNS troubleshooting',code:`# Flush DNS cache
+ipconfig /flushdns
+
+# Verify DNS SRV records for AD
+nslookup -type=SRV _ldap._tcp.kca.local
+
+# Check DNS from different server
+nslookup kca-dc01.kca.local 8.8.8.8
+
+# Clear DNS server cache
+Clear-DnsServerCache`},
+    {label:'Time sync check and fix',code:`# Check time sync status
+w32tm /query /status
+
+# Sync time now
+w32tm /resync /force
+
+# Configure DC as NTP source
+w32tm /config /manualpeerlist:time.windows.com /syncfromflags:manual \`
+  /reliable:yes /update`},
+  ],
+  infoboxes:[
+    {type:'tip',text:'<strong>Separate admin accounts:</strong> Never use your Domain Admin account for daily work like email and browsing. Use a standard account day-to-day; elevate only when needed.'},
+    {type:'warn',text:'<strong>Kerberos time skew:</strong> If the time difference between a DC and a client exceeds 5 minutes, authentication fails with "The system detected a possible attempt to compromise security." Always use NTP.'},
+    {type:'note',text:'<strong>dcdiag</strong> is your best friend for troubleshooting AD issues. Run dcdiag /test:all /v and review all PASSED/FAILED results.'},
+  ],
+  lab:{title:'Lab 14 — Troubleshooting Exercises',subtitle:'Practice diagnosing and fixing common issues',steps:[
+    'Check AD replication: repadmin /replsummary — verify no errors.',
+    'Run DC diagnostics: dcdiag /test:all — fix any FAILED tests.',
+    'Check time sync: w32tm /query /status — verify time source.',
+    'Simulate lockout: attempt wrong password 6 times for a test user. Then find the lockout event: Get-EventLog -LogName Security -InstanceId 4740 -Newest 5',
+    'Unlock the account: Unlock-ADAccount -Identity "testuser"',
+    'Check DNS health: nslookup -type=SRV _ldap._tcp.kca.local → should return the DC.',
+    'Generate a GPO report: gpresult /h C:\\GPO_Report.html /f → open the HTML file to review.',
+  ]},
+  quiz:[
+    {q:'Which Event ID indicates a failed login attempt?',opts:['4624','4625','4740','1644'],ans:1,exp:'Event ID 4625 = failed logon. 4624 = successful logon. 4740 = account lockout.'},
+    {q:'What is the maximum allowed time difference for Kerberos authentication?',opts:['1 minute','5 minutes','15 minutes','30 minutes'],ans:1,exp:'Kerberos requires clocks to be within 5 minutes. Larger differences cause authentication failures.'},
+    {q:'Which command checks Active Directory replication health?',opts:['adcheck /repl','repadmin /replsummary','dcdiag /replication','adrepl /status'],ans:1,exp:'repadmin /replsummary shows a summary of replication status across all DCs.'},
+    {q:'Which command unlocks a locked AD user account?',opts:['Enable-ADAccount','Unlock-ADAccount','Reset-ADAccount','Set-ADAccount -Unlock'],ans:1,exp:'Unlock-ADAccount -Identity "username" unlocks a locked AD account.'},
+    {q:'What does dcdiag do?',opts:['Diagnoses disk errors','Runs comprehensive Domain Controller health checks','Checks DNS configuration only','Repairs the AD database'],ans:1,exp:'dcdiag runs a comprehensive suite of tests on a DC: replication, DNS, services, connectivity, and more.'},
+  ]
+}
+];
+
+let completed = JSON.parse(localStorage.getItem('kca_winsrv_completed') || '[]');
+let current = parseInt(localStorage.getItem('kca_winsrv_current') || '0');
+let quizState = {};
+
+function saveProgress(){
+  localStorage.setItem('kca_winsrv_completed', JSON.stringify(completed));
+  localStorage.setItem('kca_winsrv_current', String(current));
+}
+
+function buildSidebar(){
+  const el = document.getElementById('sidebar');
+  el.innerHTML = '<div class="sidebar-title">Course Modules</div>' +
+    MODULES.map((m,i) => {
+      const done = completed.includes(m.id);
+      const active = i === current;
+      return `<button class="mod-btn${active?' active':''}${done?' completed':''}" onclick="goTo(${i})">
+        <span class="mod-num">${done?'✓':m.id}</span>
+        <span class="mod-label">${m.title}</span>
+      </button>`;
+    }).join('');
+}
+
+function updatePill(){
+  document.getElementById('progressPill').textContent = `${completed.length} / ${MODULES.length} Modules`;
+}
+
+function renderModule(idx){
+  const m = MODULES[idx];
+  quizState = {};
+  const concepts = (m.concepts||[]).map(c => `
+    <div class="concept">
+      <div class="concept-title">${c.title}</div>
+      <div class="concept-body">${c.body}</div>
+    </div>`).join('');
+
+  const codes = (m.codes||[]).map(c => `
+    <div class="code-label">${c.label}</div>
+    <pre class="code">${c.code}</pre>`).join('');
+
+  const tbl = m.table ? `
+    <table class="tbl">
+      <thead><tr>${m.table.headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+      <tbody>${m.table.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>` : '';
+
+  const infoboxes = (m.infoboxes||[]).map(b=>`<div class="info-box ${b.type}">${b.text}</div>`).join('');
+
+  const labSteps = m.lab ? `
+    <div class="lab">
+      <div class="lab-header">
+        <div class="lab-icon">🧪</div>
+        <div><div class="lab-title">${m.lab.title}</div><div class="lab-sub">${m.lab.subtitle}</div></div>
+      </div>
+      ${m.lab.steps.map((s,i)=>`<div class="lab-step"><div class="lab-step-num">${i+1}</div><p>${s}</p></div>`).join('')}
+    </div>` : '';
+
+  const quizHTML = m.quiz ? `
+    <div class="quiz">
+      <div class="quiz-header">📝 Knowledge Check — Module ${m.id}</div>
+      ${m.quiz.map((q,qi)=>`
+        <div class="quiz-q" id="qq-${idx}-${qi}">
+          <div class="quiz-q-text"><span class="qnum">Q${qi+1}.</span> ${q.q}</div>
+          <div class="quiz-opts">
+            ${q.opts.map((o,oi)=>`
+              <label class="quiz-opt" id="qopt-${idx}-${qi}-${oi}" onclick="selectOpt(${idx},${qi},${oi})">
+                <input type="radio" name="q-${idx}-${qi}" value="${oi}"> ${o}
+              </label>`).join('')}
+          </div>
+          <div id="qfb-${idx}-${qi}"></div>
+        </div>`).join('')}
+      <button class="btn-submit" id="btn-submit-${idx}" onclick="submitQuiz(${idx})">Submit Answers</button>
+      <div id="quiz-result-${idx}"></div>
+    </div>` : '';
+
+  const isFirst = idx === 0;
+  const isLast = idx === MODULES.length - 1;
+  const isDone = completed.includes(m.id);
+
+  document.getElementById('content').innerHTML = `
+    <div class="module-view">
+      <div class="mod-header">
+        <div class="mod-tag">📘 Module ${m.id} of ${MODULES.length}</div>
+        <h1 class="mod-title">${m.title}</h1>
+        <p class="mod-subtitle">${m.subtitle}</p>
+        <div class="mod-divider"></div>
+      </div>
+      ${concepts ? `<div class="section"><div class="section-title">Core Concepts</div>${concepts}</div>` : ''}
+      ${tbl ? `<div class="section"><div class="section-title">Comparison</div>${tbl}</div>` : ''}
+      ${codes ? `<div class="section"><div class="section-title">Command Reference</div>${codes}</div>` : ''}
+      ${infoboxes ? `<div class="section">${infoboxes}</div>` : ''}
+      ${labSteps ? `<div class="section"><div class="section-title">Hands-On Lab</div>${labSteps}</div>` : ''}
+      ${quizHTML ? `<div class="section">${quizHTML}</div>` : ''}
+      ${isDone ? `<div class="complete-banner"><h2>✅ Module ${m.id} Complete!</h2><p>Move on to the next module or review any topic above.</p></div>` : ''}
+      <div class="mod-nav">
+        <button class="btn-nav btn-prev" onclick="goTo(${idx-1})" ${isFirst?'disabled':''}>← Previous</button>
+        <button class="btn-nav btn-next" onclick="goTo(${idx+1})" ${isLast?'disabled':''}>Next →</button>
+      </div>
+    </div>`;
+}
+
+function goTo(idx){
+  if(idx < 0 || idx >= MODULES.length) return;
+  current = idx;
+  saveProgress();
+  buildSidebar();
+  renderModule(idx);
+  document.getElementById('content').scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+function selectOpt(modIdx, qi, oi){
+  if(quizState[qi]?.answered) return;
+  quizState[qi] = { selected: oi };
+  document.querySelectorAll(`[id^="qopt-${modIdx}-${qi}-"]`).forEach(el => el.classList.remove('selected'));
+  document.getElementById(`qopt-${modIdx}-${qi}-${oi}`).classList.add('selected');
+}
+
+function submitQuiz(modIdx){
+  const m = MODULES[modIdx];
+  let score = 0;
+  let allAnswered = true;
+  m.quiz.forEach((q, qi) => {
+    const state = quizState[qi];
+    if(!state || state.selected === undefined){ allAnswered = false; return; }
+    const sel = state.selected;
+    const correct = q.ans;
+    state.answered = true;
+    const opts = document.querySelectorAll(`[id^="qopt-${modIdx}-${qi}-"]`);
+    opts.forEach(o => {
+      const val = parseInt(o.id.split('-').pop());
+      if(val === correct) o.classList.add('correct');
+      else if(val === sel && sel !== correct) o.classList.add('wrong');
+      o.style.pointerEvents = 'none';
+    });
+    const fb = document.getElementById(`qfb-${modIdx}-${qi}`);
+    if(sel === correct){
+      score++;
+      fb.innerHTML = `<div class="quiz-feedback correct">✅ Correct! ${q.exp}</div>`;
+    } else {
+      fb.innerHTML = `<div class="quiz-feedback wrong">❌ Incorrect. ${q.exp}</div>`;
+    }
+  });
+  if(!allAnswered){ alert('Please answer all questions before submitting.'); return; }
+  document.getElementById(`btn-submit-${modIdx}`).disabled = true;
+  const pct = Math.round((score/m.quiz.length)*100);
+  document.getElementById(`quiz-result-${modIdx}`).innerHTML = `
+    <div class="quiz-result">
+      <div class="quiz-score">${score} / ${m.quiz.length}</div>
+      <div class="quiz-score-label">${pct}% — ${pct>=80?'🎉 Excellent!':pct>=60?'👍 Good, review missed questions.':'📚 Review the module and try again.'}</div>
+    </div>`;
+  if(pct >= 60 && !completed.includes(MODULES[modIdx].id)){
+    completed.push(MODULES[modIdx].id);
+    saveProgress();
+    buildSidebar();
+    updatePill();
+  }
+}
+
+// Init
+buildSidebar();
+renderModule(current);
+updatePill();
+</script>
+</body>
+</html>
