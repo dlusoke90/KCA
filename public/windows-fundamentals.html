@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KCA — Windows Fundamentals & Microsoft Office</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0A1A3B;
+  --navy2: #0D3B6E;
+  --teal: #0E8A78;
+  --teal2: #0BA894;
+  --gold: #F5A623;
+  --gold2: #FFB84D;
+  --white: #FFFFFF;
+  --light: #F0F6FF;
+  --gray: #8B9CB6;
+  --dark-text: #1A2A4A;
+  --card-bg: #F7FAFF;
+  --border: #D0DCF0;
+  --success: #1A7A4A;
+  --error: #C0392B;
+  --warn: #E67E22;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark-text);min-height:100vh;}
+
+/* ── TOP NAV ── */
+#topnav{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--navy);
+  display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;
+  border-bottom:3px solid var(--gold);box-shadow:0 2px 20px rgba(0,0,0,0.4);}
+#topnav .brand{display:flex;align-items:center;gap:12px;}
+#topnav .logo-box{background:var(--gold);color:var(--navy);font-family:'Rajdhani',sans-serif;
+  font-weight:700;font-size:15px;padding:4px 10px;border-radius:4px;letter-spacing:1px;}
+#topnav .brand-name{color:var(--white);font-family:'Rajdhani',sans-serif;font-weight:600;font-size:16px;
+  letter-spacing:.5px;}
+#topnav .brand-name span{color:var(--gold);}
+#topnav .progress-wrap{display:flex;align-items:center;gap:10px;}
+#topnav .progress-label{color:var(--gray);font-size:12px;}
+#topnav .progress-bar{width:140px;height:6px;background:rgba(255,255,255,0.15);border-radius:3px;overflow:hidden;}
+#topnav .progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:3px;transition:width .5s ease;}
+#topnav .score-badge{background:var(--teal);color:#fff;font-size:12px;font-weight:600;
+  padding:3px 10px;border-radius:20px;font-family:'Rajdhani',sans-serif;letter-spacing:.5px;}
+
+/* ── SIDEBAR ── */
+#sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--navy);
+  overflow-y:auto;z-index:900;border-right:1px solid rgba(255,255,255,0.08);}
+#sidebar::-webkit-scrollbar{width:4px;}
+#sidebar::-webkit-scrollbar-thumb{background:var(--teal);border-radius:2px;}
+.sidebar-section{padding:12px 0 4px;}
+.sidebar-section-title{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;
+  color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;padding:6px 18px;}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;
+  transition:all .2s;border-left:3px solid transparent;position:relative;}
+.sidebar-item:hover{background:rgba(255,255,255,0.06);border-left-color:var(--teal);}
+.sidebar-item.active{background:rgba(14,138,120,0.2);border-left-color:var(--gold);}
+.sidebar-item .si-icon{font-size:16px;min-width:20px;text-align:center;}
+.sidebar-item .si-text{color:rgba(255,255,255,0.85);font-size:13px;font-weight:400;line-height:1.3;}
+.sidebar-item.active .si-text{color:var(--white);font-weight:500;}
+.sidebar-item .si-check{margin-left:auto;color:var(--teal);font-size:14px;display:none;}
+.sidebar-item.done .si-check{display:block;}
+
+/* ── MAIN CONTENT ── */
+#main{margin-left:260px;margin-top:56px;padding:32px 36px;min-height:calc(100vh - 56px);}
+.module{display:none;}
+.module.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── MODULE HEADER ── */
+.module-header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+  border-radius:12px;padding:28px 32px;margin-bottom:28px;position:relative;overflow:hidden;
+  border:1px solid rgba(245,166,35,0.3);}
+.module-header::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;
+  background:var(--gold);opacity:.06;border-radius:50%;}
+.module-header::after{content:'';position:absolute;bottom:-20px;right:60px;width:80px;height:80px;
+  background:var(--teal);opacity:.08;border-radius:50%;}
+.module-header .mod-tag{display:inline-block;background:var(--gold);color:var(--navy);
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:11px;letter-spacing:1.5px;
+  text-transform:uppercase;padding:3px 12px;border-radius:20px;margin-bottom:10px;}
+.module-header h1{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:30px;
+  color:var(--white);margin-bottom:6px;line-height:1.1;}
+.module-header p{color:rgba(255,255,255,0.65);font-size:14px;max-width:600px;line-height:1.6;}
+
+/* ── CARDS ── */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-bottom:24px;}
+.card{background:var(--white);border-radius:10px;padding:22px;border:1px solid var(--border);
+  transition:all .25s;position:relative;overflow:hidden;}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(10,26,59,0.1);border-color:var(--teal);}
+.card .card-icon{font-size:28px;margin-bottom:12px;}
+.card h3{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:17px;color:var(--navy);margin-bottom:8px;}
+.card p{font-size:13px;color:#5A6A8A;line-height:1.6;}
+.card .card-tag{position:absolute;top:14px;right:14px;font-size:10px;font-weight:600;font-family:'Rajdhani',sans-serif;
+  text-transform:uppercase;letter-spacing:1px;padding:2px 8px;border-radius:10px;}
+.tag-win{background:#E3F0FF;color:#1A5BB8;}
+.tag-tool{background:#E6F4F2;color:var(--teal);}
+.tag-office{background:#FFF4E6;color:#C0622B;}
+
+/* ── FEATURE TABLE ── */
+.feature-table{width:100%;border-collapse:collapse;border-radius:10px;overflow:hidden;
+  box-shadow:0 2px 12px rgba(10,26,59,0.08);margin-bottom:24px;}
+.feature-table thead{background:var(--navy);}
+.feature-table thead th{color:var(--white);font-family:'Rajdhani',sans-serif;font-weight:600;
+  font-size:13px;text-transform:uppercase;letter-spacing:.8px;padding:12px 16px;text-align:left;}
+.feature-table tbody tr{background:var(--white);border-bottom:1px solid var(--border);}
+.feature-table tbody tr:nth-child(even){background:#F8FBFF;}
+.feature-table tbody tr:hover{background:#EEF5FF;}
+.feature-table td{padding:11px 16px;font-size:13px;vertical-align:top;}
+.feature-table td:first-child{font-weight:600;color:var(--navy);white-space:nowrap;}
+.feature-table td .key-badge{display:inline-block;background:var(--navy);color:var(--gold);
+  font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 8px;border-radius:4px;
+  margin:1px 2px;white-space:nowrap;border:1px solid rgba(245,166,35,0.4);}
+
+/* ── SHORTCUT CHEAT SHEET ── */
+.cheat-section{margin-bottom:28px;}
+.cheat-section h3{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:19px;
+  color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.cheat-section h3::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,var(--teal),transparent);}
+.shortcut-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;}
+.shortcut-row{display:flex;align-items:center;justify-content:space-between;
+  background:var(--white);border:1px solid var(--border);border-radius:8px;
+  padding:8px 12px;transition:all .2s;}
+.shortcut-row:hover{border-color:var(--teal);background:#F0FDFA;}
+.shortcut-row .action{font-size:12px;color:#4A5A7A;flex:1;}
+.shortcut-row .keys{display:flex;gap:3px;flex-shrink:0;}
+.key{display:inline-block;background:var(--navy);color:var(--gold);font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;border-bottom:2px solid rgba(245,166,35,0.6);
+  white-space:nowrap;}
+
+/* ── QUIZ ── */
+.quiz-box{background:var(--white);border-radius:12px;padding:28px;border:1px solid var(--border);
+  box-shadow:0 2px 12px rgba(10,26,59,0.06);margin-bottom:24px;}
+.quiz-box h3{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:20px;color:var(--navy);
+  margin-bottom:6px;}
+.quiz-box .quiz-subtitle{font-size:13px;color:var(--gray);margin-bottom:20px;}
+.quiz-q{background:var(--light);border-left:4px solid var(--teal);border-radius:0 8px 8px 0;
+  padding:14px 16px;margin-bottom:16px;}
+.quiz-q .q-text{font-size:14px;font-weight:500;color:var(--navy);margin-bottom:12px;}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.quiz-opt{background:var(--white);border:2px solid var(--border);border-radius:8px;
+  padding:10px 14px;font-size:13px;cursor:pointer;transition:all .2s;text-align:left;
+  color:var(--dark-text);}
+.quiz-opt:hover{border-color:var(--teal);background:#F0FDFA;}
+.quiz-opt.correct{border-color:var(--success);background:#E8F8EF;color:var(--success);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--error);background:#FDECEC;color:var(--error);}
+.quiz-opt:disabled{cursor:not-allowed;}
+.quiz-result{margin-top:16px;padding:12px 16px;border-radius:8px;font-size:13px;font-weight:500;display:none;}
+.quiz-result.show{display:block;}
+.quiz-result.pass{background:#E8F8EF;color:var(--success);border:1px solid #A3D9B8;}
+.quiz-result.fail{background:#FDECEC;color:var(--error);border:1px solid #F0AAAA;}
+.quiz-score{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;
+  text-align:center;margin:12px 0;color:var(--navy);}
+#submit-quiz{background:var(--teal);color:var(--white);border:none;border-radius:8px;
+  padding:12px 28px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:16px;
+  letter-spacing:.5px;cursor:pointer;transition:all .2s;margin-top:8px;}
+#submit-quiz:hover{background:var(--teal2);transform:translateY(-1px);}
+
+/* ── INFO BOXES ── */
+.info-box{border-radius:8px;padding:14px 18px;margin-bottom:16px;font-size:13px;line-height:1.6;
+  display:flex;gap:12px;align-items:flex-start;}
+.info-box .ib-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.info-box.tip{background:#E6F4F2;border-left:4px solid var(--teal);}
+.info-box.warn{background:#FFF4E0;border-left:4px solid var(--gold);}
+.info-box.note{background:#EEF3FF;border-left:4px solid var(--navy2);}
+.info-box strong{color:var(--navy);display:block;margin-bottom:3px;font-family:'Rajdhani',sans-serif;font-size:14px;}
+
+/* ── STEP FLOW ── */
+.steps{display:flex;flex-direction:column;gap:0;margin-bottom:24px;}
+.step{display:flex;gap:16px;position:relative;padding-bottom:20px;}
+.step:last-child{padding-bottom:0;}
+.step:not(:last-child)::before{content:'';position:absolute;left:19px;top:40px;bottom:0;width:2px;background:var(--border);}
+.step-num{width:38px;height:38px;border-radius:50%;background:var(--navy);color:var(--gold);
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;border:2px solid var(--gold);}
+.step-content{flex:1;padding-top:6px;}
+.step-content h4{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:16px;color:var(--navy);margin-bottom:4px;}
+.step-content p{font-size:13px;color:#5A6A8A;line-height:1.6;}
+
+/* ── NAV BUTTONS ── */
+.module-nav{display:flex;justify-content:space-between;align-items:center;
+  margin-top:32px;padding-top:20px;border-top:1px solid var(--border);}
+.btn{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:15px;letter-spacing:.5px;
+  padding:11px 24px;border-radius:8px;cursor:pointer;transition:all .2s;border:none;display:flex;
+  align-items:center;gap:8px;}
+.btn-primary{background:var(--teal);color:var(--white);}
+.btn-primary:hover{background:var(--teal2);transform:translateY(-1px);}
+.btn-secondary{background:var(--white);color:var(--navy);border:2px solid var(--border);}
+.btn-secondary:hover{border-color:var(--teal);color:var(--teal);}
+.btn-gold{background:var(--gold);color:var(--navy);}
+.btn-gold:hover{background:var(--gold2);}
+
+/* ── OFFICE TABS ── */
+.app-tabs{display:flex;gap:0;margin-bottom:0;border-bottom:2px solid var(--border);}
+.app-tab{padding:10px 22px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;
+  cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;color:var(--gray);}
+.app-tab:hover{color:var(--navy);}
+.app-tab.active{color:var(--navy);border-bottom-color:var(--gold);}
+.app-tab-content{display:none;padding-top:20px;}
+.app-tab-content.active{display:block;}
+.app-tab[data-app="word"].active{border-bottom-color:#2B579A;}
+.app-tab[data-app="ppt"].active{border-bottom-color:#D04423;}
+.app-tab[data-app="excel"].active{border-bottom-color:#1D6F42;}
+
+/* ── DASHBOARD ── */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:24px;}
+.dash-card{background:var(--white);border-radius:10px;padding:20px;border:1px solid var(--border);
+  text-align:center;cursor:pointer;transition:all .25s;}
+.dash-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(10,26,59,0.12);border-color:var(--teal);}
+.dash-card .dc-icon{font-size:36px;margin-bottom:10px;}
+.dash-card h4{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;color:var(--navy);margin-bottom:4px;}
+.dash-card p{font-size:11px;color:var(--gray);}
+.dash-card .dc-badge{margin-top:10px;font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:600;
+  color:var(--white);background:var(--teal);padding:2px 10px;border-radius:20px;display:inline-block;}
+
+/* ── CERT BANNER ── */
+.cert-banner{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:12px;
+  padding:32px;text-align:center;margin-bottom:24px;border:2px solid var(--gold);position:relative;overflow:hidden;}
+.cert-banner::before{content:'🏆';font-size:80px;position:absolute;right:20px;top:50%;
+  transform:translateY(-50%);opacity:.08;}
+.cert-banner h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:26px;color:var(--gold);margin-bottom:8px;}
+.cert-banner p{color:rgba(255,255,255,0.7);font-size:14px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  #sidebar{transform:translateX(-100%);transition:transform .3s;}
+  #sidebar.open{transform:translateX(0);}
+  #main{margin-left:0;}
+  .quiz-options{grid-template-columns:1fr;}
+  .shortcut-grid{grid-template-columns:1fr;}
+}
+.section-divider{height:2px;background:linear-gradient(90deg,var(--teal),var(--gold),transparent);
+  border-radius:2px;margin:28px 0;}
+.highlight-row{background:linear-gradient(90deg,rgba(14,138,120,0.05),transparent);
+  border-radius:8px;padding:12px 16px;margin-bottom:8px;border-left:3px solid var(--teal);}
+.highlight-row h4{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;color:var(--navy);margin-bottom:4px;}
+.highlight-row p{font-size:13px;color:#5A6A8A;line-height:1.5;}
+
+/* ── HOME WELCOME ── */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 60%,#0D4A5E 100%);
+  border-radius:14px;padding:40px;margin-bottom:28px;position:relative;overflow:hidden;
+  border:1px solid rgba(245,166,35,0.3);}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+.hero-tag{display:inline-block;background:var(--gold);color:var(--navy);font-family:'Rajdhani',sans-serif;
+  font-weight:700;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;padding:4px 14px;
+  border-radius:20px;margin-bottom:14px;}
+.hero h1{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:38px;color:var(--white);
+  line-height:1.1;margin-bottom:10px;}
+.hero h1 span{color:var(--gold);}
+.hero p{color:rgba(255,255,255,0.7);font-size:15px;max-width:520px;line-height:1.7;margin-bottom:20px;}
+.hero-stats{display:flex;gap:24px;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat .hs-num{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:26px;color:var(--gold);}
+.hero-stat .hs-label{font-size:11px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.8px;}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav id="topnav">
+  <div class="brand">
+    <div class="logo-box">KCA</div>
+    <div class="brand-name">Kuwaha Cloud <span>Academy</span></div>
+  </div>
+  <div class="progress-wrap">
+    <span class="progress-label" id="progress-label">0% Complete</span>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="score-badge" id="score-badge">Score: 0</div>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Course Home</div>
+    <div class="sidebar-item active" onclick="showModule('home')" id="nav-home">
+      <span class="si-icon">🏠</span><span class="si-text">Dashboard</span><span class="si-check">✓</span>
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Windows Tools</div>
+    <div class="sidebar-item" onclick="showModule('m1')" id="nav-m1">
+      <span class="si-icon">⚙️</span><span class="si-text">System & Admin Tools</span><span class="si-check">✓</span>
+    </div>
+    <div class="sidebar-item" onclick="showModule('m2')" id="nav-m2">
+      <span class="si-icon">🔌</span><span class="si-text">Device & Network Mgmt</span><span class="si-check">✓</span>
+    </div>
+    <div class="sidebar-item" onclick="showModule('m3')" id="nav-m3">
+      <span class="si-icon">💾</span><span class="si-text">Disk & Computer Mgmt</span><span class="si-check">✓</span>
+    </div>
+    <div class="sidebar-item" onclick="showModule('m4')" id="nav-m4">
+      <span class="si-icon">🖥️</span><span class="si-text">PowerShell & Run</span><span class="si-check">✓</span>
+    </div>
+    <div class="sidebar-item" onclick="showModule('m5')" id="nav-m5">
+      <span class="si-icon">🔍</span><span class="si-text">Task Manager, Explorer & Search</span><span class="si-check">✓</span>
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Microsoft Office</div>
+    <div class="sidebar-item" onclick="showModule('m6')" id="nav-m6">
+      <span class="si-icon">📝</span><span class="si-text">Microsoft Word</span><span class="si-check">✓</span>
+    </div>
+    <div class="sidebar-item" onclick="showModule('m7')" id="nav-m7">
+      <span class="si-icon">📊</span><span class="si-text">Microsoft Excel</span><span class="si-check">✓</span>
+    </div>
+    <div class="sidebar-item" onclick="showModule('m8')" id="nav-m8">
+      <span class="si-icon">🎨</span><span class="si-text">Microsoft PowerPoint</span><span class="si-check">✓</span>
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Reference</div>
+    <div class="sidebar-item" onclick="showModule('m9')" id="nav-m9">
+      <span class="si-icon">⌨️</span><span class="si-text">Shortcut Cheat Sheet</span><span class="si-check">✓</span>
+    </div>
+    <div class="sidebar-item" onclick="showModule('quiz')" id="nav-quiz">
+      <span class="si-icon">🎯</span><span class="si-text">Final Quiz</span><span class="si-check">✓</span>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+
+<!-- ══════════════════════════════════════════════════════ HOME -->
+<div class="module active" id="mod-home">
+  <div class="hero">
+    <div class="hero-tag">KCA Windows Fundamentals</div>
+    <h1>Master <span>Windows</span> &<br>Microsoft Office</h1>
+    <p>Learn Windows administration tools, File Explorer, PowerShell, and master Word, Excel & PowerPoint — with hands-on exercises and quizzes.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hs-num">9</div><div class="hs-label">Modules</div></div>
+      <div class="hero-stat"><div class="hs-num">18</div><div class="hs-label">Tools Covered</div></div>
+      <div class="hero-stat"><div class="hs-num">3</div><div class="hs-label">Office Apps</div></div>
+      <div class="hero-stat"><div class="hs-num">200+</div><div class="hs-label">Shortcuts</div></div>
+    </div>
+  </div>
+  <div class="dash-grid">
+    <div class="dash-card" onclick="showModule('m1')">
+      <div class="dc-icon">⚙️</div>
+      <h4>System & Admin</h4>
+      <p>Apps, Power, Event Viewer, System</p>
+      <div class="dc-badge">Start Here</div>
+    </div>
+    <div class="dash-card" onclick="showModule('m2')">
+      <div class="dc-icon">🔌</div>
+      <h4>Device & Network</h4>
+      <p>Device Manager, Network Connections</p>
+    </div>
+    <div class="dash-card" onclick="showModule('m3')">
+      <div class="dc-icon">💾</div>
+      <h4>Disk & Computer</h4>
+      <p>Disk Management, Computer Management</p>
+    </div>
+    <div class="dash-card" onclick="showModule('m4')">
+      <div class="dc-icon">🖥️</div>
+      <h4>PowerShell & Run</h4>
+      <p>PowerShell, Admin mode, Run dialog</p>
+    </div>
+    <div class="dash-card" onclick="showModule('m5')">
+      <div class="dc-icon">🔍</div>
+      <h4>Task Mgr & Explorer</h4>
+      <p>Task Manager, File Explorer, Search</p>
+    </div>
+    <div class="dash-card" onclick="showModule('m6')">
+      <div class="dc-icon">📝</div>
+      <h4>Microsoft Word</h4>
+      <p>Documents, formatting, templates</p>
+    </div>
+    <div class="dash-card" onclick="showModule('m7')">
+      <div class="dc-icon">📊</div>
+      <h4>Microsoft Excel</h4>
+      <p>Spreadsheets, formulas, charts</p>
+    </div>
+    <div class="dash-card" onclick="showModule('m8')">
+      <div class="dc-icon">🎨</div>
+      <h4>PowerPoint</h4>
+      <p>Presentations, slides, animations</p>
+    </div>
+    <div class="dash-card" onclick="showModule('m9')">
+      <div class="dc-icon">⌨️</div>
+      <h4>Cheat Sheet</h4>
+      <p>All shortcuts in one place</p>
+    </div>
+  </div>
+  <div class="info-box tip">
+    <span class="ib-icon">💡</span>
+    <div><strong>How to Use This Course</strong>Work through each module in order. Each lesson builds on the previous. Use the <strong>Cheat Sheet</strong> module as a reference at any time. Take the <strong>Final Quiz</strong> when you feel ready.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ MODULE 1: System & Admin -->
+<div class="module" id="mod-m1">
+  <div class="module-header">
+    <div class="mod-tag">Module 1 — Windows Tools</div>
+    <h1>System & Administrative Tools</h1>
+    <p>Access and understand the core Windows admin tools accessible via the Win+X Power User Menu.</p>
+  </div>
+  <div class="info-box note">
+    <span class="ib-icon">📌</span>
+    <div><strong>How to Open the Win+X Menu</strong>Right-click the <strong>Start button</strong> OR press <span class="key">Win</span> + <span class="key">X</span> on your keyboard. This opens the Power User Menu you saw in class.</div>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;">📱 Apps and Features</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">📱</div>
+      <span class="card-tag tag-win">Settings</span>
+      <h3>Apps and Features</h3>
+      <p>View, modify, and uninstall all installed applications on your computer. Also lets you manage optional Windows features and app execution aliases.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔋</div>
+      <span class="card-tag tag-win">Control</span>
+      <h3>Mobility Center</h3>
+      <p>Quick access to common laptop settings: display brightness, volume, battery status, wireless network, screen rotation, and presentation mode — all in one panel.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <span class="card-tag tag-win">System</span>
+      <h3>Power Options</h3>
+      <p>Configure power plans (Balanced, Power Saver, High Performance). Control when the display turns off and when the PC goes to sleep. Critical for laptops and servers.</p>
+    </div>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;">📋 Event Viewer</h2>
+  <div class="highlight-row">
+    <h4>🔍 What is Event Viewer?</h4>
+    <p>Event Viewer is a Windows administrative tool that lets you view detailed information about significant events on your computer — including system errors, security events, and application warnings.</p>
+  </div>
+  <table class="feature-table">
+    <thead><tr><th>Log Type</th><th>What It Records</th><th>When to Use It</th></tr></thead>
+    <tbody>
+      <tr><td>Application</td><td>Events logged by applications/programs</td><td>App crashes, software errors</td></tr>
+      <tr><td>Security</td><td>Login attempts, file/object access</td><td>Security auditing, failed logins</td></tr>
+      <tr><td>System</td><td>Windows system component events</td><td>Driver failures, service stops</td></tr>
+      <tr><td>Setup</td><td>Application setup events</td><td>Installation issues</td></tr>
+    </tbody>
+  </table>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">💻 System</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">💻</div>
+      <h3>System Information</h3>
+      <p>Shows your PC name, Windows edition, processor, RAM, system type (32/64-bit), and Windows activation status. The starting point for any tech support call.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔧</div>
+      <h3>Advanced System Settings</h3>
+      <p>From here you access Performance settings, Environment Variables, Remote Desktop, and System Protection (restore points).</p>
+    </div>
+  </div>
+  <div class="info-box tip">
+    <span class="ib-icon">⌨️</span>
+    <div><strong>Quick Access Shortcuts</strong>
+    Open Apps & Features: <span class="key">Win</span>+<span class="key">I</span> → Apps<br>
+    Open System: <span class="key">Win</span>+<span class="key">Pause/Break</span> or right-click This PC → Properties<br>
+    Open Event Viewer: type <code>eventvwr</code> in Run dialog (<span class="key">Win</span>+<span class="key">R</span>)</div>
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="showModule('home')">← Dashboard</button>
+    <button class="btn btn-primary" onclick="showModule('m2')">Next: Device & Network →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ MODULE 2: Device & Network -->
+<div class="module" id="mod-m2">
+  <div class="module-header">
+    <div class="mod-tag">Module 2 — Windows Tools</div>
+    <h1>Device Manager & Network Connections</h1>
+    <p>Manage hardware drivers and configure network adapters, VPNs, and connectivity settings.</p>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;">🔌 Device Manager</h2>
+  <div class="highlight-row">
+    <h4>What is Device Manager?</h4>
+    <p>Device Manager is the central location for managing all hardware connected to your computer — from your keyboard to network cards to GPUs. It shows you what's installed, what's working, and what has problems.</p>
+  </div>
+  <table class="feature-table">
+    <thead><tr><th>Icon/Status</th><th>Meaning</th><th>Action Needed</th></tr></thead>
+    <tbody>
+      <tr><td>✅ No icon</td><td>Device working normally</td><td>None</td></tr>
+      <tr><td>⚠️ Yellow triangle</td><td>Device has a problem or warning</td><td>Update driver or check properties</td></tr>
+      <tr><td>❌ Red X</td><td>Device is disabled</td><td>Right-click → Enable device</td></tr>
+      <tr><td>⬇️ Arrow down</td><td>Device manually disabled</td><td>Right-click → Enable</td></tr>
+      <tr><td>❓ Question mark</td><td>Unknown device / no driver</td><td>Install driver from manufacturer</td></tr>
+    </tbody>
+  </table>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content"><h4>Update a Driver</h4><p>Right-click the device → Update driver → Search automatically for drivers.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content"><h4>Roll Back a Driver</h4><p>Right-click → Properties → Driver tab → Roll Back Driver (if a recent update caused problems).</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content"><h4>Uninstall a Device</h4><p>Right-click → Uninstall device. Useful when completely reinstalling a driver from scratch.</p></div></div>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">🌐 Network Connections</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">📶</div>
+      <span class="card-tag tag-tool">Network</span>
+      <h3>What You See Here</h3>
+      <p>All network adapters on your PC: Ethernet, Wi-Fi, Bluetooth, VPN adapters, and virtual adapters. Each is shown with its current connection status.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔧</div>
+      <span class="card-tag tag-tool">Config</span>
+      <h3>Key Tasks</h3>
+      <p>Set a static IP address, change DNS servers, disable/enable a network adapter, bridge two connections, or diagnose a broken connection.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <span class="card-tag tag-tool">Diagnose</span>
+      <h3>Adapter Properties</h3>
+      <p>Right-click any adapter → Properties → double-click Internet Protocol Version 4 (TCP/IPv4) to set static IP, subnet mask, gateway, and DNS.</p>
+    </div>
+  </div>
+  <div class="info-box warn">
+    <span class="ib-icon">⚠️</span>
+    <div><strong>Important</strong>Disabling your only active network adapter will immediately disconnect you from the internet and network. Always have a plan before making changes here.</div>
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="showModule('m1')">← System & Admin</button>
+    <button class="btn btn-primary" onclick="showModule('m3')">Next: Disk & Computer →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ MODULE 3: Disk & Computer -->
+<div class="module" id="mod-m3">
+  <div class="module-header">
+    <div class="mod-tag">Module 3 — Windows Tools</div>
+    <h1>Disk Management & Computer Management</h1>
+    <p>Manage storage volumes, partitions, and access all Windows admin tools from one unified console.</p>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;">💾 Disk Management</h2>
+  <div class="highlight-row">
+    <h4>What is Disk Management?</h4>
+    <p>Disk Management lets you view and manage all physical disks and partitions on your system. You can create, delete, format, resize partitions and assign drive letters — without any third-party software.</p>
+  </div>
+  <table class="feature-table">
+    <thead><tr><th>Task</th><th>How To Do It</th><th>Use Case</th></tr></thead>
+    <tbody>
+      <tr><td>Create Partition</td><td>Right-click unallocated space → New Simple Volume</td><td>Setting up a new drive</td></tr>
+      <tr><td>Format Volume</td><td>Right-click partition → Format</td><td>Prepare drive for use (NTFS/FAT32)</td></tr>
+      <tr><td>Shrink Volume</td><td>Right-click partition → Shrink Volume</td><td>Make space for another partition</td></tr>
+      <tr><td>Extend Volume</td><td>Right-click partition → Extend Volume</td><td>Add unallocated space to partition</td></tr>
+      <tr><td>Change Drive Letter</td><td>Right-click → Change Drive Letter and Paths</td><td>Rename C:, D:, etc.</td></tr>
+      <tr><td>Mark as Active</td><td>Right-click → Mark Partition as Active</td><td>Set boot partition</td></tr>
+    </tbody>
+  </table>
+  <div class="info-box warn">
+    <span class="ib-icon">⚠️</span>
+    <div><strong>Danger Zone</strong>Deleting or formatting a partition <strong>permanently destroys all data</strong> on it. Always verify you are working on the correct disk before proceeding.</div>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">🖥️ Computer Management</h2>
+  <div class="highlight-row">
+    <h4>The All-in-One Admin Console</h4>
+    <p>Computer Management bundles multiple administration tools into a single window. It's the most powerful single access point for Windows system administration.</p>
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">📅</div>
+      <h3>Task Scheduler</h3>
+      <p>Create and manage automated tasks that run at specific times or when events occur — like backup scripts, cleanup jobs, or login scripts.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>Event Viewer</h3>
+      <p>Same Event Viewer you learned earlier — accessible here too as part of the unified console.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📁</div>
+      <h3>Shared Folders</h3>
+      <p>See all shares, active sessions, and open files on the computer. Manage who has access to shared network folders.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👥</div>
+      <h3>Local Users & Groups</h3>
+      <p>Create and manage local user accounts and groups. Add users, reset passwords, disable accounts, and manage group membership.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>Performance Monitor</h3>
+      <p>Track real-time CPU, memory, disk, and network performance with detailed graphs and reports.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔧</div>
+      <h3>Device Manager</h3>
+      <p>The same Device Manager from the Win+X menu — included here in the unified console.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💾</div>
+      <h3>Disk Management</h3>
+      <p>The storage management tool — also accessible from within Computer Management.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚙️</div>
+      <h3>Services</h3>
+      <p>Start, stop, pause, or restart Windows services. Configure startup type (Automatic, Manual, Disabled). Critical for IT support.</p>
+    </div>
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="showModule('m2')">← Device & Network</button>
+    <button class="btn btn-primary" onclick="showModule('m4')">Next: PowerShell & Run →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ MODULE 4: PowerShell & Run -->
+<div class="module" id="mod-m4">
+  <div class="module-header">
+    <div class="mod-tag">Module 4 — Windows Tools</div>
+    <h1>Windows PowerShell & Run Dialog</h1>
+    <p>Automate Windows with PowerShell scripts and quickly open any tool using the Run command.</p>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;">🖥️ Windows PowerShell vs PowerShell (Admin)</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🟦</div>
+      <h3>Windows PowerShell</h3>
+      <p>Runs with your normal user permissions. Good for most scripting, querying system info, and file operations that don't require elevated access.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔴</div>
+      <h3>PowerShell (Admin)</h3>
+      <p>Runs with <strong>Administrator privileges</strong>. Required for system changes: installing software, modifying registry, managing services, and network configuration changes.</p>
+    </div>
+  </div>
+  <div class="info-box warn">
+    <span class="ib-icon">⚠️</span>
+    <div><strong>Always Use Admin Mode Carefully</strong>Commands run in PowerShell (Admin) have full system access. A typo can delete system files or break Windows. Double-check every command before pressing Enter.</div>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">⚡ Essential PowerShell Commands</h2>
+  <table class="feature-table">
+    <thead><tr><th>Command</th><th>What It Does</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><span class="key-badge">Get-Help</span></td><td>Get help for any command</td><td>Get-Help Get-Process</td></tr>
+      <tr><td><span class="key-badge">Get-Process</span></td><td>List all running processes</td><td>Get-Process | Where CPU -gt 10</td></tr>
+      <tr><td><span class="key-badge">Get-Service</span></td><td>List Windows services</td><td>Get-Service | Where Status -eq Running</td></tr>
+      <tr><td><span class="key-badge">Start-Service</span></td><td>Start a Windows service</td><td>Start-Service -Name "Spooler"</td></tr>
+      <tr><td><span class="key-badge">Stop-Service</span></td><td>Stop a Windows service</td><td>Stop-Service -Name "Spooler"</td></tr>
+      <tr><td><span class="key-badge">Get-ChildItem</span></td><td>List files/folders (like dir)</td><td>Get-ChildItem C:\Users</td></tr>
+      <tr><td><span class="key-badge">Copy-Item</span></td><td>Copy files or folders</td><td>Copy-Item C:\file.txt D:\backup\</td></tr>
+      <tr><td><span class="key-badge">Remove-Item</span></td><td>Delete files or folders</td><td>Remove-Item C:\temp\*.log</td></tr>
+      <tr><td><span class="key-badge">ipconfig</span></td><td>Show IP address info</td><td>ipconfig /all</td></tr>
+      <tr><td><span class="key-badge">ping</span></td><td>Test network connectivity</td><td>ping google.com</td></tr>
+      <tr><td><span class="key-badge">netstat</span></td><td>Show active connections</td><td>netstat -an</td></tr>
+      <tr><td><span class="key-badge">systeminfo</span></td><td>Detailed system information</td><td>systeminfo | findstr RAM</td></tr>
+    </tbody>
+  </table>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">🏃 The Run Dialog</h2>
+  <div class="info-box note">
+    <span class="ib-icon">📌</span>
+    <div><strong>Open Run Dialog</strong>Press <span class="key">Win</span>+<span class="key">R</span> — type a command and press Enter. The fastest way to open any Windows tool.</div>
+  </div>
+  <table class="feature-table">
+    <thead><tr><th>Type This</th><th>Opens</th></tr></thead>
+    <tbody>
+      <tr><td><span class="key-badge">msconfig</span></td><td>System Configuration (startup, boot options)</td></tr>
+      <tr><td><span class="key-badge">regedit</span></td><td>Registry Editor</td></tr>
+      <tr><td><span class="key-badge">services.msc</span></td><td>Windows Services console</td></tr>
+      <tr><td><span class="key-badge">compmgmt.msc</span></td><td>Computer Management</td></tr>
+      <tr><td><span class="key-badge">diskmgmt.msc</span></td><td>Disk Management</td></tr>
+      <tr><td><span class="key-badge">devmgmt.msc</span></td><td>Device Manager</td></tr>
+      <tr><td><span class="key-badge">eventvwr</span></td><td>Event Viewer</td></tr>
+      <tr><td><span class="key-badge">ncpa.cpl</span></td><td>Network Connections</td></tr>
+      <tr><td><span class="key-badge">control</span></td><td>Control Panel</td></tr>
+      <tr><td><span class="key-badge">calc</span></td><td>Calculator</td></tr>
+      <tr><td><span class="key-badge">mspaint</span></td><td>Microsoft Paint</td></tr>
+      <tr><td><span class="key-badge">notepad</span></td><td>Notepad text editor</td></tr>
+      <tr><td><span class="key-badge">cmd</span></td><td>Command Prompt</td></tr>
+      <tr><td><span class="key-badge">powershell</span></td><td>Windows PowerShell</td></tr>
+      <tr><td><span class="key-badge">\\computername</span></td><td>Access another computer on the network</td></tr>
+    </tbody>
+  </table>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="showModule('m3')">← Disk & Computer</button>
+    <button class="btn btn-primary" onclick="showModule('m5')">Next: Task Mgr & Explorer →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ MODULE 5: Task Manager etc -->
+<div class="module" id="mod-m5">
+  <div class="module-header">
+    <div class="mod-tag">Module 5 — Windows Tools</div>
+    <h1>Task Manager, File Explorer, Search & More</h1>
+    <p>Monitor processes, navigate your files, and control your Windows desktop environment.</p>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;">📊 Task Manager</h2>
+  <div class="highlight-row">
+    <h4>Your Real-Time PC Monitor</h4>
+    <p>Task Manager shows you everything running on your PC right now — processes, CPU usage, RAM, disk, network activity. It's the first tool to open when your computer is slow.</p>
+  </div>
+  <table class="feature-table">
+    <thead><tr><th>Tab</th><th>What It Shows</th><th>Key Use</th></tr></thead>
+    <tbody>
+      <tr><td>Processes</td><td>All running apps and background tasks with resource usage</td><td>Kill frozen apps, see what's eating CPU</td></tr>
+      <tr><td>Performance</td><td>Real-time graphs: CPU, Memory, Disk, Network, GPU</td><td>Diagnose slowdowns, see live utilization</td></tr>
+      <tr><td>App history</td><td>Historical resource usage per app</td><td>Find resource-hungry applications</td></tr>
+      <tr><td>Startup</td><td>Apps that launch at Windows startup</td><td>Disable slow-boot programs</td></tr>
+      <tr><td>Users</td><td>All logged-in users and their resource usage</td><td>Multi-user session management</td></tr>
+      <tr><td>Details</td><td>Advanced view: PID, status, username per process</td><td>IT troubleshooting, malware hunting</td></tr>
+      <tr><td>Services</td><td>All Windows services with status</td><td>Quick service start/stop/restart</td></tr>
+    </tbody>
+  </table>
+  <div class="info-box tip">
+    <span class="ib-icon">💡</span>
+    <div><strong>Task Manager Shortcuts</strong>
+    Open Task Manager: <span class="key">Ctrl</span>+<span class="key">Shift</span>+<span class="key">Esc</span> (fastest method)<br>
+    Or: <span class="key">Ctrl</span>+<span class="key">Alt</span>+<span class="key">Del</span> → Task Manager<br>
+    End a frozen program: select it → End Task</div>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">📁 File Explorer</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">📁</div>
+      <h3>Navigation Pane</h3>
+      <p>Left panel shows Quick Access, OneDrive, This PC (drives), and Network. Pin frequently used folders to Quick Access for fast navigation.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👁️</div>
+      <h3>View Options</h3>
+      <p>Switch between Large Icons, List, Details, and Tiles views. Enable "Hidden Items" and "File Name Extensions" in View → Show.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔎</div>
+      <h3>Search in Explorer</h3>
+      <p>Use the search box (top right) to search within a folder. Use filters like <code>date:yesterday</code>, <code>size:large</code>, or <code>type:.pdf</code>.</p>
+    </div>
+  </div>
+  <div class="section-divider"></div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;">The Remaining Win+X Items</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <span class="card-tag tag-win">Search</span>
+      <h3>Search</h3>
+      <p>Opens Windows Search. Find apps, files, settings, and web results. Press <span class="key">Win</span>+<span class="key">S</span> to open instantly. Supports natural language queries.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚙️</div>
+      <span class="card-tag tag-win">System</span>
+      <h3>Settings</h3>
+      <p>The modern Windows Settings app — replaces much of the old Control Panel. Configure accounts, network, display, privacy, updates, and more. Open with <span class="key">Win</span>+<span class="key">I</span>.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🖥️</div>
+      <span class="card-tag tag-win">Desktop</span>
+      <h3>Desktop</h3>
+      <p>Minimizes all open windows and shows your desktop. Same as pressing <span class="key">Win</span>+<span class="key">D</span>.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔴</div>
+      <span class="card-tag tag-win">Power</span>
+      <h3>Shut Down or Sign Out</h3>
+      <p>Sub-menu options: Sign out, Sleep, Hibernate, Shut down, Restart. Shut down closes all programs and fully powers off. Restart is the fix for most Windows issues.</p>
+    </div>
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="showModule('m4')">← PowerShell & Run</button>
+    <button class="btn btn-primary" onclick="showModule('m6')">Next: Microsoft Word →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ MODULE 6: Word -->
+<div class="module" id="mod-m6">
+  <div class="module-header">
+    <div class="mod-tag">Module 6 — Microsoft Office</div>
+    <h1>Microsoft Word — Document Creation</h1>
+    <p>Create professional documents, format text, use styles, and collaborate with others.</p>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;">🎯 The Word Interface</h2>
+  <table class="feature-table">
+    <thead><tr><th>Area</th><th>What It Does</th></tr></thead>
+    <tbody>
+      <tr><td>Quick Access Toolbar</td><td>Top-left icons for Save, Undo, Redo — customizable</td></tr>
+      <tr><td>Ribbon</td><td>Organized tabs (Home, Insert, Design, Layout, etc.) with all features</td></tr>
+      <tr><td>Document Area</td><td>The main white area where you type and see your document</td></tr>
+      <tr><td>Status Bar</td><td>Bottom bar showing page number, word count, zoom level, view mode</td></tr>
+      <tr><td>Rulers</td><td>Top and left rulers for measuring margins and setting tab stops</td></tr>
+    </tbody>
+  </table>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">📑 Ribbon Tabs Overview</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🏠</div>
+      <h3>Home Tab</h3>
+      <p>Font (Bold, Italic, Underline, size, color), Paragraph (alignment, bullets, spacing), Styles (Heading 1, Normal, etc.), Clipboard (Cut, Copy, Paste).</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">➕</div>
+      <h3>Insert Tab</h3>
+      <p>Add Tables, Pictures, Icons, Shapes, SmartArt, Charts, Headers & Footers, Page Numbers, Hyperlinks, Comments, and Equations.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎨</div>
+      <h3>Design Tab</h3>
+      <p>Document Themes (color + font combinations) and Watermarks. Change the entire look of a document with one click.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📐</div>
+      <h3>Layout Tab</h3>
+      <p>Margins, Orientation (Portrait/Landscape), Paper Size, Columns, Line Breaks, Spacing, and Indentation.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📚</div>
+      <h3>References Tab</h3>
+      <p>Table of Contents, Footnotes, Citations, Bibliography, Captions, Index — for professional academic and business documents.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">✉️</div>
+      <h3>Review Tab</h3>
+      <p>Spelling & Grammar check, Thesaurus, Track Changes, Comments, Compare documents, Protect document with a password.</p>
+    </div>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">⭐ Key Word Features</h2>
+  <div class="highlight-row">
+    <h4>Styles — The Most Important Feature</h4>
+    <p>Styles (Heading 1, Heading 2, Normal, etc.) let you format your document consistently and automatically generate a Table of Contents. Always use Styles instead of manually bolding/resizing text.</p>
+  </div>
+  <div class="highlight-row">
+    <h4>Track Changes</h4>
+    <p>Review tab → Track Changes. Every edit is recorded with the author's name and timestamp. The recipient can Accept or Reject each change. Essential for collaborative work.</p>
+  </div>
+  <div class="highlight-row">
+    <h4>Find & Replace</h4>
+    <p>Ctrl+H opens Find & Replace. Instantly swap every instance of a word in the entire document. Supports wildcards and formatting replacement.</p>
+  </div>
+  <div class="highlight-row">
+    <h4>Page Layout & Margins</h4>
+    <p>Layout tab → Margins. Standard is 1 inch all around. Use Narrow (0.5") for more content per page. Orientation: Portrait = taller than wide, Landscape = wider than tall.</p>
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="showModule('m5')">← Task Mgr & Explorer</button>
+    <button class="btn btn-primary" onclick="showModule('m7')">Next: Microsoft Excel →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ MODULE 7: Excel -->
+<div class="module" id="mod-m7">
+  <div class="module-header">
+    <div class="mod-tag">Module 7 — Microsoft Office</div>
+    <h1>Microsoft Excel — Spreadsheets & Data</h1>
+    <p>Organize data, perform calculations with formulas, and visualize information with charts.</p>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;">🧱 Excel Building Blocks</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🔲</div>
+      <h3>Cells</h3>
+      <p>The smallest unit. Every cell has an address: column letter + row number (e.g., <strong>A1</strong>, <strong>C5</strong>). Click to select, type to enter data.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">↕️</div>
+      <h3>Rows & Columns</h3>
+      <p>Rows are numbered (1, 2, 3...). Columns are lettered (A, B, C... Z, AA, AB...). A typical spreadsheet has 1,048,576 rows and 16,384 columns.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>Worksheets</h3>
+      <p>Tabs at the bottom of the window. One Excel file (workbook) can contain multiple worksheets. Right-click a tab to rename, move, copy, or delete it.</p>
+    </div>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">🧮 Essential Formulas</h2>
+  <div class="info-box note">
+    <span class="ib-icon">📌</span>
+    <div><strong>All formulas start with = (equals sign)</strong>For example: <code>=SUM(A1:A10)</code> or <code>=A1+B1</code>. If you don't start with =, Excel treats it as plain text.</div>
+  </div>
+  <table class="feature-table">
+    <thead><tr><th>Formula</th><th>What It Does</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><span class="key-badge">=SUM()</span></td><td>Adds all numbers in a range</td><td>=SUM(A1:A10)</td></tr>
+      <tr><td><span class="key-badge">=AVERAGE()</span></td><td>Calculates the mean of a range</td><td>=AVERAGE(B2:B20)</td></tr>
+      <tr><td><span class="key-badge">=COUNT()</span></td><td>Counts cells with numbers</td><td>=COUNT(C1:C100)</td></tr>
+      <tr><td><span class="key-badge">=MAX()</span></td><td>Returns the largest value</td><td>=MAX(D1:D50)</td></tr>
+      <tr><td><span class="key-badge">=MIN()</span></td><td>Returns the smallest value</td><td>=MIN(D1:D50)</td></tr>
+      <tr><td><span class="key-badge">=IF()</span></td><td>Returns one value if true, another if false</td><td>=IF(A1>100,"Pass","Fail")</td></tr>
+      <tr><td><span class="key-badge">=VLOOKUP()</span></td><td>Looks up a value in a table</td><td>=VLOOKUP(A1,B:C,2,FALSE)</td></tr>
+      <tr><td><span class="key-badge">=CONCATENATE()</span></td><td>Joins text from multiple cells</td><td>=CONCATENATE(A1," ",B1)</td></tr>
+      <tr><td><span class="key-badge">=TODAY()</span></td><td>Returns today's date</td><td>=TODAY()</td></tr>
+      <tr><td><span class="key-badge">=ROUND()</span></td><td>Rounds a number to specified decimals</td><td>=ROUND(A1,2)</td></tr>
+    </tbody>
+  </table>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">📊 Creating Charts</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content"><h4>Select Your Data</h4><p>Highlight the cells with the data you want to visualize, including headers.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content"><h4>Insert → Charts</h4><p>Go to Insert tab → choose chart type: Column, Bar, Line, Pie, Scatter, etc.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content"><h4>Customize the Chart</h4><p>Click the chart → use the Chart Design and Format tabs to add titles, change colors, and adjust the legend.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content"><h4>Move or Resize</h4><p>Drag the chart to reposition it. Drag the corners to resize. You can also move it to its own sheet.</p></div></div>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">🔑 Key Excel Features</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🔽</div>
+      <h3>AutoFilter</h3>
+      <p>Data tab → Filter. Adds dropdown arrows to column headers so you can filter rows by any criteria — dates, text, numbers, custom conditions.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎨</div>
+      <h3>Conditional Formatting</h3>
+      <p>Home tab → Conditional Formatting. Automatically color cells based on their value — red for negative, green for positive, data bars, heat maps.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📌</div>
+      <h3>Freeze Panes</h3>
+      <p>View tab → Freeze Panes. Keeps header rows/columns visible as you scroll through large datasets. Essential for big spreadsheets.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔒</div>
+      <h3>Protect Sheet</h3>
+      <p>Review tab → Protect Sheet. Lock cells so others can't accidentally change formulas. Set a password to prevent unprotecting.</p>
+    </div>
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="showModule('m6')">← Microsoft Word</button>
+    <button class="btn btn-primary" onclick="showModule('m8')">Next: PowerPoint →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ MODULE 8: PowerPoint -->
+<div class="module" id="mod-m8">
+  <div class="module-header">
+    <div class="mod-tag">Module 8 — Microsoft Office</div>
+    <h1>Microsoft PowerPoint — Presentations</h1>
+    <p>Create compelling slide decks with layouts, transitions, animations, and media.</p>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;">🖼️ The PowerPoint Interface</h2>
+  <table class="feature-table">
+    <thead><tr><th>Area</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>Slide Panel (left)</td><td>Thumbnail view of all slides — drag to reorder, right-click to duplicate/delete</td></tr>
+      <tr><td>Editing Area (center)</td><td>The main slide — click any element to edit it</td></tr>
+      <tr><td>Notes Panel (bottom)</td><td>Speaker notes for each slide — not visible to audience, shown to presenter</td></tr>
+      <tr><td>Ribbon</td><td>Home, Insert, Design, Transitions, Animations, Slide Show, Review, View tabs</td></tr>
+    </tbody>
+  </table>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">🎨 Key PowerPoint Tabs</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🎨</div>
+      <h3>Design Tab</h3>
+      <p>Choose a Theme (colors + fonts + backgrounds for the whole deck), Slide Size (Standard 4:3 or Widescreen 16:9), and Format Background.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">✨</div>
+      <h3>Transitions Tab</h3>
+      <p>Visual effects that play when you move from one slide to the next — Fade, Push, Wipe, Morph, etc. Apply to one slide or all slides at once.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎬</div>
+      <h3>Animations Tab</h3>
+      <p>Motion effects on individual elements within a slide — Appear, Fly In, Fade, Spin, etc. Set to trigger On Click, After Previous, or With Previous.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">▶️</div>
+      <h3>Slide Show Tab</h3>
+      <p>Start the presentation from the beginning or current slide. Set up Presenter View (see notes + next slide on your screen, audience sees only the slide).</p>
+    </div>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">💡 Slide Design Best Practices</h2>
+  <div class="info-box tip">
+    <span class="ib-icon">✅</span>
+    <div><strong>DO:</strong> One main idea per slide. Use images over text. Keep text large (28pt+ for body). Use consistent colors from your theme. Include slide numbers.</div>
+  </div>
+  <div class="info-box warn">
+    <span class="ib-icon">❌</span>
+    <div><strong>AVOID:</strong> Walls of text. More than 6 bullet points per slide. Too many animations. More than 3 font sizes. Reading your slides word-for-word.</div>
+  </div>
+  <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--navy);margin-bottom:16px;margin-top:24px;">🔧 Essential PowerPoint Techniques</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content"><h4>Slide Master</h4><p>View → Slide Master. Edit the master template to apply consistent fonts, colors, and logos to every slide automatically.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content"><h4>Align & Distribute</h4><p>Select multiple objects → Home → Arrange → Align. Makes elements perfectly centered or evenly spaced without guessing.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content"><h4>Group Objects</h4><p>Select multiple shapes/images → right-click → Group. Move and resize them together as one unit.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content"><h4>Export to PDF</h4><p>File → Export → Create PDF/XPS. Preserves formatting perfectly. Recipients don't need PowerPoint to view it.</p></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-content"><h4>Presenter View</h4><p>During your presentation, press Alt+F5 to use Presenter View — see your notes and the next slide while the audience sees only the current slide.</p></div></div>
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="showModule('m7')">← Microsoft Excel</button>
+    <button class="btn btn-primary" onclick="showModule('m9')">Next: Cheat Sheet →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ MODULE 9: Cheat Sheet -->
+<div class="module" id="mod-m9">
+  <div class="module-header">
+    <div class="mod-tag">Module 9 — Reference</div>
+    <h1>Keyboard Shortcut Cheat Sheet</h1>
+    <p>Every shortcut you need for Windows, Word, Excel, and PowerPoint — all in one place.</p>
+  </div>
+
+  <!-- WINDOWS -->
+  <div class="cheat-section">
+    <h3>🪟 Windows System Shortcuts</h3>
+    <div class="shortcut-grid">
+      <div class="shortcut-row"><span class="action">Open Start Menu</span><div class="keys"><span class="key">Win</span></div></div>
+      <div class="shortcut-row"><span class="action">Open Settings</span><div class="keys"><span class="key">Win</span><span class="key">I</span></div></div>
+      <div class="shortcut-row"><span class="action">Open File Explorer</span><div class="keys"><span class="key">Win</span><span class="key">E</span></div></div>
+      <div class="shortcut-row"><span class="action">Open Run Dialog</span><div class="keys"><span class="key">Win</span><span class="key">R</span></div></div>
+      <div class="shortcut-row"><span class="action">Open Task Manager</span><div class="keys"><span class="key">Ctrl</span><span class="key">Shift</span><span class="key">Esc</span></div></div>
+      <div class="shortcut-row"><span class="action">Open Win+X Menu</span><div class="keys"><span class="key">Win</span><span class="key">X</span></div></div>
+      <div class="shortcut-row"><span class="action">Show Desktop</span><div class="keys"><span class="key">Win</span><span class="key">D</span></div></div>
+      <div class="shortcut-row"><span class="action">Lock Computer</span><div class="keys"><span class="key">Win</span><span class="key">L</span></div></div>
+      <div class="shortcut-row"><span class="action">Windows Search</span><div class="keys"><span class="key">Win</span><span class="key">S</span></div></div>
+      <div class="shortcut-row"><span class="action">Action Center</span><div class="keys"><span class="key">Win</span><span class="key">A</span></div></div>
+      <div class="shortcut-row"><span class="action">Screenshot (region)</span><div class="keys"><span class="key">Win</span><span class="key">Shift</span><span class="key">S</span></div></div>
+      <div class="shortcut-row"><span class="action">Full screenshot to file</span><div class="keys"><span class="key">Win</span><span class="key">PrtSc</span></div></div>
+      <div class="shortcut-row"><span class="action">Snap window left</span><div class="keys"><span class="key">Win</span><span class="key">←</span></div></div>
+      <div class="shortcut-row"><span class="action">Snap window right</span><div class="keys"><span class="key">Win</span><span class="key">→</span></div></div>
+      <div class="shortcut-row"><span class="action">Maximize window</span><div class="keys"><span class="key">Win</span><span class="key">↑</span></div></div>
+      <div class="shortcut-row"><span class="action">Minimize window</span><div class="keys"><span class="key">Win</span><span class="key">↓</span></div></div>
+      <div class="shortcut-row"><span class="action">Switch between apps</span><div class="keys"><span class="key">Alt</span><span class="key">Tab</span></div></div>
+      <div class="shortcut-row"><span class="action">Task View / Timline</span><div class="keys"><span class="key">Win</span><span class="key">Tab</span></div></div>
+      <div class="shortcut-row"><span class="action">Close current window</span><div class="keys"><span class="key">Alt</span><span class="key">F4</span></div></div>
+      <div class="shortcut-row"><span class="action">Undo (any app)</span><div class="keys"><span class="key">Ctrl</span><span class="key">Z</span></div></div>
+      <div class="shortcut-row"><span class="action">Redo (any app)</span><div class="keys"><span class="key">Ctrl</span><span class="key">Y</span></div></div>
+      <div class="shortcut-row"><span class="action">Copy</span><div class="keys"><span class="key">Ctrl</span><span class="key">C</span></div></div>
+      <div class="shortcut-row"><span class="action">Cut</span><div class="keys"><span class="key">Ctrl</span><span class="key">X</span></div></div>
+      <div class="shortcut-row"><span class="action">Paste</span><div class="keys"><span class="key">Ctrl</span><span class="key">V</span></div></div>
+      <div class="shortcut-row"><span class="action">Select All</span><div class="keys"><span class="key">Ctrl</span><span class="key">A</span></div></div>
+    </div>
+  </div>
+
+  <!-- WORD -->
+  <div class="cheat-section">
+    <h3 style="color:#2B579A;">📝 Microsoft Word Shortcuts</h3>
+    <div class="shortcut-grid">
+      <div class="shortcut-row"><span class="action">New Document</span><div class="keys"><span class="key">Ctrl</span><span class="key">N</span></div></div>
+      <div class="shortcut-row"><span class="action">Open Document</span><div class="keys"><span class="key">Ctrl</span><span class="key">O</span></div></div>
+      <div class="shortcut-row"><span class="action">Save</span><div class="keys"><span class="key">Ctrl</span><span class="key">S</span></div></div>
+      <div class="shortcut-row"><span class="action">Save As</span><div class="keys"><span class="key">F12</span></div></div>
+      <div class="shortcut-row"><span class="action">Print</span><div class="keys"><span class="key">Ctrl</span><span class="key">P</span></div></div>
+      <div class="shortcut-row"><span class="action">Bold text</span><div class="keys"><span class="key">Ctrl</span><span class="key">B</span></div></div>
+      <div class="shortcut-row"><span class="action">Italic text</span><div class="keys"><span class="key">Ctrl</span><span class="key">I</span></div></div>
+      <div class="shortcut-row"><span class="action">Underline text</span><div class="keys"><span class="key">Ctrl</span><span class="key">U</span></div></div>
+      <div class="shortcut-row"><span class="action">Find text</span><div class="keys"><span class="key">Ctrl</span><span class="key">F</span></div></div>
+      <div class="shortcut-row"><span class="action">Find & Replace</span><div class="keys"><span class="key">Ctrl</span><span class="key">H</span></div></div>
+      <div class="shortcut-row"><span class="action">Align Left</span><div class="keys"><span class="key">Ctrl</span><span class="key">L</span></div></div>
+      <div class="shortcut-row"><span class="action">Align Center</span><div class="keys"><span class="key">Ctrl</span><span class="key">E</span></div></div>
+      <div class="shortcut-row"><span class="action">Align Right</span><div class="keys"><span class="key">Ctrl</span><span class="key">R</span></div></div>
+      <div class="shortcut-row"><span class="action">Justify</span><div class="keys"><span class="key">Ctrl</span><span class="key">J</span></div></div>
+      <div class="shortcut-row"><span class="action">Insert Page Break</span><div class="keys"><span class="key">Ctrl</span><span class="key">Enter</span></div></div>
+      <div class="shortcut-row"><span class="action">Spell Check</span><div class="keys"><span class="key">F7</span></div></div>
+      <div class="shortcut-row"><span class="action">Insert Comment</span><div class="keys"><span class="key">Ctrl</span><span class="key">Alt</span><span class="key">M</span></div></div>
+      <div class="shortcut-row"><span class="action">Track Changes</span><div class="keys"><span class="key">Ctrl</span><span class="key">Shift</span><span class="key">E</span></div></div>
+      <div class="shortcut-row"><span class="action">Increase font size</span><div class="keys"><span class="key">Ctrl</span><span class="key">]</span></div></div>
+      <div class="shortcut-row"><span class="action">Decrease font size</span><div class="keys"><span class="key">Ctrl</span><span class="key">[</span></div></div>
+      <div class="shortcut-row"><span class="action">Show/Hide formatting</span><div class="keys"><span class="key">Ctrl</span><span class="key">*</span></div></div>
+      <div class="shortcut-row"><span class="action">Go to page</span><div class="keys"><span class="key">Ctrl</span><span class="key">G</span></div></div>
+      <div class="shortcut-row"><span class="action">Heading 1 style</span><div class="keys"><span class="key">Ctrl</span><span class="key">Alt</span><span class="key">1</span></div></div>
+      <div class="shortcut-row"><span class="action">Heading 2 style</span><div class="keys"><span class="key">Ctrl</span><span class="key">Alt</span><span class="key">2</span></div></div>
+      <div class="shortcut-row"><span class="action">Normal style</span><div class="keys"><span class="key">Ctrl</span><span class="key">Alt</span><span class="key">N</span></div></div>
+    </div>
+  </div>
+
+  <!-- EXCEL -->
+  <div class="cheat-section">
+    <h3 style="color:#1D6F42;">📊 Microsoft Excel Shortcuts</h3>
+    <div class="shortcut-grid">
+      <div class="shortcut-row"><span class="action">New Workbook</span><div class="keys"><span class="key">Ctrl</span><span class="key">N</span></div></div>
+      <div class="shortcut-row"><span class="action">Save</span><div class="keys"><span class="key">Ctrl</span><span class="key">S</span></div></div>
+      <div class="shortcut-row"><span class="action">Enter formula mode</span><div class="keys"><span class="key">=</span></div></div>
+      <div class="shortcut-row"><span class="action">Sum selected cells</span><div class="keys"><span class="key">Alt</span><span class="key">=</span></div></div>
+      <div class="shortcut-row"><span class="action">Insert new row</span><div class="keys"><span class="key">Ctrl</span><span class="key">+</span></div></div>
+      <div class="shortcut-row"><span class="action">Delete row</span><div class="keys"><span class="key">Ctrl</span><span class="key">-</span></div></div>
+      <div class="shortcut-row"><span class="action">Go to cell A1</span><div class="keys"><span class="key">Ctrl</span><span class="key">Home</span></div></div>
+      <div class="shortcut-row"><span class="action">Go to last cell</span><div class="keys"><span class="key">Ctrl</span><span class="key">End</span></div></div>
+      <div class="shortcut-row"><span class="action">Select entire column</span><div class="keys"><span class="key">Ctrl</span><span class="key">Space</span></div></div>
+      <div class="shortcut-row"><span class="action">Select entire row</span><div class="keys"><span class="key">Shift</span><span class="key">Space</span></div></div>
+      <div class="shortcut-row"><span class="action">Select to last used cell</span><div class="keys"><span class="key">Ctrl</span><span class="key">Shift</span><span class="key">End</span></div></div>
+      <div class="shortcut-row"><span class="action">Fill Down</span><div class="keys"><span class="key">Ctrl</span><span class="key">D</span></div></div>
+      <div class="shortcut-row"><span class="action">Fill Right</span><div class="keys"><span class="key">Ctrl</span><span class="key">R</span></div></div>
+      <div class="shortcut-row"><span class="action">Format cells dialog</span><div class="keys"><span class="key">Ctrl</span><span class="key">1</span></div></div>
+      <div class="shortcut-row"><span class="action">Bold</span><div class="keys"><span class="key">Ctrl</span><span class="key">B</span></div></div>
+      <div class="shortcut-row"><span class="action">Add/Remove Filter</span><div class="keys"><span class="key">Ctrl</span><span class="key">Shift</span><span class="key">L</span></div></div>
+      <div class="shortcut-row"><span class="action">Insert chart</span><div class="keys"><span class="key">Alt</span><span class="key">F1</span></div></div>
+      <div class="shortcut-row"><span class="action">New worksheet tab</span><div class="keys"><span class="key">Shift</span><span class="key">F11</span></div></div>
+      <div class="shortcut-row"><span class="action">Navigate worksheets →</span><div class="keys"><span class="key">Ctrl</span><span class="key">PgDn</span></div></div>
+      <div class="shortcut-row"><span class="action">Navigate worksheets ←</span><div class="keys"><span class="key">Ctrl</span><span class="key">PgUp</span></div></div>
+      <div class="shortcut-row"><span class="action">Toggle absolute ref ($)</span><div class="keys"><span class="key">F4</span></div></div>
+      <div class="shortcut-row"><span class="action">Show all formulas</span><div class="keys"><span class="key">Ctrl</span><span class="key">`</span></div></div>
+      <div class="shortcut-row"><span class="action">Freeze Panes</span><div class="keys"><span class="key">Alt</span><span class="key">W</span><span class="key">F</span></div></div>
+      <div class="shortcut-row"><span class="action">Find & Replace</span><div class="keys"><span class="key">Ctrl</span><span class="key">H</span></div></div>
+    </div>
+  </div>
+
+  <!-- POWERPOINT -->
+  <div class="cheat-section">
+    <h3 style="color:#D04423;">🎨 Microsoft PowerPoint Shortcuts</h3>
+    <div class="shortcut-grid">
+      <div class="shortcut-row"><span class="action">New Presentation</span><div class="keys"><span class="key">Ctrl</span><span class="key">N</span></div></div>
+      <div class="shortcut-row"><span class="action">Save</span><div class="keys"><span class="key">Ctrl</span><span class="key">S</span></div></div>
+      <div class="shortcut-row"><span class="action">New slide</span><div class="keys"><span class="key">Ctrl</span><span class="key">M</span></div></div>
+      <div class="shortcut-row"><span class="action">Duplicate slide</span><div class="keys"><span class="key">Ctrl</span><span class="key">D</span></div></div>
+      <div class="shortcut-row"><span class="action">Start slideshow (beginning)</span><div class="keys"><span class="key">F5</span></div></div>
+      <div class="shortcut-row"><span class="action">Start from current slide</span><div class="keys"><span class="key">Shift</span><span class="key">F5</span></div></div>
+      <div class="shortcut-row"><span class="action">Presenter View</span><div class="keys"><span class="key">Alt</span><span class="key">F5</span></div></div>
+      <div class="shortcut-row"><span class="action">End slideshow</span><div class="keys"><span class="key">Esc</span></div></div>
+      <div class="shortcut-row"><span class="action">Next slide (during show)</span><div class="keys"><span class="key">→</span><span class="key">or Space</span></div></div>
+      <div class="shortcut-row"><span class="action">Previous slide (during show)</span><div class="keys"><span class="key">←</span></div></div>
+      <div class="shortcut-row"><span class="action">Black screen (pause)</span><div class="keys"><span class="key">B</span></div></div>
+      <div class="shortcut-row"><span class="action">White screen</span><div class="keys"><span class="key">W</span></div></div>
+      <div class="shortcut-row"><span class="action">Bold selected text</span><div class="keys"><span class="key">Ctrl</span><span class="key">B</span></div></div>
+      <div class="shortcut-row"><span class="action">Group objects</span><div class="keys"><span class="key">Ctrl</span><span class="key">G</span></div></div>
+      <div class="shortcut-row"><span class="action">Ungroup objects</span><div class="keys"><span class="key">Ctrl</span><span class="key">Shift</span><span class="key">G</span></div></div>
+      <div class="shortcut-row"><span class="action">Align objects</span><div class="keys"><span class="key">Alt</span><span class="key">H A</span></div></div>
+      <div class="shortcut-row"><span class="action">Zoom in</span><div class="keys"><span class="key">Ctrl</span><span class="key">+</span></div></div>
+      <div class="shortcut-row"><span class="action">Zoom out</span><div class="keys"><span class="key">Ctrl</span><span class="key">-</span></div></div>
+      <div class="shortcut-row"><span class="action">Find</span><div class="keys"><span class="key">Ctrl</span><span class="key">F</span></div></div>
+      <div class="shortcut-row"><span class="action">Select All</span><div class="keys"><span class="key">Ctrl</span><span class="key">A</span></div></div>
+      <div class="shortcut-row"><span class="action">Insert hyperlink</span><div class="keys"><span class="key">Ctrl</span><span class="key">K</span></div></div>
+      <div class="shortcut-row"><span class="action">Format Shape dialog</span><div class="keys"><span class="key">Ctrl</span><span class="key">1</span></div></div>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="showModule('m8')">← PowerPoint</button>
+    <button class="btn btn-gold" onclick="showModule('quiz')">🎯 Take the Final Quiz →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ FINAL QUIZ -->
+<div class="module" id="mod-quiz">
+  <div class="module-header">
+    <div class="mod-tag">Final Assessment</div>
+    <h1>Windows Fundamentals — Final Quiz</h1>
+    <p>Test your knowledge across all modules. Select the best answer for each question.</p>
+  </div>
+  <div class="quiz-box">
+    <h3>🎯 Final Knowledge Check</h3>
+    <div class="quiz-subtitle">20 questions covering Windows tools and Microsoft Office.</div>
+    <div id="quiz-questions"></div>
+    <button id="submit-quiz" onclick="submitQuiz()">Submit Answers</button>
+    <div class="quiz-result" id="quiz-result"></div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────
+const modules = ['home','m1','m2','m3','m4','m5','m6','m7','m8','m9','quiz'];
+const visited = new Set(['home']);
+let totalScore = 0;
+
+// ── Navigation ────────────────────────────────────────────────────
+function showModule(id) {
+  document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  document.getElementById('mod-'+id).classList.add('active');
+  const navEl = document.getElementById('nav-'+id);
+  if(navEl){ navEl.classList.add('active'); navEl.classList.add('done'); }
+  visited.add(id);
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updateProgress() {
+  const pct = Math.round((visited.size / modules.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = pct + '% Complete';
+}
+
+// ── Quiz Data ─────────────────────────────────────────────────────
+const questions = [
+  {q:"Which keyboard shortcut opens the Win+X Power User Menu?", opts:["Win+I","Win+X","Win+R","Ctrl+Alt+Del"], a:1},
+  {q:"What does Event Viewer's 'Security' log record?", opts:["App crashes","Driver failures","Login attempts & file access","Disk errors"], a:2},
+  {q:"In Device Manager, a yellow triangle on a device means:", opts:["Device is working fine","Device is disabled","Device has a problem/warning","Device is unknown"], a:2},
+  {q:"Which Run command opens Disk Management?", opts:["diskman.msc","diskmgmt.msc","disk.msc","hdmgmt.msc"], a:1},
+  {q:"What does 'Shrink Volume' do in Disk Management?", opts:["Deletes the partition","Reduces partition size to create unallocated space","Formats the drive","Extends the partition"], a:1},
+  {q:"PowerShell (Admin) runs with:", opts:["Standard user permissions","Guest permissions","Administrator privileges","Network Service permissions"], a:2},
+  {q:"Which shortcut opens Task Manager directly (fastest method)?", opts:["Ctrl+Alt+Del","Ctrl+Shift+Esc","Win+T","Alt+F4"], a:1},
+  {q:"In Task Manager, the 'Startup' tab is used to:", opts:["Restart the computer","View CPU usage","Disable programs that launch at boot","Check network speed"], a:2},
+  {q:"In Microsoft Word, which tab contains Track Changes?", opts:["Home","Insert","View","Review"], a:3},
+  {q:"In Word, Ctrl+H opens:", opts:["Help","Headers","Find & Replace","Hyperlink"], a:2},
+  {q:"All Excel formulas must begin with:", opts:["# (hash)","$ (dollar sign)","= (equals sign)","@ (at sign)"], a:2},
+  {q:"Which Excel formula returns the largest value in a range?", opts:["=LARGE()","=HIGHEST()","=PEAK()","=MAX()"], a:3},
+  {q:"The =IF() formula in Excel:", opts:["Counts cells","Returns one value if true, another if false","Sums a range","Finds text"], a:1},
+  {q:"In PowerPoint, which key starts the slideshow from the beginning?", opts:["F1","F3","F5","F7"], a:2},
+  {q:"During a PowerPoint presentation, pressing 'B' does what?", opts:["Go back a slide","Brighten the screen","Show a blank black screen","Open speaker notes"], a:2},
+  {q:"Which Run command opens Computer Management?", opts:["compmgmt.msc","computer.msc","mgmt.msc","winmgmt.msc"], a:0},
+  {q:"Win+L does what?", opts:["Opens File Explorer","Locks the computer","Opens a link","Minimizes all windows"], a:1},
+  {q:"In Excel, pressing F4 while in a formula:", opts:["Deletes the cell","Toggles absolute/relative cell reference ($)","Opens Format dialog","Inserts a chart"], a:1},
+  {q:"In PowerPoint, where do you see your speaker notes during a presentation?", opts:["Slide panel","Editing area","Presenter View","Notes app"], a:2},
+  {q:"Which Windows tool lets you create and manage local user accounts?", opts:["Device Manager","Computer Management → Local Users & Groups","Event Viewer","Power Options"], a:1},
+];
+
+// ── Build Quiz ────────────────────────────────────────────────────
+function buildQuiz() {
+  const container = document.getElementById('quiz-questions');
+  container.innerHTML = '';
+  questions.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-q';
+    div.innerHTML = `<div class="q-text"><strong>Q${qi+1}.</strong> ${q.q}</div>
+    <div class="quiz-options" id="opts-${qi}">
+      ${q.opts.map((opt,oi) => `<button class="quiz-opt" onclick="selectOpt(${qi},${oi})" id="opt-${qi}-${oi}">${opt}</button>`).join('')}
+    </div>`;
+    container.appendChild(div);
+  });
+}
+
+let selected = {};
+function selectOpt(qi, oi) {
+  // Deselect previous
+  questions[qi].opts.forEach((_,i) => {
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if(el){ el.style.borderColor=''; el.style.background=''; el.style.fontWeight=''; }
+  });
+  selected[qi] = oi;
+  const el = document.getElementById(`opt-${qi}-${oi}`);
+  if(el){ el.style.borderColor='var(--teal)'; el.style.background='#E0F7F4'; el.style.fontWeight='600'; }
+}
+
+function submitQuiz() {
+  let score = 0;
+  questions.forEach((q, qi) => {
+    const opts = document.querySelectorAll(`#opts-${qi} .quiz-opt`);
+    opts.forEach(o => o.disabled = true);
+    if(selected[qi] === q.a) {
+      score++;
+      document.getElementById(`opt-${qi}-${q.a}`).classList.add('correct');
+    } else {
+      if(selected[qi] !== undefined)
+        document.getElementById(`opt-${qi}-${selected[qi]}`).classList.add('wrong');
+      document.getElementById(`opt-${qi}-${q.a}`).classList.add('correct');
+    }
+  });
+  totalScore = score;
+  document.getElementById('score-badge').textContent = 'Score: '+score+'/'+questions.length;
+  const pct = Math.round((score/questions.length)*100);
+  const resultEl = document.getElementById('quiz-result');
+  resultEl.className = 'quiz-result show ' + (pct >= 70 ? 'pass' : 'fail');
+  resultEl.innerHTML = `<div class="quiz-score">${pct}% — ${score}/${questions.length} Correct</div>
+  ${pct >= 70
+    ? `✅ <strong>Excellent work!</strong> You have demonstrated solid knowledge of Windows Fundamentals and Microsoft Office. ${pct===100?'Perfect score — outstanding! 🏆':''}`
+    : `❌ <strong>Keep studying!</strong> Review the modules where you missed questions and try again. A passing score is 70%.`}`;
+  document.getElementById('submit-quiz').style.display='none';
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+buildQuiz();
+updateProgress();
+</script>
+</body>
+</html>

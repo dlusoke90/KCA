@@ -210,6 +210,25 @@ app.post('/api/tickets/:id/comments', auth, async (req, res) => {
       [req.params.id, req.user.id, comment||'', command_output||'']);
     // Auto set to WIP when commented
     await pool.query("UPDATE tickets SET status='work_in_progress' WHERE id=? AND status='assigned'", [req.params.id]);
+    // Notify ticket creator about new comment (skip if commenting on own ticket)
+    try {
+      const [[ticketInfo]] = await pool.query(
+        `SELECT t.title, t.ticket_no, u.email, u.full_name
+         FROM tickets t JOIN users u ON t.created_by=u.id WHERE t.id=?`, [req.params.id]
+      );
+      if (ticketInfo && ticketInfo.email !== req.user.email) {
+        mailer.sendMail({
+          from: process.env.EMAIL_USER,
+          to: ticketInfo.email,
+          subject: `KCA — New Reply on Ticket ${ticketInfo.ticket_no}`,
+          html: `<h2>Hi ${ticketInfo.full_name},</h2>
+                 <p>There is a new reply on your support ticket:</p>
+                 <p><b>Ticket:</b> ${ticketInfo.ticket_no} — ${ticketInfo.title}</p>
+                 <p><a href="https://kca-cloudnet.com/ticket-view.html?id=${req.params.id}" style="background:#0e8a78;color:#fff;padding:.5rem 1rem;border-radius:6px;text-decoration:none">View Reply →</a></p>
+                 <br><p>Best regards,<br><b>KCA Team</b><br>kca-cloudnet.com</p>`
+        }).catch(e => console.error('Comment notify email error:', e.message));
+      }
+    } catch(emailErr) { console.error('Comment email fetch error:', emailErr.message); }
     res.status(201).json({ message: 'Comment added!' });
   } catch(e) { res.status(500).json({ error: 'Failed to add comment' }); }
 });
@@ -481,6 +500,37 @@ app.post('/api/assignments', auth, uploadAssignment.single('file'), async (req, 
       'INSERT INTO assignments (title, description, file_path, file_type, course_id, created_by) VALUES (?,?,?,?,?,?)',
       [title, description||null, file_path, file_type, course_id, req.user.id]
     );
+    // Notify enrolled students about new assignment
+    try {
+      const targetCourseId = course_id;
+      let studentRows = [];
+      if (targetCourseId) {
+        [studentRows] = await pool.query(
+          `SELECT u.full_name, u.email FROM users u
+           JOIN enrollments e ON u.id=e.user_id
+           WHERE e.course_id=? AND e.status='approved'`, [targetCourseId]
+        );
+      } else {
+        // No course filter — notify all approved enrolled students
+        [studentRows] = await pool.query(
+          `SELECT DISTINCT u.full_name, u.email FROM users u
+           JOIN enrollments e ON u.id=e.user_id WHERE e.status='approved'`
+        );
+      }
+      studentRows.forEach(student => {
+        mailer.sendMail({
+          from: process.env.EMAIL_USER,
+          to: student.email,
+          subject: `KCA — New Assignment Posted: ${title}`,
+          html: `<h2>Hi ${student.full_name},</h2>
+                 <p>A new assignment has been posted on <b>Kuwaha Cloud Academy</b>:</p>
+                 <h3 style="color:#0e8a78">${title}</h3>
+                 ${description ? `<p>${description}</p>` : ''}
+                 <p><a href="https://kca-cloudnet.com/assignments.html" style="background:#0e8a78;color:#fff;padding:.5rem 1rem;border-radius:6px;text-decoration:none">View Assignment →</a></p>
+                 <br><p>Best regards,<br><b>KCA Team</b><br>kca-cloudnet.com</p>`
+        }).catch(e => console.error('New assignment student email error:', e.message));
+      });
+    } catch(emailErr) { console.error('New assignment email fetch error:', emailErr.message); }
     res.json({ message: 'Assignment created successfully' });
   } catch(e) { console.error(e); res.status(500).json({ error: 'Failed to create assignment' }); }
 });
@@ -548,6 +598,35 @@ app.post('/api/assignments/:id/submit', auth, uploadAssignment.single('file'), a
         [req.params.id, req.user.id, reply_text||null, file_path]
       );
     }
+    // ── NOTIFICATION PATCHES ── assignment submission
+    try {
+      const [[asgn]] = await pool.query(
+        'SELECT a.title, u.full_name, u.email FROM assignments a JOIN users u ON u.id=? WHERE a.id=?',
+        [req.user.id, req.params.id]
+      );
+      if (asgn) {
+        // Notify admin
+        mailer.sendMail({
+          from: process.env.EMAIL_USER,
+          to: process.env.EMAIL_USER,
+          subject: `KCA — Assignment Submitted: ${asgn.title}`,
+          html: `<h2>Assignment Submission Received</h2>
+                 <p><b>Student:</b> ${asgn.full_name} (${asgn.email})</p>
+                 <p><b>Assignment:</b> ${asgn.title}</p>
+                 <p><a href="https://kca-cloudnet.com/instructor.html" style="background:#0e8a78;color:#fff;padding:.5rem 1rem;border-radius:6px;text-decoration:none">View in Instructor Portal →</a></p>`
+        }).catch(e => console.error('Admin submission email error:', e.message));
+        // Notify student confirmation
+        mailer.sendMail({
+          from: process.env.EMAIL_USER,
+          to: asgn.email,
+          subject: `KCA — Submission Received: ${asgn.title}`,
+          html: `<h2>Hi ${asgn.full_name},</h2>
+                 <p>Your submission for <b>${asgn.title}</b> has been received successfully.</p>
+                 <p>Your instructor will review it and get back to you soon.</p>
+                 <br><p>Best regards,<br><b>KCA Team</b><br>kca-cloudnet.com</p>`
+        }).catch(e => console.error('Student submission email error:', e.message));
+      }
+    } catch(emailErr) { console.error('Submission email fetch error:', emailErr.message); }
     res.json({ message: 'Submission saved successfully' });
   } catch(e) { res.status(500).json({ error: 'Failed to submit' }); }
 });
@@ -619,11 +698,49 @@ app.post('/api/tickets/create', auth, (req, res) => {
       const [result] = await pool.query(
         'INSERT INTO tickets (ticket_no, title, description, queue, status, created_by, image_path, extra_images, assigned_to, command_output) VALUES (?,?,?,?,?,?,?,?,?,?)',
         [ticket_no, title, description || '', queue, 'assigned', req.user.id, image_path, extra_images, assigned_to, command_output || '']);
+      // Notify admin always
       mailer.sendMail({
         from: process.env.EMAIL_USER, to: process.env.EMAIL_USER,
         subject: `KCA Ticket ${ticket_no} — ${title}`,
         html: `<h2>New Support Ticket</h2><p><b>Ticket:</b> ${ticket_no}</p><p><b>Title:</b> ${title}</p><p><b>Queue:</b> ${queue}</p><p><a href="https://kca-cloudnet.com/ticket-view.html?id=${result.insertId}">View Ticket →</a></p>`
       }).catch(e => console.error(e));
+      // If Net-PS queue — notify all Net-PS members + confirm to student
+      if (queue === 'Net-PS') {
+        try {
+          const [netpsMembers] = await pool.query(
+            'SELECT u.email, u.full_name FROM netps_members nm JOIN users u ON nm.user_id=u.id'
+          );
+          netpsMembers.forEach(member => {
+            mailer.sendMail({
+              from: process.env.EMAIL_USER,
+              to: member.email,
+              subject: `🛡️ Net-PS — New Ticket Assigned: ${ticket_no}`,
+              html: `<h2>Hi ${member.full_name},</h2>
+                     <p>A new ticket has been submitted to the <b>Net-PS team</b> and may be assigned to you:</p>
+                     <p><b>Ticket:</b> ${ticket_no}</p>
+                     <p><b>Title:</b> ${title}</p>
+                     <p><a href="https://kca-cloudnet.com/netps.html" style="background:#0e8a78;color:#fff;padding:.5rem 1rem;border-radius:6px;text-decoration:none">Open Net-PS Dashboard →</a></p>
+                     <br><p>Best regards,<br><b>KCA Team</b><br>kca-cloudnet.com</p>`
+            }).catch(e => console.error('Net-PS member email error:', e.message));
+          });
+          // Confirm to student
+          const [[studentInfo]] = await pool.query('SELECT full_name, email FROM users WHERE id=?', [req.user.id]);
+          if (studentInfo) {
+            mailer.sendMail({
+              from: process.env.EMAIL_USER,
+              to: studentInfo.email,
+              subject: `KCA — Your Net-PS Ticket ${ticket_no} Has Been Received`,
+              html: `<h2>Hi ${studentInfo.full_name},</h2>
+                     <p>Your ticket has been submitted to the <b>Net-PS (Problem Solver) team</b>:</p>
+                     <p><b>Ticket #:</b> ${ticket_no}</p>
+                     <p><b>Title:</b> ${title}</p>
+                     <p>A Net-PS agent will review your issue and respond shortly.</p>
+                     <p><a href="https://kca-cloudnet.com/ticket-view.html?id=${result.insertId}" style="background:#0e8a78;color:#fff;padding:.5rem 1rem;border-radius:6px;text-decoration:none">Track Your Ticket →</a></p>
+                     <br><p>Best regards,<br><b>KCA Team</b><br>kca-cloudnet.com</p>`
+            }).catch(e => console.error('Student ticket confirm email error:', e.message));
+          }
+        } catch(emailErr) { console.error('Net-PS email fetch error:', emailErr.message); }
+      }
       res.status(201).json({ message: 'Ticket created!', id: result.insertId, ticket_no });
     } catch(e) { console.error(e); res.status(500).json({ error: 'Failed to create ticket' }); }
   });
