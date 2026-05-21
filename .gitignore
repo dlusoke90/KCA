@@ -3,3 +3,4 @@ node_modules/
 public/uploads/tickets/*
 public/uploads/assignments/*
 *.log
+public/uploads/comments/
