@@ -171,7 +171,7 @@ app.get('/api/tickets/:id', auth, async (req, res) => {
     const [comments] = await pool.query(
       `SELECT tc.*, u.full_name as user_name, u.role
        FROM ticket_comments tc JOIN users u ON tc.user_id=u.id
-       WHERE tc.ticket_id=? ORDER BY tc.created_at DESC`, [req.params.id]);
+       WHERE tc.ticket_id=? ORDER BY tc.created_at ASC`, [req.params.id]);
     comments.forEach(c => c.username = getUsername(c.user_name));
     ticket.comments = comments;
     res.json(ticket);
@@ -204,16 +204,14 @@ app.post('/api/tickets', auth, upload.single('image'), async (req, res) => {
   } catch(e) { console.error(e); res.status(500).json({ error: 'Failed to create ticket' }); }
 });
 
-const uploadComment = multer({ storage: multer.diskStorage({ destination: (req, file, cb) => cb(null, "/var/www/kca/public/uploads/comments"), filename: (req, file, cb) => cb(null, "c_" + Date.now() + "_" + Math.random().toString(36).slice(2,7) + require("path").extname(file.originalname).toLowerCase()) }), fileFilter: (req, file, cb) => { ["image/jpeg","image/jpg","image/png","image/gif","image/webp"].includes(file.mimetype) ? cb(null,true) : cb(new Error("Images only")); }, limits: { fileSize: 5*1024*1024 } });
 // Add comment
-app.post('/api/tickets/:id/comments', auth, uploadComment.single('comment_image'), async (req, res) => {
+app.post('/api/tickets/:id/comments', auth, async (req, res) => {
   const { comment, command_output } = req.body;
-  const image_path = req.file ? '/uploads/comments/'+req.file.filename : null;
-  if (!comment && !command_output && !image_path) return res.status(400).json({ error: 'Comment, command output, or image required' });
+  if (!comment && !command_output) return res.status(400).json({ error: 'Comment or command output required' });
   try {
     await pool.query(
-      'INSERT INTO ticket_comments (ticket_id, user_id, comment, command_output, image_path) VALUES (?,?,?,?,?)',
-      [req.params.id, req.user.id, comment||'', command_output||'', req.file ? '/uploads/comments/'+req.file.filename : null]);
+      'INSERT INTO ticket_comments (ticket_id, user_id, comment, command_output) VALUES (?,?,?,?)',
+      [req.params.id, req.user.id, comment||'', command_output||'']);
     // Auto set to WIP when commented
     await pool.query("UPDATE tickets SET status='work_in_progress' WHERE id=? AND status='assigned'", [req.params.id]);
     // Notify ticket creator about new comment (skip if commenting on own ticket)

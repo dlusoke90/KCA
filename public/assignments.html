@@ -26,18 +26,39 @@ header{background:linear-gradient(135deg,#0a1628,#0d2040);padding:1rem 2rem;disp
 .reply-section{background:#0a0f1a;border:1px solid #1e2330;border-radius:8px;padding:1rem}
 .reply-label{font-size:.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
 .submitted-badge{display:inline-block;background:rgba(14,138,120,.15);color:#0e8a78;border:1px solid rgba(14,138,120,.3);padding:.25rem .7rem;border-radius:12px;font-size:.75rem;font-weight:700;margin-bottom:.75rem}
-textarea{width:100%;padding:.65rem .9rem;background:#111827;border:1px solid #1e2330;border-radius:8px;color:#e2e8f0;font-size:.875rem;font-family:inherit;resize:vertical;min-height:80px;margin-bottom:.75rem}
+textarea{width:100%;padding:.65rem .9rem;background:#111827;border:1px solid #1e2330;border-radius:8px;color:#e2e8f0;font-size:.875rem;font-family:inherit;resize:vertical;min-height:80px;margin-bottom:.6rem;transition:border-color .2s,background .2s,box-shadow .2s}
 textarea:focus{outline:none;border-color:#0e8a78}
-.file-input-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;flex-wrap:wrap}
-.file-label{background:#0a0f1a;border:1px solid #1e2330;padding:.4rem .9rem;border-radius:6px;color:#94a3b8;font-size:.8rem;cursor:pointer;font-weight:600}
+textarea.drag-over{border-color:#0e8a78!important;background:#0d1f14!important;box-shadow:0 0 0 3px rgba(14,138,120,.25)}
+.attach-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem;flex-wrap:wrap}
+.file-label{background:#0a0f1a;border:1px solid #1e2330;padding:.4rem .9rem;border-radius:6px;color:#94a3b8;font-size:.8rem;cursor:pointer;font-weight:600;transition:all .2s;white-space:nowrap}
 .file-label:hover{border-color:#0e8a78;color:#0e8a78}
-.file-name{font-size:.78rem;color:#0e8a78}
-.submit-btn{background:#0e8a78;color:#fff;border:none;padding:.5rem 1.2rem;border-radius:8px;cursor:pointer;font-weight:600;font-size:.85rem}
+.img-attach-btn{background:#0a0f1a;border:1px solid #1e2330;padding:.4rem .9rem;border-radius:6px;color:#94a3b8;font-size:.8rem;cursor:pointer;font-weight:600;transition:all .2s;white-space:nowrap}
+.img-attach-btn:hover{border-color:#a78bfa;color:#a78bfa}
+.attach-hint{font-size:.72rem;color:#475569}
+.file-name{font-size:.75rem;color:#0e8a78;margin-top:.15rem;width:100%}
+.img-preview-wrap{display:none;position:relative;margin:.6rem 0;width:fit-content}
+.img-preview-wrap img{display:block;max-height:180px;max-width:100%;border-radius:8px;border:1px solid #0e8a78;box-shadow:0 0 0 2px rgba(14,138,120,.2)}
+.img-preview-remove{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;background:#ef4444;border:2px solid #0a0f1a;color:#fff;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1}
+.img-preview-remove:hover{background:#dc2626}
+.img-preview-meta{font-size:.7rem;color:#475569;margin-top:.25rem}
+.submitted-img-wrap{margin:.5rem 0}
+.submitted-img-wrap img{max-width:100%;max-height:220px;border-radius:8px;border:1px solid #1e2330;cursor:pointer;transition:opacity .2s}
+.submitted-img-wrap img:hover{opacity:.85}
+.submitted-img-label{font-size:.72rem;color:#64748b;margin-top:.3rem}
+.submit-btn{background:#0e8a78;color:#fff;border:none;padding:.5rem 1.2rem;border-radius:8px;cursor:pointer;font-weight:600;font-size:.85rem;transition:background .2s}
 .submit-btn:hover{background:#0a6b5e}
+.submit-btn:disabled{background:#1e2330;color:#475569;cursor:not-allowed}
 .msg{font-size:.82rem;margin-top:.5rem}
 .empty{text-align:center;color:#64748b;padding:4rem;font-size:.95rem}
 .badge{padding:.2rem .6rem;border-radius:12px;font-size:.7rem;font-weight:700}
 .badge-course{background:rgba(14,138,120,.15);color:#0e8a78;border:1px solid rgba(14,138,120,.3)}
+.paste-toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#0e8a78;color:#fff;padding:.55rem 1.1rem;border-radius:8px;font-size:.82rem;font-weight:600;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;z-index:999}
+.paste-toast.show{opacity:1;transform:translateY(0)}
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1000;align-items:center;justify-content:center;cursor:zoom-out}
+.lightbox.open{display:flex}
+.lightbox img{max-width:92vw;max-height:88vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.lightbox-close{position:absolute;top:1.2rem;right:1.5rem;color:#fff;font-size:2.2rem;cursor:pointer;opacity:.65;line-height:1}
+.lightbox-close:hover{opacity:1}
 </style>
 </head>
 <body>
@@ -52,63 +73,154 @@ textarea:focus{outline:none;border-color:#0e8a78}
   <div class="page-title">📚 Your Assignments</div>
   <div id="assignmentsList"><div class="empty">Loading assignments...</div></div>
 </div>
+<div class="paste-toast" id="pasteToast">🖼️ Image pasted!</div>
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close">✕</span>
+  <img id="lightboxImg" src="" alt="Full size">
+</div>
 <script>
 const token = localStorage.getItem('kca_token');
-const user = JSON.parse(localStorage.getItem('kca_user') || '{}');
+const user  = JSON.parse(localStorage.getItem('kca_user') || '{}');
 if (!token) window.location.replace('/login');
+const stagedImages = {};
+let focusedCardId = null;
 
-async function loadAssignments() {
-  const r = await fetch('/api/assignments', { headers: { Authorization: 'Bearer ' + token } });
+function isImagePath(p){ return p && /\.(jpg|jpeg|png|gif|webp)$/i.test(p); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function showToast(msg){ const t=document.getElementById('pasteToast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
+
+async function loadAssignments(){
+  const r = await fetch('/api/assignments',{headers:{Authorization:'Bearer '+token}});
   const assignments = await r.json();
   const el = document.getElementById('assignmentsList');
-  if (!assignments.length) { el.innerHTML = '<div class="empty">📭 No assignments yet. Check back soon!</div>'; return; }
-  el.innerHTML = assignments.map(a => `
-    <div class="assignment-card" id="card-${a.id}">
-      <div class="a-title">${a.title}</div>
-      <div class="a-meta">📅 ${new Date(a.created_at).toLocaleDateString()} &nbsp;|&nbsp; 👤 ${a.instructor_name || 'Instructor'}
-        ${a.course ? `&nbsp;|&nbsp;<span class="badge badge-course">${a.course}</span>` : ''}
-      </div>
-      ${a.description ? `<div class="a-desc">${a.description}</div>` : ''}
-      ${a.file_path ? `<a href="${a.file_path}" target="_blank" class="a-file">📎 Download Assignment File</a>` : ''}
-      <div class="reply-section">
-        <div class="reply-label">Your Submission</div>
-        ${a.my_reply || a.my_submission ? '<div class="submitted-badge">✅ Submitted</div>' : ''}
-        <textarea id="reply-${a.id}" placeholder="Type your answer or notes here...">${a.my_reply || ''}</textarea>
-        <div class="file-input-row">
-          <label class="file-label" for="file-${a.id}">📎 Attach File</label>
-          <input type="file" id="file-${a.id}" style="display:none" onchange="document.getElementById('fname-${a.id}').textContent=this.files[0]?this.files[0].name:''">
-          <span class="file-name" id="fname-${a.id}">${a.my_submission ? '(file previously submitted)' : ''}</span>
-        </div>
-        <button class="submit-btn" onclick="submitReply(${a.id})">
-          ${a.my_reply || a.my_submission ? '🔄 Update Submission' : '🚀 Submit'}
-        </button>
-        <div class="msg" id="msg-${a.id}"></div>
-        ${a.instructor_reply ? `<div style="margin-top:1rem;padding-top:.75rem;border-top:1px solid #1e2330"><div style="font-size:.75rem;font-weight:700;color:#0e8a78;margin-bottom:.3rem">💬 Instructor Feedback</div><div style="background:#0a1628;border:1px solid rgba(14,138,120,.3);padding:.75rem;border-radius:8px;font-size:.85rem;color:#e2e8f0;line-height:1.5">${a.instructor_reply}</div></div>` : ''}
-      </div>
-    </div>`).join('');
+  if(!assignments.length){ el.innerHTML='<div class="empty">📭 No assignments yet. Check back soon!</div>'; return; }
+  el.innerHTML = assignments.map(a => buildCard(a)).join('');
+  assignments.forEach(a => attachCardListeners(a.id));
 }
 
-async function submitReply(id) {
-  const reply_text = document.getElementById('reply-' + id).value.trim();
-  const file = document.getElementById('file-' + id).files[0];
-  const msg = document.getElementById('msg-' + id);
+function buildCard(a){
+  const submitted = !!(a.my_reply || a.my_submission);
+  const submittedImgHtml = (a.file_path && isImagePath(a.file_path))
+    ? '<div class="submitted-img-wrap"><div class="submitted-img-label">📎 Previously submitted image:</div><img src="'+esc(a.file_path)+'" alt="Submitted" onclick="openLightbox(''+esc(a.file_path)+'')" title="Click to enlarge"></div>' : '';
+  return '<div class="assignment-card" id="card-'+a.id+'">'
+    +'<div class="a-title">'+esc(a.title)+'</div>'
+    +'<div class="a-meta">📅 '+new Date(a.created_at).toLocaleDateString()+' &nbsp;|&nbsp; 👤 '+esc(a.instructor_name||'Instructor')
+    +(a.course?' &nbsp;|&nbsp;<span class="badge badge-course">'+esc(a.course)+'</span>':'')+'</div>'
+    +(a.description?'<div class="a-desc">'+esc(a.description)+'</div>':'')
+    +(a.file_path&&!isImagePath(a.file_path)?'<a href="'+esc(a.file_path)+'" target="_blank" class="a-file">📎 Download Assignment File</a>':'')
+    +(a.file_path&&isImagePath(a.file_path)?'<a href="'+esc(a.file_path)+'" target="_blank" class="a-file">📄 View Assignment Image</a>':'')
+    +'<div class="reply-section">'
+    +'<div class="reply-label">Your Submission</div>'
+    +(submitted?'<div class="submitted-badge">✅ Submitted</div>':'')
+    +'<textarea id="reply-'+a.id+'" placeholder="Type your answer or notes here...&#10;&#10;Tip: Paste (Ctrl+V) or drag and drop an image here." onfocus="focusedCardId='+a.id+'">'+esc(a.my_reply||'')+'</textarea>'
+    +'<div class="attach-row">'
+    +'<label class="file-label" for="file-'+a.id+'">📎 Attach File</label>'
+    +'<input type="file" id="file-'+a.id+'" style="display:none" onchange="onFileSelected('+a.id+',this)">'
+    +'<label class="img-attach-btn" for="img-input-'+a.id+'">🖼️ Attach Image</label>'
+    +'<input type="file" id="img-input-'+a.id+'" accept="image/*" style="display:none" onchange="onImageFileSelected('+a.id+',this)">'
+    +'<span class="attach-hint">or Ctrl+V paste · drag and drop image</span>'
+    +'</div>'
+    +'<div class="file-name" id="fname-'+a.id+'">'+(a.my_submission?'(file previously submitted)':'')+'</div>'
+    +submittedImgHtml
+    +'<div class="img-preview-wrap" id="img-preview-wrap-'+a.id+'"><img id="img-preview-'+a.id+'" src="" alt="Preview"><div class="img-preview-remove" onclick="clearStagedImage('+a.id+')">✕</div><div class="img-preview-meta" id="img-preview-meta-'+a.id+'"></div></div>'
+    +'<button class="submit-btn" id="submit-btn-'+a.id+'" onclick="submitReply('+a.id+')">'+(submitted?'🔄 Update Submission':'🚀 Submit')+'</button>'
+    +'<div class="msg" id="msg-'+a.id+'"></div>'
+    +(a.instructor_reply?'<div style="margin-top:1rem;padding-top:.75rem;border-top:1px solid #1e2330"><div style="font-size:.75rem;font-weight:700;color:#0e8a78;margin-bottom:.3rem">💬 Instructor Feedback</div><div style="background:#0a1628;border:1px solid rgba(14,138,120,.3);padding:.75rem;border-radius:8px;font-size:.85rem;color:#e2e8f0;line-height:1.5">'+esc(a.instructor_reply)+'</div></div>':'')
+    +'</div></div>';
+}
 
-  if (!reply_text && !file) { msg.style.color = '#e74c3c'; msg.textContent = '⚠️ Please add a reply or attach a file'; return; }
-
-  const fd = new FormData();
-  if (reply_text) fd.append('reply_text', reply_text);
-  if (file) fd.append('file', file);
-
-  msg.style.color = '#0e8a78'; msg.textContent = 'Submitting...';
-  const r = await fetch('/api/assignments/' + id + '/submit', {
-    method: 'POST', headers: { Authorization: 'Bearer ' + token }, body: fd
+function attachCardListeners(id){
+  const ta=document.getElementById('reply-'+id);
+  if(!ta)return;
+  ta.addEventListener('dragover',e=>{e.preventDefault();ta.classList.add('drag-over');});
+  ta.addEventListener('dragleave',()=>ta.classList.remove('drag-over'));
+  ta.addEventListener('drop',e=>{
+    e.preventDefault();ta.classList.remove('drag-over');
+    const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];
+    if(f&&f.type.startsWith('image/'))stageImage(id,f);
+    else if(f)onFileDropped(id,f);
   });
-  const d = await r.json();
-  if (d.message) { msg.textContent = '✅ ' + d.message; loadAssignments(); }
-  else { msg.style.color = '#e74c3c'; msg.textContent = '❌ ' + (d.error || 'Failed'); }
 }
 
-function logout() { localStorage.removeItem('kca_token'); localStorage.removeItem('kca_user'); window.location.replace('/login'); }
+window.addEventListener('paste',e=>{
+  const items=(e.clipboardData||{items:[]}).items||[];
+  for(const item of items){
+    if(item.type.startsWith('image/')){
+      e.preventDefault();
+      const f=item.getAsFile();
+      const tid=focusedCardId||getFirstCardId();
+      if(f&&tid){stageImage(tid,f);showToast('🖼️ Image attached!');}
+      break;
+    }
+  }
+});
+
+function getFirstCardId(){const c=document.querySelector('.assignment-card');return c?parseInt(c.id.replace('card-','')):null;}
+
+function onFileSelected(id,input){
+  const f=input.files[0];if(!f)return;
+  const n=document.getElementById('fname-'+id);if(n)n.textContent=f.name;
+  if(f.type.startsWith('image/'))stageImage(id,f);
+  else clearStagedImage(id);
+}
+function onImageFileSelected(id,input){const f=input.files[0];if(f)stageImage(id,f);}
+function onFileDropped(id,file){
+  const n=document.getElementById('fname-'+id);if(n)n.textContent=file.name;
+  try{const dt=new DataTransfer();dt.items.add(file);const inp=document.getElementById('file-'+id);if(inp)inp.files=dt.files;}catch(e){}
+}
+
+function stageImage(id,file){
+  if(!file.type.startsWith('image/')){alert('Only image files can be pasted or dragged here.');return;}
+  if(file.size>5*1024*1024){alert('Image must be under 5MB.');return;}
+  stagedImages[id]=file;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const wrap=document.getElementById('img-preview-wrap-'+id);
+    const img=document.getElementById('img-preview-'+id);
+    const meta=document.getElementById('img-preview-meta-'+id);
+    if(wrap&&img&&meta){img.src=e.target.result;meta.textContent=file.name+' — '+(file.size/1024).toFixed(0)+' KB';wrap.style.display='block';}
+    const n=document.getElementById('fname-'+id);if(n)n.textContent='🖼️ '+file.name;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearStagedImage(id){
+  delete stagedImages[id];
+  const wrap=document.getElementById('img-preview-wrap-'+id);if(wrap)wrap.style.display='none';
+  const img=document.getElementById('img-preview-'+id);if(img)img.src='';
+  const meta=document.getElementById('img-preview-meta-'+id);if(meta)meta.textContent='';
+  const inp=document.getElementById('img-input-'+id);if(inp)inp.value='';
+  const n=document.getElementById('fname-'+id);if(n)n.textContent='';
+}
+
+async function submitReply(id){
+  const replyText=(document.getElementById('reply-'+id)||{value:''}).value.trim();
+  const fileInput=document.getElementById('file-'+id);
+  const pickedFile=fileInput&&fileInput.files&&fileInput.files[0];
+  const stagedImage=stagedImages[id];
+  const msg=document.getElementById('msg-'+id);
+  const btn=document.getElementById('submit-btn-'+id);
+  if(!replyText&&!pickedFile&&!stagedImage){msg.style.color='#e74c3c';msg.textContent='⚠️ Please add a reply, attach a file, or paste an image.';return;}
+  const fd=new FormData();
+  if(replyText)fd.append('reply_text',replyText);
+  if(stagedImage)fd.append('file',stagedImage,stagedImage.name);
+  else if(pickedFile)fd.append('file',pickedFile);
+  msg.style.color='#0e8a78';msg.textContent='Submitting...';
+  if(btn)btn.disabled=true;
+  try{
+    const r=await fetch('/api/assignments/'+id+'/submit',{method:'POST',headers:{Authorization:'Bearer '+token},body:fd});
+    const d=await r.json();
+    if(r.ok){msg.textContent='✅ '+d.message;clearStagedImage(id);loadAssignments();}
+    else{msg.style.color='#e74c3c';msg.textContent='❌ '+(d.error||'Failed to submit');}
+  }catch(e){msg.style.color='#e74c3c';msg.textContent='❌ Network error. Please try again.';}
+  finally{if(btn)btn.disabled=false;}
+}
+
+function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+function logout(){localStorage.removeItem('kca_token');localStorage.removeItem('kca_user');window.location.replace('/login');}
+
 loadAssignments();
 </script>
 </body>
