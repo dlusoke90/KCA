@@ -56,6 +56,15 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .msg.success{background:rgba(62,207,110,.1);border:1px solid rgba(62,207,110,.3);color:#3ecf6e;display:block}
 .msg.error{background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.3);color:#ff4d4d;display:block}
 .table-wrap{overflow-x:auto}
+
+  .course-card{background:#0d1117;border:1px solid #1e2330;border-radius:12px;padding:1.25rem;cursor:pointer;transition:border-color .2s,transform .2s}
+  .course-card:hover{border-color:#0e8a78;transform:translateY(-2px)}
+  .course-card .cc-title{font-weight:700;color:#e2e8f0;margin-bottom:.5rem;font-size:.95rem}
+  .course-card .cc-cat{font-size:.75rem;color:#64748b;margin-bottom:.75rem}
+  .course-card .cc-stats{display:flex;gap:.75rem}
+  .course-card .cc-stat{text-align:center}
+  .course-card .cc-stat .n{font-size:1.4rem;font-weight:700;color:#0e8a78}
+  .course-card .cc-stat .l{font-size:.7rem;color:#64748b;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -82,6 +91,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div class="tab active" onclick="showTab('pending')">Pending Approvals</div>
     <div class="tab" onclick="showTab('students')">All Students</div>
     <div class="tab" onclick="showTab('enrollments')">Enrollments</div>
+    <div class="tab" onclick="showTab('bycourse');loadByCourse()">📊 By Course</div>
     <div class="tab" onclick="showTab('tickets')">Tickets</div>
     <div class="tab" onclick="showTab('netps')">🛡️ Net-PS Team</div><div class="tab" onclick="window.location.href='/instructor'">📚 Assignments</div>
   </div>
@@ -116,6 +126,19 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <thead><tr><th>Student</th><th>Email</th><th>Course</th><th>Category</th><th>Enrolled</th></tr></thead>
       <thead><tr><th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"></th><th>STUDENT</th><th>EMAIL</th><th>COURSE</th><th>CATEGORY</th><th>STATUS</th><th>ENROLLED</th><th>ACTION</th></tr></thead><tbody id="enrollmentsBody"></tbody>
     </table></div>
+  </div>
+  <div id="sec-bycourse" class="section">
+    <div id="courseCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2rem"></div>
+    <div id="courseStudentsWrap" style="display:none">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+        <button onclick="document.getElementById('courseStudentsWrap').style.display='none';document.getElementById('courseCards').style.display='grid'" style="background:#1e2330;color:#94a3b8;border:none;padding:.4rem .9rem;border-radius:6px;cursor:pointer;font-size:.85rem">← Back to Courses</button>
+        <h3 id="courseStudentsTitle" style="color:#e2e8f0;font-size:1rem;font-weight:600;margin:0"></h3>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Country</th><th>Enrollment</th><th>Account</th><th>Enrolled Date</th></tr></thead>
+        <tbody id="courseStudentsBody"></tbody>
+      </table></div>
+    </div>
   </div>
   <div id="sec-tickets" class="section">
     <div class="table-wrap"><table>
@@ -367,6 +390,43 @@ function showNetPSMsg(text, type){
 
 function logout(){localStorage.removeItem('kca_token');localStorage.removeItem('kca_user');window.location.replace('login.html');}
 loadStats();loadPending();
+
+async function loadByCourse(){
+  const res = await fetch('/api/admin/course-enrollments',{headers:{Authorization:'Bearer '+token}});
+  const courses = await res.json();
+  const grid = document.getElementById('courseCards');
+  if(!courses.length){grid.innerHTML='<p style="color:#64748b">No courses found.</p>';return;}
+  grid.innerHTML = courses.map(c=>`
+    <div class="course-card" onclick="loadCourseStudents(${c.id},'${c.title.replace(/'/g,"\'")}')">
+      <div class="cc-title">${c.title}</div>
+      <div class="cc-cat">${c.category||'General'}</div>
+      <div class="cc-stats">
+        <div class="cc-stat"><div class="n">${c.total||0}</div><div class="l">Total</div></div>
+        <div class="cc-stat"><div class="n" style="color:#22c55e">${c.approved||0}</div><div class="l">Active</div></div>
+        <div class="cc-stat"><div class="n" style="color:#f59e0b">${c.pending||0}</div><div class="l">Pending</div></div>
+      </div>
+    </div>`).join('');
+}
+async function loadCourseStudents(courseId, courseTitle){
+  document.getElementById('courseCards').style.display='none';
+  document.getElementById('courseStudentsWrap').style.display='block';
+  document.getElementById('courseStudentsTitle').textContent='Students enrolled in: '+courseTitle;
+  const tbody = document.getElementById('courseStudentsBody');
+  tbody.innerHTML='<tr><td colspan="7" style="color:#64748b;text-align:center">Loading...</td></tr>';
+  const res = await fetch('/api/admin/course-enrollments?course_id='+courseId,{headers:{Authorization:'Bearer '+token}});
+  const students = await res.json();
+  if(!students.length){tbody.innerHTML='<tr><td colspan="7" class="empty">No students enrolled yet</td></tr>';return;}
+  tbody.innerHTML = students.map(s=>`<tr>
+    <td>${s.full_name}</td>
+    <td>${s.email}</td>
+    <td>${s.phone||'-'}</td>
+    <td>${s.country||'-'}</td>
+    <td><span class="badge ${s.enrollment_status}">${s.enrollment_status}</span></td>
+    <td><span class="badge ${s.account_status}">${s.account_status}</span></td>
+    <td>${new Date(s.enrolled_at).toLocaleDateString()}</td>
+  </tr>`).join('');
+}
+
 </script>
 </body>
 </html>

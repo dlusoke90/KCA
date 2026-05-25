@@ -557,6 +557,35 @@ app.get('/api/admin/enrollments', auth, adminOnly, async (req, res) => {
   } catch { res.status(500).json({ error: 'Failed to fetch enrollments' }); }
 });
 
+
+app.get('/api/admin/course-enrollments', auth, adminOnly, async (req, res) => {
+  try {
+    const { course_id } = req.query;
+    if (course_id) {
+      const [rows] = await pool.query(
+        `SELECT u.id, u.full_name, u.email, u.phone, u.country, u.status as account_status,
+                e.status as enrollment_status, e.enrolled_at
+         FROM enrollments e
+         JOIN users u ON e.user_id = u.id
+         WHERE e.course_id = ?
+         ORDER BY e.enrolled_at DESC`, [course_id]);
+      res.json(rows);
+    } else {
+      const [rows] = await pool.query(
+        `SELECT c.id, c.title, c.category,
+                COUNT(e.id) as total,
+                SUM(e.status='approved') as approved,
+                SUM(e.status='pending') as pending
+         FROM courses c
+         LEFT JOIN enrollments e ON c.id = e.course_id
+         WHERE c.is_active = 1
+         GROUP BY c.id
+         ORDER BY total DESC`);
+      res.json(rows);
+    }
+  } catch(e) { console.error(e); res.status(500).json({ error: 'Failed to fetch course enrollments' }); }
+});
+
 app.get('/api/health', async (req, res) => {
   try { await pool.query('SELECT 1'); res.json({ status: 'ok', db: 'connected' }); }
   catch { res.status(500).json({ status: 'error', db: 'disconnected' }); }
