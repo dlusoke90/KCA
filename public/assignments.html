@@ -80,7 +80,7 @@ textarea.drag-over{border-color:#0e8a78!important;background:#0d1f14!important;b
 </div>
 <script>
 const token = localStorage.getItem('kca_token');
-const user  = JSON.parse(localStorage.getItem('kca_user') || '{}');
+const user = (() => { try { return JSON.parse(localStorage.getItem('kca_user') || '{}'); } catch(e) { localStorage.removeItem('kca_user'); return {}; } })();
 if (!token) window.location.replace('/login');
 const stagedImages = {};
 let focusedCardId = null;
@@ -90,23 +90,35 @@ function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
 function showToast(msg){ const t=document.getElementById('pasteToast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
 
 async function loadAssignments(){
-  const r = await fetch('/api/assignments',{headers:{Authorization:'Bearer '+token}});
-  const assignments = await r.json();
   const el = document.getElementById('assignmentsList');
-  if(!assignments.length){ el.innerHTML='<div class="empty">📭 No assignments yet. Check back soon!</div>'; return; }
-  el.innerHTML = assignments.map(a => buildCard(a)).join('');
-  assignments.forEach(a => attachCardListeners(a.id));
+  try {
+    const r = await fetch('/api/assignments',{headers:{Authorization:'Bearer '+token}});
+    if(!r.ok){
+      if(r.status===401||r.status===403){ window.location.replace('/login'); return; }
+      throw new Error('Server error: '+r.status);
+    }
+    const assignments = await r.json();
+    if(!Array.isArray(assignments)||!assignments.length){
+      el.innerHTML='<div class="empty">📭 No assignments yet. Check back soon!</div>'; return;
+    }
+    el.innerHTML = assignments.map(a => buildCard(a)).join('');
+    assignments.forEach(a => attachCardListeners(a.id));
+  } catch(err) {
+    console.error('loadAssignments error:', err);
+    el.innerHTML='<div class="empty" style="color:#f87171;">⚠️ Failed to load assignments. Please refresh the page.</div>';
+  }
 }
 
 function buildCard(a){
   const submitted = !!(a.my_reply || a.my_submission);
+  const imgPath = esc(a.file_path);
   const submittedImgHtml = (a.file_path && isImagePath(a.file_path))
-    ? '<div class="submitted-img-wrap"><div class="submitted-img-label">📎 Previously submitted image:</div><img src="'+esc(a.file_path)+'" alt="Submitted" onclick="openLightbox(''+esc(a.file_path)+'')" title="Click to enlarge"></div>' : '';
+    ? '<div class="submitted-img-wrap"><div class="submitted-img-label">📎 Previously submitted image:</div><img src="' + imgPath + '" alt="Submitted" onclick="openLightbox(this.src)" title="Click to enlarge"></div>' : '';
   return '<div class="assignment-card" id="card-'+a.id+'">'
     +'<div class="a-title">'+esc(a.title)+'</div>'
     +'<div class="a-meta">📅 '+new Date(a.created_at).toLocaleDateString()+' &nbsp;|&nbsp; 👤 '+esc(a.instructor_name||'Instructor')
     +(a.course?' &nbsp;|&nbsp;<span class="badge badge-course">'+esc(a.course)+'</span>':'')+'</div>'
-    +(a.description?'<div class="a-desc">'+esc(a.description)+'</div>':'')
+    +(a.description?'<div class="a-desc">'+a.description+'</div>':'')
     +(a.file_path&&!isImagePath(a.file_path)?'<a href="'+esc(a.file_path)+'" target="_blank" class="a-file">📎 Download Assignment File</a>':'')
     +(a.file_path&&isImagePath(a.file_path)?'<a href="'+esc(a.file_path)+'" target="_blank" class="a-file">📄 View Assignment Image</a>':'')
     +'<div class="reply-section">'

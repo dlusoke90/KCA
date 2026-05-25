@@ -112,12 +112,51 @@ app.post('/api/auth/reset-password', async (req, res) => {
 });
 
 const multer = require('multer');
-const storage = multer.diskStorage({
+
+// ══════════════════════════════════════════════════════════
+//  ALL MULTER INSTANCES — declared here, never inline
+// ══════════════════════════════════════════════════════════
+
+// Ticket single image upload
+const ticketStorage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/tickets'),
   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
+const upload = multer({ storage: ticketStorage, limits: { fileSize: 5 * 1024 * 1024 } });
 
-const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
+// Ticket multi-image upload
+const uploadTicketFields = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/tickets'),
+    filename: (req, file, cb) => cb(null, Date.now() + '_' + Math.random().toString(36).slice(2,7) + path.extname(file.originalname))
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 }
+}).fields([{ name: 'image', maxCount: 1 }, { name: 'extra_images', maxCount: 5 }]);
+
+
+// Comment image upload
+const commentStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/comments'),
+  filename: (req, file, cb) => cb(null, 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7) + path.extname(file.originalname).toLowerCase())
+});
+const uploadComment = multer({
+  storage: commentStorage,
+  fileFilter: (req, file, cb) => {
+    ['image/jpeg','image/jpg','image/png','image/gif','image/webp'].includes(file.mimetype)
+      ? cb(null, true) : cb(new Error('Images only'));
+  },
+  limits: { fileSize: 5 * 1024 * 1024 }
+});
+
+// Assignment file upload
+const assignmentStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/assignments'),
+  filename: (req, file, cb) => cb(null, Date.now() + '_' + file.originalname.replace(/\s/g,'_'))
+});
+const uploadAssignment = multer({ storage: assignmentStorage, limits: { fileSize: 20 * 1024 * 1024 } });
+
+
+// ══════════════════════════════════════════════════════════
 
 function getUsername(full_name) {
   if(!full_name) return 'deleted-user';
@@ -200,11 +239,28 @@ app.post('/api/tickets', auth, upload.single('image'), async (req, res) => {
       subject: `KCA Ticket ${ticket_no} — ${title}`,
       html: `<h2>New Support Ticket</h2><p><b>Ticket:</b> ${ticket_no}</p><p><b>Title:</b> ${title}</p><p><b>Queue:</b> ${queue}</p><p><a href="https://kca-cloudnet.com/ticket-view.html?id=${result.insertId}">View Ticket →</a></p>`
     }).catch(e => console.error(e));
+    // Notify Net-PS team only if ticket created by dlngunza
+    if (req.user.email && req.user.email.toLowerCase().startsWith('dlngunza')) {
+      try {
+        const [netpsMembers] = await pool.query(
+          'SELECT u.email FROM netps_members nm JOIN users u ON u.id = nm.user_id'
+        );
+        if (netpsMembers.length) {
+          const netpsEmails = netpsMembers.map(m => m.email).join(',');
+          mailer.sendMail({
+            from: process.env.EMAIL_USER,
+            to: netpsEmails,
+            subject: 'KCA Net-PS Ticket ' + ticket_no + ' - ' + title,
+            html: '<h2>New Net-PS Ticket</h2><p><b>Ticket:</b> ' + ticket_no + '</p><p><b>Title:</b> ' + title + '</p><p><b>Queue:</b> ' + queue + '</p><p><a href="https://kca-cloudnet.com/ticket-view.html?id=' + result.insertId + '">View Ticket</a></p>'
+          }).catch(e => console.error('Net-PS notify error:', e.message));
+        }
+      } catch(netpsErr) { console.error('Net-PS email error:', netpsErr.message); }
+    }
     res.status(201).json({ message: 'Ticket created!', id: result.insertId, ticket_no });
   } catch(e) { console.error(e); res.status(500).json({ error: 'Failed to create ticket' }); }
 });
 
-const uploadComment = multer({ storage: multer.diskStorage({ destination: (req, file, cb) => cb(null, "/var/www/kca/public/uploads/comments"), filename: (req, file, cb) => cb(null, "c_" + Date.now() + "_" + Math.random().toString(36).slice(2,7) + require("path").extname(file.originalname).toLowerCase()) }), fileFilter: (req, file, cb) => { ["image/jpeg","image/jpg","image/png","image/gif","image/webp"].includes(file.mimetype) ? cb(null,true) : cb(new Error("Images only")); }, limits: { fileSize: 5*1024*1024 } });
+
 // Add comment
 app.post('/api/tickets/:id/comments', auth, uploadComment.single('comment_image'), async (req, res) => {
   const { comment, command_output } = req.body;
@@ -235,6 +291,26 @@ app.post('/api/tickets/:id/comments', auth, uploadComment.single('comment_image'
         }).catch(e => console.error('Comment notify email error:', e.message));
       }
     } catch(emailErr) { console.error('Comment email fetch error:', emailErr.message); }
+    // Notify Net-PS team on every new comment
+    try {
+      const [netpsMembers] = await pool.query(
+        'SELECT u.email FROM netps_members nm JOIN users u ON u.id = nm.user_id'
+      );
+      if (netpsMembers.length) {
+        const [[ticketRef]] = await pool.query(
+          'SELECT ticket_no, title FROM tickets WHERE id=?', [req.params.id]
+        );
+        const netpsEmails = netpsMembers.map(m => m.email).filter(e => e !== req.user.email).join(',');
+        if (netpsEmails && ticketRef) {
+          mailer.sendMail({
+            from: process.env.EMAIL_USER,
+            to: netpsEmails,
+            subject: 'KCA Net-PS — New Reply on Ticket ' + ticketRef.ticket_no,
+            html: '<h2>New Comment on Ticket</h2><p><b>Ticket:</b> ' + ticketRef.ticket_no + ' — ' + ticketRef.title + '</p><p><b>Commented by:</b> ' + (req.user.full_name || req.user.email) + '</p><p><a href="https://kca-cloudnet.com/ticket-view.html?id=' + req.params.id + '">View Ticket</a></p>'
+          }).catch(e => console.error('Net-PS comment notify error:', e.message));
+        }
+      }
+    } catch(netpsCommentErr) { console.error('Net-PS comment email error:', netpsCommentErr.message); }
     res.status(201).json({ message: 'Comment added!' });
   } catch(e) { res.status(500).json({ error: 'Failed to add comment' }); }
 });
@@ -488,11 +564,7 @@ app.get('/api/health', async (req, res) => {
 
 
 // Separate upload handler for assignments
-const assignmentStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/assignments'),
-  filename: (req, file, cb) => cb(null, Date.now() + '_' + file.originalname.replace(/\s/g,'_'))
-});
-const uploadAssignment = multer({ storage: assignmentStorage, limits: { fileSize: 20 * 1024 * 1024 } });
+
 // ─── ASSIGNMENTS ────────────────────────────────────────────
 app.post('/api/assignments', auth, uploadAssignment.single('file'), async (req, res) => {
   if (!['admin','instructor'].includes(req.user.role)) return res.status(403).json({ error: 'Instructor access required' });
@@ -668,13 +740,7 @@ app.put('/api/assignments/:id/submissions/:studentId/reply', auth, async (req, r
 // ─── NET-PS TEAM ─────────────────────────────────────────────
 
 // Multi-image upload handler for tickets
-const uploadTicketFields = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/tickets'),
-    filename: (req, file, cb) => cb(null, Date.now() + '_' + Math.random().toString(36).slice(2,7) + path.extname(file.originalname))
-  }),
-  limits: { fileSize: 5 * 1024 * 1024 }
-}).fields([{ name: 'image', maxCount: 1 }, { name: 'extra_images', maxCount: 5 }]);
+
 
 // Create ticket (multi-image override — replaces existing POST /api/tickets)
 app.post('/api/tickets/create', auth, (req, res) => {
