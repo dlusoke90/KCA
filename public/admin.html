@@ -103,7 +103,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       </select>
     </div>
     <div class="table-wrap"><table>
-      <thead><tr><th>Name</th><th>Email</th><th>Country</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead>
+      <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Country</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead>
       <tbody id="studentsBody"></tbody>
     </table></div>
   </div>
@@ -181,8 +181,8 @@ async function loadStudents(){
   const r=await fetch(url,{headers:{Authorization:'Bearer '+token}});
   const students=await r.json();
   const tbody=document.getElementById('studentsBody');
-  if(!students.length){tbody.innerHTML='<tr><td colspan="6" class="empty">No students found</td></tr>';return;}
-  tbody.innerHTML=students.map(s=>'<tr><td>'+s.full_name+'</td><td>'+s.email+'</td><td>'+(s.country||'-')+'</td><td><span class="badge '+s.status+'">'+s.status+'</span></td><td>'+new Date(s.created_at).toLocaleDateString()+'</td><td>'+(s.status!=='approved'?'<button class="btn-approve" onclick="updateStatus('+s.id+',&apos;approved&apos;)">Approve</button>':'')+(s.status!=='rejected'?'<button class="btn-reject" onclick="updateStatus('+s.id+',&apos;rejected&apos;)">Reject</button>':'')+'</td><td><button class="btn-reject" onclick="deleteStudent('+s.id+',&apos;'+s.full_name+'&apos;)">Delete</button></td></tr>').join('');
+  if(!students.length){tbody.innerHTML='<tr><td colspan="7" class="empty">No students found</td></tr>';return;}
+  tbody.innerHTML=students.map(s=>'<tr><td>'+s.full_name+'</td><td>'+s.email+'</td><td>'+(s.phone||'-')+'</td><td>'+(s.country||'-')+'</td><td><span class="badge '+s.status+'">'+s.status+'</span></td><td>'+new Date(s.created_at).toLocaleDateString()+'</td><td>'+(s.status!=='approved'?'<button class="btn-approve" onclick="updateStatus('+s.id+',&apos;approved&apos;)">Approve</button>':'')+(s.status!=='rejected'?'<button class="btn-reject" onclick="updateStatus('+s.id+',&apos;rejected&apos;)">Reject</button>':'')+'</td><td><button class="btn-reject" onclick="deleteStudent('+s.id+',&apos;'+s.full_name+'&apos;)">Delete</button></td></tr>').join('');
 }
 async function loadEnrollments(filterStatus=''){
   const r=await fetch('/api/admin/enrollments',{headers:{Authorization:'Bearer '+token}});
