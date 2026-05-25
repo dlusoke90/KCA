@@ -221,7 +221,7 @@ async function updateStatus(id,status){
   else showMsg(d.error,'error');
 }
 function showTab(name){
-  ['pending','students','enrollments','tickets','netps'].forEach((t,i)=>{
+  ['pending','students','enrollments','bycourse','tickets','netps'].forEach((t,i)=>{
     const sec=document.getElementById('sec-'+t);
     if(sec) sec.classList.toggle('active',t===name);
     const tab=document.querySelectorAll('.tab')[i];
@@ -231,6 +231,7 @@ function showTab(name){
   if(name==='tickets') loadTickets();
   if(name==='students') loadStudents();
   if(name==='netps'){ loadNetPSTeam(); loadEligibleStudents(); }
+  if(name==='bycourse') loadByCourse();
 }
 function showMsg(t,type){const m=document.getElementById('msg');m.textContent=t;m.className='msg '+type;setTimeout(()=>m.className='msg',4000);}
 async function deleteStudent(id, name){
