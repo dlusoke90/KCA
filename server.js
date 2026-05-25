@@ -418,7 +418,7 @@ app.post('/api/enrollments', auth, async (req, res) => {
     res.status(201).json({ message: 'Enrollment submitted! Awaiting admin approval.' });
     // Fetch student and course details for emails
     try {
-      const [[student]] = await pool.query('SELECT full_name, email FROM users WHERE id = ?', [req.user.id]);
+      const [[student]] = await pool.query('SELECT full_name, email, phone FROM users WHERE id = ?', [req.user.id]);
       const [[course]] = await pool.query('SELECT title FROM courses WHERE id = ?', [course_id]);
       const courseName = course ? course.title : 'Unknown Course';
       // Email to admin
@@ -426,7 +426,7 @@ app.post('/api/enrollments', auth, async (req, res) => {
         from: process.env.EMAIL_USER,
         to: process.env.EMAIL_USER,
         subject: 'KCA — New Enrollment Request',
-        html: '<h2>New Enrollment Request</h2><p><b>Student:</b> '+student.full_name+'</p><p><b>Email:</b> '+student.email+'</p><p><b>Course:</b> '+courseName+'</p><p><b>Status:</b> Pending Admin Approval</p><p><a href="https://kca-cloudnet.com/admin.html">Review in Admin Dashboard →</a></p>'
+        html: '<h2>New Enrollment Request</h2><p><b>Student:</b> '+student.full_name+'</p><p><b>Email:</b> '+student.email+'</p><p><b>Phone:</b> '+(student.phone||'Not provided')+'</p><p><b>Course:</b> '+courseName+'</p><p><b>Status:</b> Pending Admin Approval</p><p><a href="https://kca-cloudnet.com/admin.html">Review in Admin Dashboard →</a></p>'
       }).catch(e => console.error('Admin email error:', e.message));
       // Email to student
       mailer.sendMail({
