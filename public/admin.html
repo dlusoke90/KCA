@@ -65,6 +65,20 @@ tr:hover td{background:rgba(255,255,255,.02)}
   .course-card .cc-stat{text-align:center}
   .course-card .cc-stat .n{font-size:1.4rem;font-weight:700;color:#0e8a78}
   .course-card .cc-stat .l{font-size:.7rem;color:#64748b;text-transform:uppercase}
+
+  .pricing-card{background:#0d1117;border:1px solid #1e2330;border-radius:10px;padding:1.25rem}
+  .pricing-card h3{font-size:.95rem;font-weight:700;color:#e2e8f0;margin-bottom:.25rem}
+  .pricing-card .cat{font-size:.75rem;color:#64748b;margin-bottom:1rem}
+  .pricing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.75rem;margin-bottom:1rem}
+  .pricing-grid label{font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#64748b;display:block;margin-bottom:.3rem}
+  .pricing-grid input,.pricing-grid select{width:100%;background:#111318;border:1px solid #1e2330;border-radius:6px;color:#e2e8f0;padding:.5rem .75rem;font-size:.85rem;outline:none}
+  .pricing-grid input:focus,.pricing-grid select:focus{border-color:#0e8a78}
+  .btn-save-pricing{background:#0e8a78;color:#fff;border:none;padding:.5rem 1.25rem;border-radius:6px;font-size:.85rem;font-weight:700;cursor:pointer}
+  .badge.paid{background:rgba(34,197,94,.15);color:#22c55e}
+  .badge.failed{background:rgba(239,68,68,.15);color:#ef4444}
+  .badge.overdue{background:rgba(239,68,68,.2);color:#f87171}
+  .badge.registration{background:rgba(59,130,246,.15);color:#60a5fa}
+  .badge.installment{background:rgba(168,85,247,.15);color:#c084fc}
 </style>
 </head>
 <body>
@@ -92,6 +106,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div class="tab" onclick="showTab('students')">All Students</div>
     <div class="tab" onclick="showTab('enrollments')">Enrollments</div>
     <div class="tab" onclick="showTab('bycourse');loadByCourse()">📊 By Course</div>
+    <div class="tab" onclick="showTab('pricing');loadPricing()">💲 Pricing</div>
+    <div class="tab" onclick="showTab('payments');loadPayments()">💳 Payments</div>
     <div class="tab" onclick="showTab('tickets')">Tickets</div>
     <div class="tab" onclick="showTab('netps')">🛡️ Net-PS Team</div><div class="tab" onclick="window.location.href='/instructor'">📚 Assignments</div>
   </div>
@@ -139,6 +155,23 @@ tr:hover td{background:rgba(255,255,255,.02)}
         <tbody id="courseStudentsBody"></tbody>
       </table></div>
     </div>
+  </div>
+
+  <div id="sec-pricing" class="section">
+    <div style="margin-bottom:1rem;color:#64748b;font-size:.85rem">Set registration fee, total price, installments and start month per course. Installments due on the <b style="color:#0e8a78">15th of each month</b>.</div>
+    <div id="pricingList" style="display:grid;gap:1rem"></div>
+  </div>
+  <div id="sec-payments" class="section">
+    <div style="display:flex;gap:1rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap">
+      <input type="text" id="paymentSearch" placeholder="Search student or course..." oninput="filterPayments()" style="flex:1;min-width:200px;background:#111318;border:1px solid #1e2330;border-radius:8px;color:#e2e8f0;padding:.5rem .9rem;font-size:.85rem;outline:none">
+      <select id="paymentTypeFilter" onchange="filterPayments()" style="background:#111318;border:1px solid #1e2330;border-radius:8px;color:#e2e8f0;padding:.5rem .8rem;font-size:.85rem;outline:none"><option value="">All Types</option><option value="registration">Registration</option><option value="installment">Installment</option></select>
+      <select id="paymentStatusFilter" onchange="filterPayments()" style="background:#111318;border:1px solid #1e2330;border-radius:8px;color:#e2e8f0;padding:.5rem .8rem;font-size:.85rem;outline:none"><option value="">All Statuses</option><option value="paid">Paid</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="overdue">Overdue</option></select>
+    </div>
+    <div id="paymentSummary" style="margin-bottom:.75rem;font-size:.85rem;color:#64748b"></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Student</th><th>Phone</th><th>Course</th><th>Type</th><th>#</th><th>Amount</th><th>Status</th><th>Due Date</th><th>Paid At</th></tr></thead>
+      <tbody id="paymentsBody"></tbody>
+    </table></div>
   </div>
   <div id="sec-tickets" class="section">
     <div class="table-wrap"><table>
@@ -221,7 +254,7 @@ async function updateStatus(id,status){
   else showMsg(d.error,'error');
 }
 function showTab(name){
-  ['pending','students','enrollments','bycourse','tickets','netps'].forEach((t,i)=>{
+  ['pending','students','enrollments','bycourse','pricing','payments','tickets','netps'].forEach((t,i)=>{
     const sec=document.getElementById('sec-'+t);
     if(sec) sec.classList.toggle('active',t===name);
     const tab=document.querySelectorAll('.tab')[i];
@@ -232,6 +265,8 @@ function showTab(name){
   if(name==='students') loadStudents();
   if(name==='netps'){ loadNetPSTeam(); loadEligibleStudents(); }
   if(name==='bycourse') loadByCourse();
+  if(name==='pricing') loadPricing();
+  if(name==='payments') loadPayments();
 }
 function showMsg(t,type){const m=document.getElementById('msg');m.textContent=t;m.className='msg '+type;setTimeout(()=>m.className='msg',4000);}
 async function deleteStudent(id, name){
@@ -425,6 +460,72 @@ async function loadCourseStudents(courseId, courseTitle){
     <td><span class="badge ${s.enrollment_status}">${s.enrollment_status}</span></td>
     <td><span class="badge ${s.account_status}">${s.account_status}</span></td>
     <td>${new Date(s.enrolled_at).toLocaleDateString()}</td>
+  </tr>`).join('');
+}
+
+
+let allPayments=[];
+async function loadPricing(){
+  const res=await fetch('/api/admin/courses-pricing',{headers:{Authorization:'Bearer '+token}});
+  const courses=await res.json();
+  const el=document.getElementById('pricingList');
+  if(!courses.length){el.innerHTML='<p style="color:#64748b">No courses found.</p>';return;}
+  function monthOptions(sel){
+    const now=new Date();let opts='<option value="">-- Select Month --</option>';
+    for(let i=0;i<24;i++){const d=new Date(now.getFullYear(),now.getMonth()+i,1);const val=d.toISOString().slice(0,7);const lbl=d.toLocaleString('default',{month:'long',year:'numeric'});opts+=`<option value="${val}"${sel===val?' selected':''}>${lbl}</option>`;}
+    return opts;
+  }
+  el.innerHTML=courses.map(c=>`
+    <div class="pricing-card">
+      <h3>${c.title}</h3><div class="cat">${c.category||'General'}</div>
+      <div class="pricing-grid">
+        <div><label>Total Price ($)</label><input type="number" min="0" step="0.01" id="price-${c.id}" value="${c.price||0}"></div>
+        <div><label>Registration Fee ($)</label><input type="number" min="0" step="0.01" id="regfee-${c.id}" value="${c.registration_fee||0}"></div>
+        <div><label>Installments</label><input type="number" min="1" max="12" id="inst-${c.id}" value="${c.installments||3}"></div>
+        <div><label>Start Month</label><select id="month-${c.id}">${monthOptions(c.payment_start_month)}</select></div>
+      </div>
+      <button class="btn-save-pricing" onclick="savePricing(${c.id})">💾 Save</button>
+      <span id="pmsg-${c.id}" style="margin-left:.75rem;font-size:.8rem"></span>
+    </div>`).join('');
+}
+async function savePricing(id){
+  const price=document.getElementById('price-'+id).value;
+  const regfee=document.getElementById('regfee-'+id).value;
+  const inst=document.getElementById('inst-'+id).value;
+  const month=document.getElementById('month-'+id).value;
+  const msg=document.getElementById('pmsg-'+id);
+  if(parseFloat(regfee)>parseFloat(price)){msg.style.color='#f87171';msg.textContent='⚠ Reg fee > total price';return;}
+  const r=await fetch('/api/admin/courses/'+id+'/pricing',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({price,registration_fee:regfee,installments:inst,payment_start_month:month})});
+  const d=await r.json();
+  if(r.ok){msg.style.color='#22c55e';msg.textContent='✅ Saved!';setTimeout(()=>msg.textContent='',3000);}
+  else{msg.style.color='#f87171';msg.textContent='⚠ '+d.error;}
+}
+async function loadPayments(){
+  const res=await fetch('/api/admin/payments',{headers:{Authorization:'Bearer '+token}});
+  allPayments=await res.json();renderPayments(allPayments);
+}
+function filterPayments(){
+  const q=document.getElementById('paymentSearch').value.toLowerCase();
+  const type=document.getElementById('paymentTypeFilter').value;
+  const status=document.getElementById('paymentStatusFilter').value;
+  renderPayments(allPayments.filter(p=>(!q||p.full_name.toLowerCase().includes(q)||p.course_name.toLowerCase().includes(q))&&(!type||p.type===type)&&(!status||p.status===status)));
+}
+function renderPayments(list){
+  const tbody=document.getElementById('paymentsBody');
+  const summary=document.getElementById('paymentSummary');
+  const paid=list.filter(p=>p.status==='paid').reduce((s,p)=>s+parseFloat(p.amount),0);
+  const pend=list.filter(p=>p.status==='pending').reduce((s,p)=>s+parseFloat(p.amount),0);
+  summary.innerHTML=`<b style="color:#22c55e">Collected: $${paid.toFixed(2)}</b> &nbsp;·&nbsp; <b style="color:#f5a623">Pending: $${pend.toFixed(2)}</b> &nbsp;·&nbsp; ${list.length} records`;
+  if(!list.length){tbody.innerHTML='<tr><td colspan="9" class="empty">No payments found</td></tr>';return;}
+  tbody.innerHTML=list.map(p=>`<tr>
+    <td>${p.full_name}<br><small style="color:#64748b">${p.email}</small></td>
+    <td>${p.phone||'-'}</td><td>${p.course_name}</td>
+    <td><span class="badge ${p.type}">${p.type}</span></td>
+    <td>${p.type==='installment'?p.installment_number:'-'}</td>
+    <td><b>$${parseFloat(p.amount).toFixed(2)}</b></td>
+    <td><span class="badge ${p.status}">${p.status}</span></td>
+    <td>${p.due_date?new Date(p.due_date).toLocaleDateString():'-'}</td>
+    <td>${p.paid_at?new Date(p.paid_at).toLocaleDateString():'-'}</td>
   </tr>`).join('');
 }
 

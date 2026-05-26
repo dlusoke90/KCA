@@ -159,6 +159,24 @@ function showTab(name){
 function showMsg(t,type){const m=document.getElementById('msg');m.textContent=t;m.className='msg '+type;setTimeout(()=>m.className='msg',4000);}
 function logout(){localStorage.removeItem('kca_token');localStorage.removeItem('kca_user');window.location.href='login.html';}
 loadCourses();
+async function enroll(courseId, btn){
+  if(btn){btn.disabled=true;btn.textContent='Processing...';}
+  try {
+    const r=await fetch('/api/payments/checkout',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({course_id:courseId})});
+    const d=await r.json();
+    if(r.ok && d.url){window.location.href=d.url;return;}
+    if(!r.ok && d.error==='no_price'){
+      const r2=await fetch('/api/enrollments',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({course_id:courseId})});
+      const d2=await r2.json();
+      if(r2.ok){showMsg('✅ Enrollment submitted! Awaiting admin approval.','success');loadCourses();}
+      else showMsg(d2.error||'Enrollment failed','error');
+      return;
+    }
+    if(!r.ok && r.status===409){showMsg('Already enrolled in this course.','error');return;}
+    showMsg(d.error||'Enrollment failed','error');
+  } catch(e){showMsg('Network error. Please try again.','error');}
+  finally{if(btn){btn.disabled=false;btn.textContent='Enroll Now';}}
+}
 </script>
 </body>
 </html>

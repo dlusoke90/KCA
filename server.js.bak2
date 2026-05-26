@@ -3,7 +3,6 @@ const express = require('express');
 const mysql   = require('mysql2/promise');
 const bcrypt  = require('bcryptjs');
 const jwt     = require('jsonwebtoken');
-const stripe   = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const cors    = require('cors');
 const helmet  = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -68,13 +67,6 @@ function auth(req, res, next) {
   catch { res.status(401).json({ error: 'Session expired. Please log in again.' }); }
 }
 
-
-function getInstallmentDueDate(yearMonth, offsetMonths) {
-  const [year, month] = yearMonth.split('-').map(Number);
-  const d = new Date(year, month - 1 + offsetMonths, 15);
-  return d.toISOString().split('T')[0];
-}
-
 function adminOnly(req, res, next) {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required' });
   next();
@@ -83,37 +75,6 @@ function adminOnly(req, res, next) {
 
 const crypto = require('crypto');
 
-
-app.post('/api/webhooks/stripe', express.raw({type:'application/json'}), async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-  let event;
-  try { event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET); }
-  catch (err) { return res.status(400).send(`Webhook Error: ${err.message}`); }
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    const { user_id, course_id, enrollment_id } = session.metadata;
-    try {
-      await pool.query("UPDATE payments SET status='paid', paid_at=NOW() WHERE stripe_session_id=?", [session.id]);
-      await pool.query("UPDATE enrollments SET status='approved' WHERE id=?", [enrollment_id]);
-      const [[course]] = await pool.query('SELECT * FROM courses WHERE id=?', [course_id]);
-      const remaining = parseFloat(course.price) - parseFloat(course.registration_fee);
-      if (remaining > 0 && course.installments > 0 && course.payment_start_month) {
-        const amt = (remaining / course.installments).toFixed(2);
-        for (let i = 0; i < course.installments; i++) {
-          const dueDate = getInstallmentDueDate(course.payment_start_month, i);
-          await pool.query('INSERT INTO payments (user_id,course_id,enrollment_id,amount,type,installment_number,status,due_date) VALUES (?,?,?,?,?,?,?,?)',
-            [user_id, course_id, enrollment_id, amt, 'installment', i+1, 'pending', dueDate]);
-        }
-      }
-      const [[student]] = await pool.query('SELECT full_name, email FROM users WHERE id=?', [user_id]);
-      mailer.sendMail({ from: process.env.EMAIL_USER, to: student.email, subject: 'KCA — Enrollment Confirmed!',
-        html: `<h2>Hi ${student.full_name}!</h2><p>Payment received. You are now enrolled in <b>${course.title}</b>. Welcome to KCA!</p>` }).catch(e=>console.error(e.message));
-      mailer.sendMail({ from: process.env.EMAIL_USER, to: process.env.EMAIL_USER, subject: 'KCA — New Paid Enrollment',
-        html: `<h2>New Paid Enrollment</h2><p><b>Student:</b> ${student.full_name}</p><p><b>Course:</b> ${course.title}</p><p><b>Paid:</b> $${course.registration_fee}</p>` }).catch(e=>console.error(e.message));
-    } catch(e) { console.error('Webhook error:', e); }
-  }
-  res.json({ received: true });
-});
 app.post('/api/auth/forgot-password', async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: 'Email is required' });
@@ -151,51 +112,12 @@ app.post('/api/auth/reset-password', async (req, res) => {
 });
 
 const multer = require('multer');
-
-// ══════════════════════════════════════════════════════════
-//  ALL MULTER INSTANCES — declared here, never inline
-// ══════════════════════════════════════════════════════════
-
-// Ticket single image upload
-const ticketStorage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/tickets'),
   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
-const upload = multer({ storage: ticketStorage, limits: { fileSize: 5 * 1024 * 1024 } });
 
-// Ticket multi-image upload
-const uploadTicketFields = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/tickets'),
-    filename: (req, file, cb) => cb(null, Date.now() + '_' + Math.random().toString(36).slice(2,7) + path.extname(file.originalname))
-  }),
-  limits: { fileSize: 5 * 1024 * 1024 }
-}).fields([{ name: 'image', maxCount: 1 }, { name: 'extra_images', maxCount: 5 }]);
-
-
-// Comment image upload
-const commentStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/comments'),
-  filename: (req, file, cb) => cb(null, 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7) + path.extname(file.originalname).toLowerCase())
-});
-const uploadComment = multer({
-  storage: commentStorage,
-  fileFilter: (req, file, cb) => {
-    ['image/jpeg','image/jpg','image/png','image/gif','image/webp'].includes(file.mimetype)
-      ? cb(null, true) : cb(new Error('Images only'));
-  },
-  limits: { fileSize: 5 * 1024 * 1024 }
-});
-
-// Assignment file upload
-const assignmentStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/assignments'),
-  filename: (req, file, cb) => cb(null, Date.now() + '_' + file.originalname.replace(/\s/g,'_'))
-});
-const uploadAssignment = multer({ storage: assignmentStorage, limits: { fileSize: 20 * 1024 * 1024 } });
-
-
-// ══════════════════════════════════════════════════════════
+const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
 
 function getUsername(full_name) {
   if(!full_name) return 'deleted-user';
@@ -299,7 +221,7 @@ app.post('/api/tickets', auth, upload.single('image'), async (req, res) => {
   } catch(e) { console.error(e); res.status(500).json({ error: 'Failed to create ticket' }); }
 });
 
-
+const uploadComment = multer({ storage: multer.diskStorage({ destination: (req, file, cb) => cb(null, "/var/www/kca/public/uploads/comments"), filename: (req, file, cb) => cb(null, "c_" + Date.now() + "_" + Math.random().toString(36).slice(2,7) + require("path").extname(file.originalname).toLowerCase()) }), fileFilter: (req, file, cb) => { ["image/jpeg","image/jpg","image/png","image/gif","image/webp"].includes(file.mimetype) ? cb(null,true) : cb(new Error("Images only")); }, limits: { fileSize: 5*1024*1024 } });
 // Add comment
 app.post('/api/tickets/:id/comments', auth, uploadComment.single('comment_image'), async (req, res) => {
   const { comment, command_output } = req.body;
@@ -457,7 +379,7 @@ app.post('/api/enrollments', auth, async (req, res) => {
     res.status(201).json({ message: 'Enrollment submitted! Awaiting admin approval.' });
     // Fetch student and course details for emails
     try {
-      const [[student]] = await pool.query('SELECT full_name, email, phone FROM users WHERE id = ?', [req.user.id]);
+      const [[student]] = await pool.query('SELECT full_name, email FROM users WHERE id = ?', [req.user.id]);
       const [[course]] = await pool.query('SELECT title FROM courses WHERE id = ?', [course_id]);
       const courseName = course ? course.title : 'Unknown Course';
       // Email to admin
@@ -465,7 +387,7 @@ app.post('/api/enrollments', auth, async (req, res) => {
         from: process.env.EMAIL_USER,
         to: process.env.EMAIL_USER,
         subject: 'KCA — New Enrollment Request',
-        html: '<h2>New Enrollment Request</h2><p><b>Student:</b> '+student.full_name+'</p><p><b>Email:</b> '+student.email+'</p><p><b>Phone:</b> '+(student.phone||'Not provided')+'</p><p><b>Course:</b> '+courseName+'</p><p><b>Status:</b> Pending Admin Approval</p><p><a href="https://kca-cloudnet.com/admin.html">Review in Admin Dashboard →</a></p>'
+        html: '<h2>New Enrollment Request</h2><p><b>Student:</b> '+student.full_name+'</p><p><b>Email:</b> '+student.email+'</p><p><b>Course:</b> '+courseName+'</p><p><b>Status:</b> Pending Admin Approval</p><p><a href="https://kca-cloudnet.com/admin.html">Review in Admin Dashboard →</a></p>'
       }).catch(e => console.error('Admin email error:', e.message));
       // Email to student
       mailer.sendMail({
@@ -596,88 +518,6 @@ app.get('/api/admin/enrollments', auth, adminOnly, async (req, res) => {
   } catch { res.status(500).json({ error: 'Failed to fetch enrollments' }); }
 });
 
-
-app.get('/api/admin/course-enrollments', auth, adminOnly, async (req, res) => {
-  try {
-    const { course_id } = req.query;
-    if (course_id) {
-      const [rows] = await pool.query(
-        `SELECT u.id, u.full_name, u.email, u.phone, u.country, u.status as account_status,
-                e.status as enrollment_status, e.enrolled_at
-         FROM enrollments e
-         JOIN users u ON e.user_id = u.id
-         WHERE e.course_id = ?
-         ORDER BY e.enrolled_at DESC`, [course_id]);
-      res.json(rows);
-    } else {
-      const [rows] = await pool.query(
-        `SELECT c.id, c.title, c.category,
-                COUNT(e.id) as total,
-                SUM(e.status='approved') as approved,
-                SUM(e.status='pending') as pending
-         FROM courses c
-         LEFT JOIN enrollments e ON c.id = e.course_id
-         WHERE c.is_active = 1
-         GROUP BY c.id
-         ORDER BY total DESC`);
-      res.json(rows);
-    }
-  } catch(e) { console.error(e); res.status(500).json({ error: 'Failed to fetch course enrollments' }); }
-});
-
-
-app.put('/api/admin/courses/:id/pricing', auth, adminOnly, async (req, res) => {
-  const { price, registration_fee, installments, payment_start_month } = req.body;
-  try {
-    await pool.query('UPDATE courses SET price=?,registration_fee=?,installments=?,payment_start_month=? WHERE id=?',
-      [parseFloat(price)||0, parseFloat(registration_fee)||0, parseInt(installments)||3, payment_start_month||null, req.params.id]);
-    res.json({ message: 'Pricing updated' });
-  } catch(e) { res.status(500).json({ error: 'Failed to update pricing' }); }
-});
-app.get('/api/admin/courses-pricing', auth, adminOnly, async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT id,title,category,price,registration_fee,installments,payment_start_month FROM courses WHERE is_active=1 ORDER BY sort_order');
-    res.json(rows);
-  } catch(e) { res.status(500).json({ error: 'Failed' }); }
-});
-app.get('/api/admin/payments', auth, adminOnly, async (req, res) => {
-  try {
-    const [rows] = await pool.query(`SELECT p.*,u.full_name,u.email,u.phone,c.title as course_name FROM payments p JOIN users u ON p.user_id=u.id JOIN courses c ON p.course_id=c.id ORDER BY p.created_at DESC`);
-    res.json(rows);
-  } catch(e) { res.status(500).json({ error: 'Failed' }); }
-});
-app.post('/api/payments/checkout', auth, async (req, res) => {
-  const { course_id } = req.body;
-  try {
-    const [[course]] = await pool.query('SELECT * FROM courses WHERE id=? AND is_active=1', [course_id]);
-    if (!course) return res.status(404).json({ error: 'Course not found' });
-    const [[student]] = await pool.query('SELECT full_name,email FROM users WHERE id=?', [req.user.id]);
-    const [existing] = await pool.query('SELECT id FROM enrollments WHERE user_id=? AND course_id=?', [req.user.id, course_id]);
-    if (existing.length) return res.status(409).json({ error: 'Already enrolled in this course' });
-    if (!course.price || parseFloat(course.price) <= 0) return res.status(400).json({ error: 'no_price' });
-    const regFee = parseFloat(course.registration_fee) > 0 ? parseFloat(course.registration_fee) : parseFloat(course.price);
-    const [enroll] = await pool.query("INSERT INTO enrollments (user_id,course_id,status) VALUES (?,?,'pending')", [req.user.id, course_id]);
-    const remaining = parseFloat(course.price) - parseFloat(course.registration_fee);
-    const instDesc = remaining > 0 ? ` + ${course.installments} monthly installments of $${(remaining/course.installments).toFixed(2)}` : '';
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [{ price_data: { currency: 'usd', product_data: { name: `${course.title} — Registration Fee`, description: `KCA Enrollment. Total: $${course.price}${instDesc}.` }, unit_amount: Math.round(regFee * 100) }, quantity: 1 }],
-      mode: 'payment', customer_email: student.email,
-      success_url: `${process.env.CLIENT_URL}/payment-success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.CLIENT_URL}/payment-cancel.html`,
-      metadata: { user_id: String(req.user.id), course_id: String(course_id), enrollment_id: String(enroll.insertId) }
-    });
-    await pool.query("INSERT INTO payments (user_id,course_id,enrollment_id,stripe_session_id,amount,type,status) VALUES (?,?,?,?,?,'registration','pending')",
-      [req.user.id, course_id, enroll.insertId, session.id, regFee]);
-    res.json({ url: session.url });
-  } catch(e) { console.error('Checkout error:', e); res.status(500).json({ error: 'Checkout failed' }); }
-});
-app.get('/api/payments/my-plan', auth, async (req, res) => {
-  try {
-    const [rows] = await pool.query(`SELECT p.*,c.title as course_name FROM payments p JOIN courses c ON p.course_id=c.id WHERE p.user_id=? ORDER BY p.course_id,p.type DESC,p.installment_number`, [req.user.id]);
-    res.json(rows);
-  } catch(e) { res.status(500).json({ error: 'Failed' }); }
-});
 app.get('/api/health', async (req, res) => {
   try { await pool.query('SELECT 1'); res.json({ status: 'ok', db: 'connected' }); }
   catch { res.status(500).json({ status: 'error', db: 'disconnected' }); }
@@ -685,7 +525,11 @@ app.get('/api/health', async (req, res) => {
 
 
 // Separate upload handler for assignments
-
+const assignmentStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/assignments'),
+  filename: (req, file, cb) => cb(null, Date.now() + '_' + file.originalname.replace(/\s/g,'_'))
+});
+const uploadAssignment = multer({ storage: assignmentStorage, limits: { fileSize: 20 * 1024 * 1024 } });
 // ─── ASSIGNMENTS ────────────────────────────────────────────
 app.post('/api/assignments', auth, uploadAssignment.single('file'), async (req, res) => {
   if (!['admin','instructor'].includes(req.user.role)) return res.status(403).json({ error: 'Instructor access required' });
@@ -861,7 +705,13 @@ app.put('/api/assignments/:id/submissions/:studentId/reply', auth, async (req, r
 // ─── NET-PS TEAM ─────────────────────────────────────────────
 
 // Multi-image upload handler for tickets
-
+const uploadTicketFields = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/tickets'),
+    filename: (req, file, cb) => cb(null, Date.now() + '_' + Math.random().toString(36).slice(2,7) + path.extname(file.originalname))
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 }
+}).fields([{ name: 'image', maxCount: 1 }, { name: 'extra_images', maxCount: 5 }]);
 
 // Create ticket (multi-image override — replaces existing POST /api/tickets)
 app.post('/api/tickets/create', auth, (req, res) => {
