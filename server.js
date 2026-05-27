@@ -707,13 +707,19 @@ app.post('/api/assignments', auth, uploadAssignment.single('file'), async (req, 
         [studentRows] = await pool.query(
           `SELECT u.full_name, u.email FROM users u
            JOIN enrollments e ON u.id=e.user_id
-           WHERE e.course_id=? AND e.status='approved'`, [targetCourseId]
+           WHERE e.course_id=? AND e.status='approved'
+             AND EXISTS (SELECT 1 FROM class_sessions cs WHERE cs.status='open'
+               AND DATE(e.enrolled_at) BETWEEN cs.start_date AND cs.end_date)`,
+          [targetCourseId]
         );
       } else {
-        // No course filter — notify all approved enrolled students
+        // No course filter — notify all students in the open session
         [studentRows] = await pool.query(
           `SELECT DISTINCT u.full_name, u.email FROM users u
-           JOIN enrollments e ON u.id=e.user_id WHERE e.status='approved'`
+           JOIN enrollments e ON u.id=e.user_id
+           WHERE e.status='approved'
+             AND EXISTS (SELECT 1 FROM class_sessions cs WHERE cs.status='open'
+               AND DATE(e.enrolled_at) BETWEEN cs.start_date AND cs.end_date)`
         );
       }
       studentRows.forEach(student => {
@@ -1036,5 +1042,55 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+
+
+// ── CLASS SESSIONS ──────────────────────────────────────────
+app.get('/api/admin/sessions', auth, adminOnly, async (req, res) => {
+  try {
+    const [sessions] = await pool.query(`
+      SELECT s.*,
+        (SELECT COUNT(*) FROM enrollments e
+         WHERE e.status='approved'
+           AND DATE(e.enrolled_at) BETWEEN s.start_date AND s.end_date) AS student_count
+      FROM class_sessions s ORDER BY FIELD(s.status,'open','closed'), s.start_date DESC
+    `);
+    res.json(sessions);
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+app.get('/api/admin/sessions/:id', auth, adminOnly, async (req, res) => {
+  try {
+    const [[session]] = await pool.query('SELECT * FROM class_sessions WHERE id=?', [req.params.id]);
+    if (!session) return res.status(404).json({ error: 'Session not found' });
+    const [students] = await pool.query(`
+      SELECT e.id, e.enrolled_at, u.full_name, u.email, u.phone, c.title AS course, c.category
+      FROM enrollments e
+      JOIN users u ON e.user_id=u.id
+      JOIN courses c ON e.course_id=c.id
+      WHERE e.status='approved' AND DATE(e.enrolled_at) BETWEEN ? AND ?
+      ORDER BY e.enrolled_at DESC
+    `, [session.start_date, session.end_date]);
+    res.json({ session, students });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/admin/sessions', auth, adminOnly, async (req, res) => {
+  try {
+    const now   = new Date();
+    const month = now.toLocaleString('en-US', { month: 'long' });
+    const year  = now.getFullYear();
+    const name  = `${month}-${year}`;
+    const start = now.toISOString().split('T')[0];
+    const end   = new Date(year, now.getMonth()+1, 0).toISOString().split('T')[0];
+    const [[exists]] = await pool.query('SELECT id FROM class_sessions WHERE name=?', [name]);
+    if (exists) return res.status(409).json({ error: `Session "${name}" already exists` });
+    // Auto-close all open sessions
+    await pool.query("UPDATE class_sessions SET status='closed' WHERE status='open'");
+    const [result] = await pool.query(
+      'INSERT INTO class_sessions (name,start_date,end_date,status) VALUES (?,?,?,\'open\')', [name,start,end]
+    );
+    res.json({ id: result.insertId, name, start_date: start, end_date: end, student_count: 0 });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
 
 app.listen(PORT, '0.0.0.0', () => console.log(`KCA running on port ${PORT}`));

@@ -1,534 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="icon" type="image/png" href="/KCA-LOGO-transparent.png">
-<link rel="shortcut icon" href="/KCA-LOGO-transparent.png">
-  <meta property="og:title" content="Kuwaha Cloud Academy" />
-  <meta property="og:description" content="Empowering Digital Professionals — Cisco CCNA, AWS, and Linux certification training." />
-  <meta property="og:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
-  <meta property="og:url" content="https://kca-cloudnet.com" />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="https://kca-cloudnet.com/KCA-LOGO.png" />
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard — KCA</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCA Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',sans-serif;background:#0a0c0f;color:#e2e8f0;min-height:100vh}
-nav{background:#111318;border-bottom:1px solid #1e2330;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.logo{display:flex;align-items:center;gap:.8rem;text-decoration:none}
-.logo img{height:36px}
-.logo span{font-size:1.1rem;font-weight:700;color:#3b9eff}
-.admin-badge{background:rgba(255,140,0,.15);border:1px solid rgba(255,140,0,.3);color:#ff8c00;padding:.25rem .7rem;border-radius:4px;font-size:.75rem;font-weight:700}
+body{background:#070d19;color:#e2e8f0;font-family:'DM Sans','Segoe UI',sans-serif;min-height:100vh}
+nav{background:#0a1628;border-bottom:1px solid #1e2330;padding:.8rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.logo{color:#fff;font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:.6rem}
 .nav-right{display:flex;align-items:center;gap:1rem}
-.btn-logout{background:transparent;border:1px solid #1e2330;color:#94a3b8;padding:.4rem .9rem;border-radius:6px;cursor:pointer;font-size:.85rem;transition:.2s}
-.btn-logout:hover{border-color:#ff4d4d;color:#ff4d4d}
-.container{max-width:1200px;margin:0 auto;padding:2.5rem 2rem}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:2.5rem}
-.stat{background:#111318;border:1px solid #1e2330;border-radius:10px;padding:1.3rem;text-align:center}
+.admin-badge{background:#0e8a78;color:#fff;padding:.3rem .8rem;border-radius:6px;font-size:.82rem;font-weight:700}
+.signout{background:transparent;border:1px solid #1e2330;color:#94a3b8;padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-size:.82rem;transition:.2s}
+.signout:hover{border-color:#0e8a78;color:#0e8a78}
+.main{max-width:1300px;margin:0 auto;padding:2rem 1.5rem}
+.stats{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem}
+.stat{background:#0a1628;border:1px solid #1e2330;border-radius:12px;padding:1.2rem 1.8rem;flex:1;min-width:130px;text-align:center;transition:.2s}
+.stat:hover{border-color:#0e8a78}
 .stat .num{font-size:2rem;font-weight:800;margin-bottom:.3rem}
-.stat .lbl{font-size:.78rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em}
-.tabs{display:flex;gap:0;border-bottom:1px solid #1e2330;margin-bottom:2rem}
-.tab{padding:.75rem 1.5rem;font-size:.9rem;font-weight:600;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;transition:.2s}
-.tab.active{color:#3b9eff;border-bottom-color:#3b9eff}
+.stat .lbl{font-size:.72rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.tabs{display:flex;flex-wrap:wrap;border-bottom:1px solid #1e2330;margin-bottom:2rem}
+.tab{padding:.7rem 1.1rem;color:#64748b;cursor:pointer;font-size:.83rem;font-weight:600;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab:hover{color:#e2e8f0}
+.tab.active{color:#0e8a78;border-bottom-color:#0e8a78}
 .section{display:none}
-.section.active{display:block}
-.search-bar{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap}
-.search-bar input,.search-bar select{background:#111318;border:1px solid #1e2330;border-radius:8px;padding:.6rem 1rem;color:#e2e8f0;font-size:.875rem;outline:none;transition:.2s}
-.search-bar input{flex:1;min-width:200px}
-.search-bar input:focus,.search-bar select:focus{border-color:#3b9eff}
-.search-bar select option{background:#111318}
-table{width:100%;border-collapse:collapse;font-size:.875rem}
-th{padding:.75rem 1rem;text-align:left;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#64748b;border-bottom:1px solid #1e2330}
-td{padding:.85rem 1rem;border-bottom:1px solid rgba(30,35,48,.5);vertical-align:middle}
-tr:hover td{background:rgba(255,255,255,.02)}
-.badge{display:inline-block;padding:.2rem .6rem;border-radius:4px;font-size:.72rem;font-weight:700}
-.badge.pending{background:rgba(255,213,79,.1);color:#ffd54f;border:1px solid rgba(255,213,79,.3)}
-.badge.approved{background:rgba(62,207,110,.1);color:#3ecf6e;border:1px solid rgba(62,207,110,.3)}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;flex-wrap:wrap;gap:.6rem}
+.sec-title{font-size:1.05rem;font-weight:700;color:#e2e8f0}
+table{width:100%;border-collapse:collapse;font-size:.84rem}
+th{padding:.65rem 1rem;text-align:left;color:#64748b;font-weight:600;font-size:.75rem;text-transform:uppercase;border-bottom:1px solid #1e2330}
+td{padding:.65rem 1rem;border-bottom:1px solid #0d1117;color:#e2e8f0;vertical-align:middle}
+tr:hover td{background:rgba(14,138,120,.03)}
+.badge{padding:.22rem .55rem;border-radius:5px;font-size:.73rem;font-weight:700;text-transform:uppercase}
+.badge.approved,.badge.active,.badge.paid{background:rgba(62,207,110,.1);color:#3ecf6e;border:1px solid rgba(62,207,110,.3)}
+.badge.pending{background:rgba(245,166,35,.1);color:#f5a623;border:1px solid rgba(245,166,35,.3)}
 .badge.rejected{background:rgba(255,77,77,.1);color:#ff4d4d;border:1px solid rgba(255,77,77,.3)}
 .btn-approve{background:rgba(62,207,110,.15);color:#3ecf6e;border:1px solid rgba(62,207,110,.3);padding:.3rem .8rem;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:600;transition:.2s;margin-right:.3rem}
 .btn-approve:hover{background:rgba(62,207,110,.3)}
 .btn-reject{background:rgba(255,77,77,.1);color:#ff4d4d;border:1px solid rgba(255,77,77,.3);padding:.3rem .8rem;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:600;transition:.2s}
 .btn-reject:hover{background:rgba(255,77,77,.25)}
-.empty{text-align:center;padding:3rem;color:#64748b}
-.msg{padding:.7rem 1rem;border-radius:8px;font-size:.85rem;margin-bottom:1rem;display:none}
-.msg.success{background:rgba(62,207,110,.1);border:1px solid rgba(62,207,110,.3);color:#3ecf6e;display:block}
-.msg.error{background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.3);color:#ff4d4d;display:block}
-.table-wrap{overflow-x:auto}
-
-  .course-card{background:#0d1117;border:1px solid #1e2330;border-radius:12px;padding:1.25rem;cursor:pointer;transition:border-color .2s,transform .2s}
-  .course-card:hover{border-color:#0e8a78;transform:translateY(-2px)}
-  .course-card .cc-title{font-weight:700;color:#e2e8f0;margin-bottom:.5rem;font-size:.95rem}
-  .course-card .cc-cat{font-size:.75rem;color:#64748b;margin-bottom:.75rem}
-  .course-card .cc-stats{display:flex;gap:.75rem}
-  .course-card .cc-stat{text-align:center}
-  .course-card .cc-stat .n{font-size:1.4rem;font-weight:700;color:#0e8a78}
-  .course-card .cc-stat .l{font-size:.7rem;color:#64748b;text-transform:uppercase}
-
-  .pricing-card{background:#0d1117;border:1px solid #1e2330;border-radius:10px;padding:1.25rem}
-  .pricing-card h3{font-size:.95rem;font-weight:700;color:#e2e8f0;margin-bottom:.25rem}
-  .pricing-card .cat{font-size:.75rem;color:#64748b;margin-bottom:1rem}
-  .pricing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.75rem;margin-bottom:1rem}
-  .pricing-grid label{font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#64748b;display:block;margin-bottom:.3rem}
-  .pricing-grid input,.pricing-grid select{width:100%;background:#111318;border:1px solid #1e2330;border-radius:6px;color:#e2e8f0;padding:.5rem .75rem;font-size:.85rem;outline:none}
-  .pricing-grid input:focus,.pricing-grid select:focus{border-color:#0e8a78}
-  .btn-save-pricing{background:#0e8a78;color:#fff;border:none;padding:.5rem 1.25rem;border-radius:6px;font-size:.85rem;font-weight:700;cursor:pointer}
-  .badge.paid{background:rgba(34,197,94,.15);color:#22c55e}
-  .badge.failed{background:rgba(239,68,68,.15);color:#ef4444}
-  .badge.overdue{background:rgba(239,68,68,.2);color:#f87171}
-  .badge.registration{background:rgba(59,130,246,.15);color:#60a5fa}
-  .badge.installment{background:rgba(168,85,247,.15);color:#c084fc}
+.empty{text-align:center;color:#64748b;padding:2.5rem;font-style:italic;font-size:.88rem}
+select,input[type=number],input[type=text]{background:#111827;border:1px solid #1e2330;color:#e2e8f0;padding:.45rem .8rem;border-radius:7px;font-size:.84rem;outline:none;font-family:inherit}
+select:focus,input:focus{border-color:#0e8a78}
+.cc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1rem}
+.cc-card{background:#0a1628;border:1px solid #1e2330;border-radius:12px;padding:1.2rem;cursor:pointer;transition:.2s}
+.cc-card:hover{border-color:#0e8a78}
+.cc-title{font-weight:700;color:#e2e8f0;margin-bottom:.8rem}
+.cc-stats{display:flex;gap:1.2rem}
+.cc-stat .n{font-size:1.4rem;font-weight:800}
+.cc-stat .l{font-size:.7rem;color:#64748b;text-transform:uppercase}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:#0a1628;border:1px solid #1e2330;border-radius:16px;padding:1.5rem;width:90%;max-width:820px;max-height:82vh;overflow-y:auto}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+.modal-close{background:none;border:none;color:#64748b;font-size:1.5rem;cursor:pointer}
+.modal-close:hover{color:#ff4d4d}
+.netps-member{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1rem;background:#111827;border-radius:8px;margin-bottom:.5rem;border:1px solid #1e2330}
 </style>
 </head>
 <body>
 <nav>
-  <a href="index.html" class="logo">
-    <img src="/KCA-LOGO-transparent.png" alt="KCA" onerror="this.style.display='none'">
-    <span>Kuwaha Cloud Academy</span>
-  </a>
+  <div class="logo">
+    <img src="/kca-logo.png" height="30" style="border-radius:4px" onerror="this.style.display='none'">
+    Kuwaha Cloud Academy
+  </div>
   <div class="nav-right">
     <span class="admin-badge">ADMIN</span>
-    <button class="btn-logout" onclick="logout()">Sign Out</button>
+    <button class="signout" onclick="signOut()">Sign Out</button>
   </div>
 </nav>
-<div class="container">
-  <div id="msg" class="msg"></div>
+<div class="main">
   <div class="stats">
-    <div class="stat" style="cursor:pointer" onclick="showTab('students');document.getElementById('statusFilter').value='';loadStudents()"><div class="num" id="s-total" style="color:#3b9eff">-</div><div class="lbl">Total Students</div></div>
-    <div class="stat" style="cursor:pointer" onclick="showTab('pending')"><div class="num" id="s-pending" style="color:#ffd54f">-</div><div class="lbl">Pending</div></div>
-    <div class="stat" style="cursor:pointer" onclick="showTab('enrollments');loadEnrollments('approved')"><div class="num" id="s-approved" style="color:#3ecf6e">-</div><div class="lbl">Approved</div></div>
-    <div class="stat" style="cursor:pointer" onclick="showTab('enrollments');loadEnrollments('rejected')"><div class="num" id="s-rejected" style="color:#ff4d4d">-</div><div class="lbl">Rejected</div></div>
-    <div class="stat" style="cursor:pointer" onclick="showTab('enrollments');loadEnrollments()"><div class="num" id="s-enrollments" style="color:#b06aff">-</div><div class="lbl">Enrollments</div></div>
+    <div class="stat" style="cursor:pointer" onclick="showTab('students')"><div class="num" id="s-total" style="color:#3b9eff">-</div><div class="lbl">Total Students</div></div>
+    <div class="stat" style="cursor:pointer" onclick="showTab('pending')"><div class="num" id="s-pending" style="color:#f5a623">-</div><div class="lbl">Pending</div></div>
+    <div class="stat" style="cursor:pointer" onclick="showTab('enrollments');setTimeout(()=>loadEnrollments('approved'),50)"><div class="num" id="s-approved" style="color:#3ecf6e">-</div><div class="lbl">Approved</div></div>
+    <div class="stat" style="cursor:pointer" onclick="showTab('enrollments');setTimeout(()=>loadEnrollments('rejected'),50)"><div class="num" id="s-rejected" style="color:#ff4d4d">-</div><div class="lbl">Rejected</div></div>
+    <div class="stat" style="cursor:pointer" onclick="showTab('enrollments');setTimeout(()=>loadEnrollments(),50)"><div class="num" id="s-enrollments" style="color:#b06aff">-</div><div class="lbl">Enrollments</div></div>
   </div>
   <div class="tabs">
     <div class="tab active" onclick="showTab('pending')">Pending Approvals</div>
     <div class="tab" onclick="showTab('students')">All Students</div>
     <div class="tab" onclick="showTab('enrollments')">Enrollments</div>
-    <div class="tab" onclick="showTab('bycourse');loadByCourse()">📊 By Course</div>
-    <div class="tab" onclick="showTab('pricing');loadPricing()">💲 Pricing</div>
-    <div class="tab" onclick="showTab('payments');loadPayments()">💳 Payments</div>
+    <div class="tab" onclick="showTab('bycourse')">&#128202; By Course</div>
+    <div class="tab" onclick="showTab('pricing')">&#36; Pricing</div>
+    <div class="tab" onclick="showTab('payments')">&#127870; Payments</div>
     <div class="tab" onclick="showTab('tickets')">Tickets</div>
-    <div class="tab" onclick="showTab('netps')">🛡️ Net-PS Team</div><div class="tab" onclick="window.location.href='/instructor'">📚 Assignments</div>
+    <div class="tab" onclick="showTab('netps')">&#128737;&#65039; Net-PS Team</div>
+    <div class="tab" onclick="window.location.href='/instructor'">&#128218; Assignments</div>
+    <div class="tab" onclick="showTab('sessions')">&#128197; Sessions</div>
   </div>
-  <div id="sec-pending" class="section active">
-    <div class="table-wrap"><table>
-      <thead><tr><th>Name</th><th>Email</th><th>Country</th><th>Registered</th><th>Actions</th></tr></thead>
-      <tbody id="pendingBody"></tbody>
-    </table></div>
+  <div id="sec-pending" class="section" style="display:block">
+    <div class="sec-hdr"><div class="sec-title">Pending Enrollment Approvals</div></div>
+    <table><thead><tr><th>Student</th><th>Email</th><th>Course</th><th>Registered</th><th>Action</th></tr></thead><tbody id="pendingBody"></tbody></table>
   </div>
   <div id="sec-students" class="section">
-    <div class="search-bar">
-      <button onclick="exportCSV()" style="background:#0e8a78;color:#fff;padding:.5rem 1rem;border-radius:8px;font-size:.85rem;font-weight:600;border:none;cursor:pointer;white-space:nowrap">⬇ Export CSV</button>
-    <input type="text" id="searchInput" placeholder="Search by name or email..." oninput="loadStudents()">
-      <select id="statusFilter" onchange="loadStudents()">
-        <option value="">All Statuses</option>
-        <option value="pending">Pending</option>
-        <option value="approved">Approved</option>
-        <option value="rejected">Rejected</option>
+    <div class="sec-hdr"><div class="sec-title">All Students</div>
+      <select id="studentStatusFilter" onchange="loadStudents(this.value)">
+        <option value="">All Statuses</option><option value="approved">Approved</option><option value="pending">Pending</option><option value="rejected">Rejected</option>
       </select>
     </div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Country</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead>
-      <tbody id="studentsBody"></tbody>
-    </table></div>
+    <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Country</th><th>Status</th><th>Registered</th><th>Action</th><th>Delete</th></tr></thead><tbody id="studentsBody"></tbody></table>
   </div>
   <div id="sec-enrollments" class="section">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-      <span style="color:#64748b;font-size:.85rem" id="selectedCount"></span>
-      <button class="btn-reject" id="dropSelectedBtn" onclick="dropSelected()" style="display:none">🗑 Drop Selected</button>
+    <div class="sec-hdr"><div class="sec-title">Enrollments</div>
+      <div style="display:flex;gap:.7rem;align-items:center">
+        <select id="enrollStatusFilter" onchange="loadEnrollments(this.value)">
+          <option value="">All Statuses</option><option value="approved">Approved</option><option value="pending">Pending</option><option value="rejected">Rejected</option>
+        </select>
+        <button id="bulkDropBtn" class="btn-reject" onclick="bulkDropEnrollments()" style="display:none">Drop Selected</button>
+      </div>
     </div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>Student</th><th>Email</th><th>Course</th><th>Category</th><th>Enrolled</th></tr></thead>
-      <thead><tr><th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"></th><th>STUDENT</th><th>EMAIL</th><th>COURSE</th><th>CATEGORY</th><th>STATUS</th><th>ENROLLED</th><th>ACTION</th></tr></thead><tbody id="enrollmentsBody"></tbody>
-    </table></div>
+    <table><thead><tr><th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"></th><th>Student</th><th>Email</th><th>Course</th><th>Category</th><th>Status</th><th>Enrolled</th><th>Action</th></tr></thead><tbody id="enrollmentsBody"></tbody></table>
   </div>
   <div id="sec-bycourse" class="section">
-    <div id="courseCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2rem"></div>
-    <div id="courseStudentsWrap" style="display:none">
-      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
-        <button onclick="document.getElementById('courseStudentsWrap').style.display='none';document.getElementById('courseCards').style.display='grid'" style="background:#1e2330;color:#94a3b8;border:none;padding:.4rem .9rem;border-radius:6px;cursor:pointer;font-size:.85rem">← Back to Courses</button>
-        <h3 id="courseStudentsTitle" style="color:#e2e8f0;font-size:1rem;font-weight:600;margin:0"></h3>
+    <div class="sec-hdr"><div class="sec-title">Enrollments by Course</div></div>
+    <div class="cc-grid" id="ccGrid"></div>
+    <div class="overlay" id="courseModal">
+      <div class="modal">
+        <div class="modal-hdr"><div class="sec-title" id="courseStudentsTitle">Students</div><button class="modal-close" onclick="document.getElementById('courseModal').classList.remove('open')">&times;</button></div>
+        <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Enrolled</th></tr></thead><tbody id="courseStudentsBody"></tbody></table>
       </div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Country</th><th>Enrollment</th><th>Account</th><th>Enrolled Date</th></tr></thead>
-        <tbody id="courseStudentsBody"></tbody>
-      </table></div>
     </div>
   </div>
-
   <div id="sec-pricing" class="section">
-    <div style="margin-bottom:1rem;color:#64748b;font-size:.85rem">Set registration fee, total price, installments and start month per course. Installments due on the <b style="color:#0e8a78">15th of each month</b>.</div>
-    <div id="pricingList" style="display:grid;gap:1rem"></div>
+    <div class="sec-hdr"><div class="sec-title">Course Pricing</div></div>
+    <div id="pricingContainer"></div>
   </div>
   <div id="sec-payments" class="section">
-    <div style="display:flex;gap:1rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap">
-      <input type="text" id="paymentSearch" placeholder="Search student or course..." oninput="filterPayments()" style="flex:1;min-width:200px;background:#111318;border:1px solid #1e2330;border-radius:8px;color:#e2e8f0;padding:.5rem .9rem;font-size:.85rem;outline:none">
-      <select id="paymentTypeFilter" onchange="filterPayments()" style="background:#111318;border:1px solid #1e2330;border-radius:8px;color:#e2e8f0;padding:.5rem .8rem;font-size:.85rem;outline:none"><option value="">All Types</option><option value="registration">Registration</option><option value="installment">Installment</option></select>
-      <select id="paymentStatusFilter" onchange="filterPayments()" style="background:#111318;border:1px solid #1e2330;border-radius:8px;color:#e2e8f0;padding:.5rem .8rem;font-size:.85rem;outline:none"><option value="">All Statuses</option><option value="paid">Paid</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="overdue">Overdue</option></select>
-    </div>
-    <div id="paymentSummary" style="margin-bottom:.75rem;font-size:.85rem;color:#64748b"></div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>Student</th><th>Phone</th><th>Course</th><th>Type</th><th>#</th><th>Amount</th><th>Status</th><th>Due Date</th><th>Paid At</th></tr></thead>
-      <tbody id="paymentsBody"></tbody>
-    </table></div>
+    <div class="sec-hdr"><div class="sec-title">Payments</div></div>
+    <table><thead><tr><th>Student</th><th>Course</th><th>Amount</th><th>Type</th><th>Status</th><th>Date</th></tr></thead><tbody id="paymentsBody"></tbody></table>
   </div>
   <div id="sec-tickets" class="section">
-    <div class="table-wrap"><table>
-      <thead><tr><th>Ticket #</th><th>Title</th><th>Queue</th><th>Created By</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
-      <tbody id="ticketsBody"></tbody>
-    </table></div>
+    <div class="sec-hdr"><div class="sec-title">Support Tickets</div>
+      <a href="/tickets.html" style="background:#0e8a78;color:#fff;padding:.5rem 1.1rem;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:600">Open Ticket Dashboard &#8594;</a>
+    </div>
+    <div style="color:#64748b;padding:2.5rem;text-align:center">Click the button above to manage support tickets.</div>
   </div>
-
-  <!-- NET-PS TEAM SECTION -->
   <div id="sec-netps" class="section">
-    <div id="netps-msg" class="msg"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start">
-
-      <!-- Current Net-PS Members -->
-      <div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-          <h3 style="color:#0e8a78;font-size:.95rem;letter-spacing:.03em">🛡️ CURRENT NET-PS MEMBERS</h3>
-          <span id="netps-count" style="background:rgba(14,138,120,.15);color:#0e8a78;padding:.2rem .7rem;border-radius:20px;font-size:.78rem;font-weight:700"></span>
-        </div>
-        <div id="netpsTeamList"></div>
+    <div class="sec-hdr"><div class="sec-title">&#128737;&#65039; Net-PS Escalation Team</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+      <div><div style="font-weight:700;color:#e2e8f0;margin-bottom:.8rem">Current Members</div><div id="netpsMembers"></div></div>
+      <div><div style="font-weight:700;color:#e2e8f0;margin-bottom:.8rem">Add Member</div>
+        <select id="netpsAddSelect" style="width:100%;margin-bottom:.8rem;padding:.6rem"><option value="">-- Select eligible student --</option></select>
+        <button class="btn-approve" onclick="addNetpsMember()" style="width:100%;padding:.6rem">Add to Net-PS Team</button>
       </div>
-
-      <!-- Eligible Students -->
-      <div>
-        <div style="margin-bottom:1rem">
-          <h3 style="color:#94a3b8;font-size:.95rem;letter-spacing:.03em;margin-bottom:.5rem">👥 ENROLLED STUDENTS</h3>
-          <input type="text" id="netpsSearch" placeholder="Search students..." oninput="filterEligible()"
-            style="width:100%;padding:.5rem .8rem;background:#111318;border:1px solid #1e2330;border-radius:8px;color:#e2e8f0;font-size:.85rem;outline:none">
-        </div>
-        <div id="netpsEligibleList"></div>
-      </div>
-
     </div>
   </div>
-  <!-- END NET-PS SECTION -->
+  <div id="sec-sessions" class="section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+      <h2 style="margin:0;color:#e2e8f0">&#128197; Class Sessions</h2>
+      <button id="createSessionBtn" onclick="createSession()" style="background:#0e8a78;color:#fff;border:none;padding:.6rem 1.4rem;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer">&#65291; New Session</button>
+    </div>
+    <div id="sessionsContainer"></div>
+  </div>
 </div>
 <script>
 const token=localStorage.getItem('kca_token');
-const user=JSON.parse(localStorage.getItem('kca_user')||'{}');
-if(!token||user.role!=='admin'){window.location.replace('login.html');}
+(function(){if(!token){window.location.href='/login.html';return;}fetch('/api/auth/me',{headers:{Authorization:'Bearer '+token}}).then(r=>r.json()).then(u=>{if(u.role!=='admin')window.location.href='/dashboard.html';}).catch(()=>window.location.href='/login.html');})();
+function signOut(){localStorage.removeItem('kca_token');window.location.href='/login.html';}
+function showTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.style.display='none');
+  const sec=document.getElementById('sec-'+name);if(sec)sec.style.display='block';
+  document.querySelectorAll('.tab').forEach(t=>{if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("'"+name+"'"))t.classList.add('active');});
+  if(name==='pending')loadPending();
+  if(name==='students')loadStudents();
+  if(name==='enrollments')loadEnrollments();
+  if(name==='bycourse')loadByCourse();
+  if(name==='pricing')loadPricing();
+  if(name==='payments')loadPayments();
+  if(name==='netps')loadNetps();
+  if(name==='sessions')loadSessions();
+}
 async function loadStats(){
-  const r=await fetch('/api/admin/stats',{headers:{Authorization:'Bearer '+token}});
-  const d=await r.json();
-  document.getElementById('s-total').textContent=d.total_students;
-  document.getElementById('s-pending').textContent=d.pending;
-  document.getElementById('s-approved').textContent=d.approved;
-  document.getElementById('s-rejected').textContent=d.rejected;
-  document.getElementById('s-enrollments').textContent=d.total_enrollments;
+  try{const r=await fetch('/api/admin/stats',{headers:{Authorization:'Bearer '+token}});const d=await r.json();
+  document.getElementById('s-total').textContent=d.total_students||0;document.getElementById('s-pending').textContent=d.pending||0;
+  document.getElementById('s-approved').textContent=d.approved||0;document.getElementById('s-rejected').textContent=d.rejected||0;
+  document.getElementById('s-enrollments').textContent=d.total_enrollments||0;}catch(e){}
 }
 async function loadPending(){
-  const r=await fetch('/api/admin/enrollments',{headers:{Authorization:'Bearer '+token}});
-  const students=await r.json();
-  const tbody=document.getElementById('pendingBody');
-  if(!students.length){tbody.innerHTML='<tr><td colspan="5" class="empty">No pending approvals</td></tr>';return;}
-  const pending=students.filter(e=>e.status==='pending');if(!pending.length){tbody.innerHTML='<tr><td colspan="5" class="empty">No pending enrollment requests</td></tr>';return;}tbody.innerHTML=pending.map(e=>'<tr><td>'+e.full_name+'</td><td>'+e.email+'</td><td>'+e.course+'</td><td>'+new Date(e.enrolled_at).toLocaleDateString()+'</td><td><button class="btn-approve" onclick="updateEnrollment('+e.id+',&apos;approved&apos;)">Approve</button><button class="btn-reject" onclick="updateEnrollment('+e.id+',&apos;rejected&apos;)">Reject</button></td></tr>').join('');
-}
-async function loadStudents(){
-  const search=document.getElementById('searchInput').value;
-  const status=document.getElementById('statusFilter').value;
-  let url='/api/admin/students?';
-  if(status) url+='status='+status+'&';
-  if(search) url+='search='+encodeURIComponent(search);
-  const r=await fetch(url,{headers:{Authorization:'Bearer '+token}});
-  const students=await r.json();
-  const tbody=document.getElementById('studentsBody');
-  if(!students.length){tbody.innerHTML='<tr><td colspan="7" class="empty">No students found</td></tr>';return;}
-  tbody.innerHTML=students.map(s=>'<tr><td>'+s.full_name+'</td><td>'+s.email+'</td><td>'+(s.phone||'-')+'</td><td>'+(s.country||'-')+'</td><td><span class="badge '+s.status+'">'+s.status+'</span></td><td>'+new Date(s.created_at).toLocaleDateString()+'</td><td>'+(s.status!=='approved'?'<button class="btn-approve" onclick="updateStatus('+s.id+',&apos;approved&apos;)">Approve</button>':'')+(s.status!=='rejected'?'<button class="btn-reject" onclick="updateStatus('+s.id+',&apos;rejected&apos;)">Reject</button>':'')+'</td><td><button class="btn-reject" onclick="deleteStudent('+s.id+',&apos;'+s.full_name+'&apos;)">Delete</button></td></tr>').join('');
-}
-async function loadEnrollments(filterStatus=''){
-  const r=await fetch('/api/admin/enrollments',{headers:{Authorization:'Bearer '+token}});
-  const data=await r.json();
-  const tbody=document.getElementById('enrollmentsBody');
-  if(!data.length){tbody.innerHTML='<tr><td colspan="5" class="empty">No enrollments yet</td></tr>';return;}
-  const filtered=filterStatus?data.filter(e=>e.status===filterStatus):data;if(!filtered.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No enrollments found</td></tr>';return;}tbody.innerHTML=filtered.map(e=>'<tr><td><input type="checkbox" class="enrollment-cb" value="'+e.id+'" onchange="updateDropBtn()"></td><td>'+e.full_name+'</td><td>'+e.email+'</td><td>'+e.course+'</td><td>'+e.category+'</td><td><span class="badge '+e.status+'">'+e.status+'</span></td><td>'+new Date(e.enrolled_at).toLocaleDateString()+'</td><td><button class="btn-reject" onclick="dropEnrollment('+e.id+')">Drop</button></td></tr>').join('');
-}
-async function updateStatus(id,status){
-  const r=await fetch('/api/admin/students/'+id+'/status',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({status})});
-  const d=await r.json();
-  if(r.ok){showMsg(d.message,'success');loadStats();loadPending();loadStudents();}
-  else showMsg(d.error,'error');
-}
-function showTab(name){
-  ['pending','students','enrollments','bycourse','pricing','payments','tickets','netps'].forEach((t,i)=>{
-    const sec=document.getElementById('sec-'+t);
-    if(sec) sec.classList.toggle('active',t===name);
-    const tab=document.querySelectorAll('.tab')[i];
-    if(tab) tab.classList.toggle('active',t===name);
-  });
-  if(name==='enrollments') loadEnrollments();
-  if(name==='tickets') loadTickets();
-  if(name==='students') loadStudents();
-  if(name==='netps'){ loadNetPSTeam(); loadEligibleStudents(); }
-  if(name==='bycourse') loadByCourse();
-  if(name==='pricing') loadPricing();
-  if(name==='payments') loadPayments();
-}
-function showMsg(t,type){const m=document.getElementById('msg');m.textContent=t;m.className='msg '+type;setTimeout(()=>m.className='msg',4000);}
-async function deleteStudent(id, name){
-  if(!confirm('Delete ' + name + '? This will also remove their enrollments.')) return;
-  const r=await fetch('/api/admin/students/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+localStorage.getItem('kca_token')}});
-  const d=await r.json();
-  alert(d.message||d.error);
-  loadStudents();
-  loadStats();
-}
-function toggleSelectAll(){
-  const all=document.getElementById('selectAll').checked;
-  document.querySelectorAll('.enrollment-cb').forEach(cb=>cb.checked=all);
-  updateDropBtn();
-}
-function updateDropBtn(){
-  const selected=document.querySelectorAll('.enrollment-cb:checked');
-  const btn=document.getElementById('dropSelectedBtn');
-  const count=document.getElementById('selectedCount');
-  btn.style.display=selected.length?'inline-block':'none';
-  count.textContent=selected.length?selected.length+' selected':'';
-}
-async function dropEnrollment(id){
-  console.log('Drop clicked for id:', id);
-  const r=await fetch('/api/admin/enrollments/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+token}});
-  const d=await r.json();
-  alert(d.message||d.error);
-  loadEnrollments();loadStats();
-}
-async function dropSelected(){
-  const ids=[...document.querySelectorAll('.enrollment-cb:checked')].map(cb=>parseInt(cb.value));
-  if(!ids.length) return;
-  const r=await fetch('/api/admin/enrollments/bulk-drop',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({ids})});
-  const d=await r.json();
-  alert(d.message||d.error);
-  loadEnrollments();loadStats();
+  const r=await fetch('/api/admin/enrollments',{headers:{Authorization:'Bearer '+token}});const data=await r.json();
+  const tbody=document.getElementById('pendingBody');const pending=data.filter(e=>e.status==='pending');
+  if(!pending.length){tbody.innerHTML='<tr><td colspan="5" class="empty">No pending enrollment requests</td></tr>';return;}
+  tbody.innerHTML=pending.map(e=>'<tr><td>'+e.full_name+'</td><td>'+e.email+'</td><td>'+e.course+'</td><td>'+new Date(e.enrolled_at).toLocaleDateString()+'</td><td><button class="btn-approve" onclick="updateEnrollment('+e.id+',\'approved\')">Approve</button><button class="btn-reject" onclick="updateEnrollment('+e.id+',\'rejected\')">Reject</button></td></tr>').join('');
 }
 async function updateEnrollment(id,status){
-  const r=await fetch('/api/admin/enrollments/'+id+'/status',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('kca_token')},body:JSON.stringify({status})});
-  const d=await r.json();
-  alert(d.message||d.error);
-  loadPending();
-  loadStats();
+  await fetch('/api/admin/enrollments/'+id+'/status',{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({status})});
+  loadPending();loadStats();
 }
-async function exportCSV(){
-  const r = await fetch('/api/admin/students/export', {headers:{Authorization:'Bearer '+token}});
-  if(!r.ok){alert('Export failed');return;}
-  const blob = await r.blob();
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'KCA_Students.csv';
-  a.click();
-  URL.revokeObjectURL(url);
+async function loadStudents(filterStatus=''){
+  const r=await fetch('/api/admin/students',{headers:{Authorization:'Bearer '+token}});const students=await r.json();
+  const tbody=document.getElementById('studentsBody');const filtered=filterStatus?students.filter(s=>s.status===filterStatus):students;
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No students found</td></tr>';return;}
+  tbody.innerHTML=filtered.map(s=>'<tr><td><div style="font-weight:600">'+s.full_name+'</div>'+(s.enrolled_courses?'<div style="font-size:.75rem;color:#3b9eff;margin-top:.2rem">&#128218; '+s.enrolled_courses+'</div>':'')+'</td><td>'+s.email+'</td><td>'+(s.phone||'&mdash;')+'</td><td>'+(s.country||'&mdash;')+'</td><td><span class="badge '+s.status+'">'+s.status+'</span></td><td>'+new Date(s.created_at).toLocaleDateString()+'</td><td>'+(s.status!=='approved'?'<button class="btn-approve" onclick="updateStatus('+s.id+',\'approved\')">Approve</button>':'')+(s.status!=='rejected'?'<button class="btn-reject" onclick="updateStatus('+s.id+',\'rejected\')">Reject</button>':'')+'</td><td><button class="btn-reject" onclick="deleteStudent('+s.id+')">Delete</button></td></tr>').join('');
 }
-async function loadTickets(){
-  const r = await fetch('/api/tickets', {headers:{Authorization:'Bearer '+token}});
-  const tickets = await r.json();
-  const tbody = document.getElementById('ticketsBody');
-  if(!tickets.length){tbody.innerHTML='<tr><td colspan="7" class="empty">No tickets found</td></tr>';return;}
-  tbody.innerHTML = tickets.map(t => `
-    <tr>
-      <td><a href="/ticket-view.html?id=${t.id}" style="color:#3b9eff;font-weight:600" target="_blank">${t.ticket_no}</a></td>
-      <td>${t.title}</td>
-      <td><span style="background:#1e2330;padding:.2rem .5rem;border-radius:4px;font-size:.75rem">${t.queue}</span></td>
-      <td style="color:#94a3b8;font-size:.82rem">${t.username||'deleted-user'}</td>
-      <td><span class="badge ${t.status}">${t.status.replace('_',' ')}</span></td>
-      <td style="color:#64748b">${new Date(t.created_at).toLocaleDateString()}</td>
-      <td><button class="btn-reject" onclick="deleteTicket(${t.id})">🗑 Delete</button></td>
-    </tr>`).join('');
+async function updateStatus(id,status){
+  await fetch('/api/admin/users/'+id+'/status',{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({status})});
+  loadStudents(document.getElementById('studentStatusFilter').value);loadStats();
 }
-async function deleteTicket(id){
-  if(!confirm('Permanently delete this ticket and all comments?')) return;
-  const r = await fetch('/api/tickets/'+id, {method:'DELETE', headers:{Authorization:'Bearer '+token}});
-  const d = await r.json();
-  alert(d.message||d.error);
-  loadTickets();
+async function deleteStudent(id){
+  if(!confirm('Delete this student? Their enrollments will also be removed.'))return;
+  await fetch('/api/admin/users/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});
+  loadStudents();loadStats();
 }
-
-// ─── NET-PS TEAM ────────────────────────────────────────────
-let eligibleAll = [];
-
-async function loadNetPSTeam(){
-  const r = await fetch('/api/netps/team', {headers:{Authorization:'Bearer '+token}});
-  const members = await r.json();
-  document.getElementById('netps-count').textContent = members.length + ' members';
-  const el = document.getElementById('netpsTeamList');
-  if(!members.length){
-    el.innerHTML = '<div style="text-align:center;padding:2rem;color:#64748b">No members yet — add students from the list →</div>';
-    return;
-  }
-  el.innerHTML = members.map(m => `
-    <div style="background:#111318;border:1px solid #0e8a78;border-radius:10px;padding:.9rem 1rem;margin-bottom:.6rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem">
-      <div>
-        <div style="font-weight:700;font-size:.9rem;color:#e2e8f0">${m.full_name}</div>
-        <div style="font-size:.78rem;color:#64748b">${m.email}</div>
-        <div style="font-size:.75rem;color:#0e8a78;margin-top:.2rem">✅ ${m.resolved_tickets || 0} resolved · 📋 ${m.total_tickets || 0} total</div>
-      </div>
-      <button onclick="removeNetPS(${m.id},'${m.full_name.replace("'","\'")}')"
-        style="background:rgba(255,77,77,.1);color:#ff4d4d;border:1px solid rgba(255,77,77,.3);padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:600;white-space:nowrap">
-        ✕ Remove
-      </button>
-    </div>`).join('');
+async function loadEnrollments(filterStatus=''){
+  const sel=document.getElementById('enrollStatusFilter');if(sel)sel.value=filterStatus;
+  const r=await fetch('/api/admin/enrollments',{headers:{Authorization:'Bearer '+token}});const data=await r.json();
+  const tbody=document.getElementById('enrollmentsBody');
+  if(!data.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No enrollments yet</td></tr>';return;}
+  const filtered=filterStatus?data.filter(e=>e.status===filterStatus):data;
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No enrollments found</td></tr>';return;}
+  tbody.innerHTML=filtered.map(e=>'<tr><td><input type="checkbox" class="enrollment-cb" value="'+e.id+'" onchange="updateDropBtn()"></td><td>'+e.full_name+'</td><td>'+e.email+'</td><td>'+e.course+'</td><td>'+e.category+'</td><td><span class="badge '+e.status+'">'+e.status+'</span></td><td>'+new Date(e.enrolled_at).toLocaleDateString()+'</td><td><button class="btn-reject" onclick="dropEnrollment('+e.id+')">Drop</button></td></tr>').join('');
 }
-
-async function loadEligibleStudents(){
-  const r = await fetch('/api/netps/eligible', {headers:{Authorization:'Bearer '+token}});
-  eligibleAll = await r.json();
-  renderEligible(eligibleAll);
+function toggleSelectAll(){const all=document.getElementById('selectAll').checked;document.querySelectorAll('.enrollment-cb').forEach(cb=>cb.checked=all);updateDropBtn();}
+function updateDropBtn(){const n=document.querySelectorAll('.enrollment-cb:checked').length;document.getElementById('bulkDropBtn').style.display=n?'inline-block':'none';}
+async function dropEnrollment(id){if(!confirm('Drop this enrollment?'))return;await fetch('/api/admin/enrollments/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});loadEnrollments(document.getElementById('enrollStatusFilter').value);loadStats();}
+async function bulkDropEnrollments(){
+  const ids=[...document.querySelectorAll('.enrollment-cb:checked')].map(cb=>parseInt(cb.value));
+  if(!ids.length)return;if(!confirm('Drop '+ids.length+' enrollment(s)?'))return;
+  await fetch('/api/admin/enrollments/bulk-drop',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({ids})});
+  loadEnrollments();loadStats();
 }
-
-function filterEligible(){
-  const q = document.getElementById('netpsSearch').value.toLowerCase();
-  renderEligible(q ? eligibleAll.filter(s => s.full_name.toLowerCase().includes(q) || (s.email||'').toLowerCase().includes(q)) : eligibleAll);
-}
-
-function renderEligible(students){
-  const el = document.getElementById('netpsEligibleList');
-  const nonMembers = students.filter(s => !s.is_netps);
-  if(!nonMembers.length){ el.innerHTML = '<div style="text-align:center;padding:2rem;color:#64748b">All eligible students are already on the team</div>'; return; }
-  el.innerHTML = nonMembers.map(s => `
-    <div style="background:#111318;border:1px solid #1e2330;border-radius:10px;padding:.9rem 1rem;margin-bottom:.6rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem">
-      <div>
-        <div style="font-weight:600;font-size:.9rem;color:#e2e8f0">${s.full_name}</div>
-        <div style="font-size:.78rem;color:#64748b">${s.email}</div>
-        ${s.enrolled_courses ? `<div style="font-size:.75rem;color:#3b9eff;margin-top:.2rem">📚 ${s.enrolled_courses}</div>` : ''}
-      </div>
-      <button onclick="addNetPS(${s.id},'${s.full_name.replace("'","\'")}')"
-        style="background:rgba(14,138,120,.15);color:#0e8a78;border:1px solid rgba(14,138,120,.3);padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:600;white-space:nowrap">
-        + Add to Net-PS
-      </button>
-    </div>`).join('');
-}
-
-async function addNetPS(userId, name){
-  const r = await fetch('/api/netps/team/'+userId, {method:'POST', headers:{Authorization:'Bearer '+token}});
-  const d = await r.json();
-  showNetPSMsg(d.message || d.error, r.ok ? 'success' : 'error');
-  if(r.ok){ loadNetPSTeam(); loadEligibleStudents(); }
-}
-
-async function removeNetPS(userId, name){
-  if(!confirm('Remove ' + name + ' from Net-PS team?')) return;
-  const r = await fetch('/api/netps/team/'+userId, {method:'DELETE', headers:{Authorization:'Bearer '+token}});
-  const d = await r.json();
-  showNetPSMsg(d.message || d.error, r.ok ? 'success' : 'error');
-  if(r.ok){ loadNetPSTeam(); loadEligibleStudents(); }
-}
-
-function showNetPSMsg(text, type){
-  const el = document.getElementById('netps-msg');
-  el.textContent = text;
-  el.className = 'msg ' + type;
-  setTimeout(() => el.className = 'msg', 4000);
-}
-// ─── END NET-PS ──────────────────────────────────────────────
-
-function logout(){localStorage.removeItem('kca_token');localStorage.removeItem('kca_user');window.location.replace('login.html');}
-loadStats();loadPending();
-
 async function loadByCourse(){
-  const res = await fetch('/api/admin/course-enrollments',{headers:{Authorization:'Bearer '+token}});
-  const courses = await res.json();
-  const grid = document.getElementById('courseCards');
-  if(!courses.length){grid.innerHTML='<p style="color:#64748b">No courses found.</p>';return;}
-  grid.innerHTML = courses.map(c=>`
-    <div class="course-card" onclick="loadCourseStudents(${c.id},'${c.title.replace(/'/g,"\'")}')">
-      <div class="cc-title">${c.title}</div>
-      <div class="cc-cat">${c.category||'General'}</div>
-      <div class="cc-stats">
-        <div class="cc-stat"><div class="n">${c.total||0}</div><div class="l">Total</div></div>
-        <div class="cc-stat"><div class="n" style="color:#22c55e">${c.approved||0}</div><div class="l">Active</div></div>
-        <div class="cc-stat"><div class="n" style="color:#f59e0b">${c.pending||0}</div><div class="l">Pending</div></div>
-      </div>
-    </div>`).join('');
+  const res=await fetch('/api/admin/course-enrollments',{headers:{Authorization:'Bearer '+token}});const courses=await res.json();
+  const grid=document.getElementById('ccGrid');
+  if(!courses.length){grid.innerHTML='<div class="empty">No course data yet</div>';return;}
+  grid.innerHTML=courses.map(c=>'<div class="cc-card" onclick="viewCourseStudents('+c.course_id+',\''+c.title+'\')"><div class="cc-title">'+c.title+'</div><div class="cc-stats"><div class="cc-stat"><div class="n" style="color:#22c55e">'+(c.approved||0)+'</div><div class="l">Active</div></div><div class="cc-stat"><div class="n" style="color:#f5a623">'+(c.pending||0)+'</div><div class="l">Pending</div></div><div class="cc-stat"><div class="n" style="color:#ff4d4d">'+(c.rejected||0)+'</div><div class="l">Rejected</div></div></div></div>').join('');
 }
-async function loadCourseStudents(courseId, courseTitle){
-  document.getElementById('courseCards').style.display='none';
-  document.getElementById('courseStudentsWrap').style.display='block';
+async function viewCourseStudents(courseId,courseTitle){
   document.getElementById('courseStudentsTitle').textContent='Students enrolled in: '+courseTitle;
-  const tbody = document.getElementById('courseStudentsBody');
-  tbody.innerHTML='<tr><td colspan="7" style="color:#64748b;text-align:center">Loading...</td></tr>';
-  const res = await fetch('/api/admin/course-enrollments?course_id='+courseId,{headers:{Authorization:'Bearer '+token}});
-  const students = await res.json();
-  if(!students.length){tbody.innerHTML='<tr><td colspan="7" class="empty">No students enrolled yet</td></tr>';return;}
-  tbody.innerHTML = students.map(s=>`<tr>
-    <td>${s.full_name}</td>
-    <td>${s.email}</td>
-    <td>${s.phone||'-'}</td>
-    <td>${s.country||'-'}</td>
-    <td><span class="badge ${s.enrollment_status}">${s.enrollment_status}</span></td>
-    <td><span class="badge ${s.account_status}">${s.account_status}</span></td>
-    <td>${new Date(s.enrolled_at).toLocaleDateString()}</td>
-  </tr>`).join('');
+  document.getElementById('courseModal').classList.add('open');
+  const res=await fetch('/api/admin/course-enrollments?course_id='+courseId,{headers:{Authorization:'Bearer '+token}});const students=await res.json();
+  const tbody=document.getElementById('courseStudentsBody');
+  if(!students.length){tbody.innerHTML='<tr><td colspan="5" class="empty">No students enrolled yet</td></tr>';return;}
+  tbody.innerHTML=students.map(s=>'<tr><td>'+s.full_name+'</td><td>'+s.email+'</td><td>'+(s.phone||'&mdash;')+'</td><td><span class="badge '+s.enrollment_status+'">'+s.enrollment_status+'</span></td><td>'+new Date(s.enrolled_at).toLocaleDateString()+'</td></tr>').join('');
 }
-
-
-let allPayments=[];
 async function loadPricing(){
-  const res=await fetch('/api/admin/courses-pricing',{headers:{Authorization:'Bearer '+token}});
-  const courses=await res.json();
-  const el=document.getElementById('pricingList');
-  if(!courses.length){el.innerHTML='<p style="color:#64748b">No courses found.</p>';return;}
-  function monthOptions(sel){
-    const now=new Date();let opts='<option value="">-- Select Month --</option>';
-    for(let i=0;i<24;i++){const d=new Date(now.getFullYear(),now.getMonth()+i,1);const val=d.toISOString().slice(0,7);const lbl=d.toLocaleString('default',{month:'long',year:'numeric'});opts+=`<option value="${val}"${sel===val?' selected':''}>${lbl}</option>`;}
-    return opts;
-  }
-  el.innerHTML=courses.map(c=>`
-    <div class="pricing-card">
-      <h3>${c.title}</h3><div class="cat">${c.category||'General'}</div>
-      <div class="pricing-grid">
-        <div><label>Total Price ($)</label><input type="number" min="0" step="0.01" id="price-${c.id}" value="${c.price||0}"></div>
-        <div><label>Registration Fee ($)</label><input type="number" min="0" step="0.01" id="regfee-${c.id}" value="${c.registration_fee||0}"></div>
-        <div><label>Installments</label><input type="number" min="1" max="12" id="inst-${c.id}" value="${c.installments||3}"></div>
-        <div><label>Start Month</label><select id="month-${c.id}">${monthOptions(c.payment_start_month)}</select></div>
-      </div>
-      <button class="btn-save-pricing" onclick="savePricing(${c.id})">💾 Save</button>
-      <span id="pmsg-${c.id}" style="margin-left:.75rem;font-size:.8rem"></span>
-    </div>`).join('');
+  const r=await fetch('/api/courses',{headers:{Authorization:'Bearer '+token}});const courses=await r.json();
+  const cont=document.getElementById('pricingContainer');
+  if(!courses.length){cont.innerHTML='<div class="empty">No courses found</div>';return;}
+  cont.innerHTML='<table><thead><tr><th>Course</th><th>Category</th><th>Price (USD)</th><th>Action</th></tr></thead><tbody>'+courses.map(c=>'<tr><td>'+c.title+'</td><td>'+c.category+'</td><td><input type="number" id="price-'+c.id+'" value="'+(c.price||0)+'" min="0" style="width:110px"></td><td><button class="btn-approve" onclick="updatePrice('+c.id+')">Save</button></td></tr>').join('')+'</tbody></table>';
 }
-async function savePricing(id){
-  const price=document.getElementById('price-'+id).value;
-  const regfee=document.getElementById('regfee-'+id).value;
-  const inst=document.getElementById('inst-'+id).value;
-  const month=document.getElementById('month-'+id).value;
-  const msg=document.getElementById('pmsg-'+id);
-  if(parseFloat(regfee)>parseFloat(price)){msg.style.color='#f87171';msg.textContent='⚠ Reg fee > total price';return;}
-  const r=await fetch('/api/admin/courses/'+id+'/pricing',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({price,registration_fee:regfee,installments:inst,payment_start_month:month})});
-  const d=await r.json();
-  if(r.ok){msg.style.color='#22c55e';msg.textContent='✅ Saved!';setTimeout(()=>msg.textContent='',3000);}
-  else{msg.style.color='#f87171';msg.textContent='⚠ '+d.error;}
+async function updatePrice(courseId){
+  const price=document.getElementById('price-'+courseId).value;
+  const r=await fetch('/api/admin/courses/'+courseId+'/price',{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({price:parseFloat(price)})});
+  if(r.ok)alert('Price updated');else alert('Failed to update price');
 }
 async function loadPayments(){
-  const res=await fetch('/api/admin/payments',{headers:{Authorization:'Bearer '+token}});
-  allPayments=await res.json();renderPayments(allPayments);
-}
-function filterPayments(){
-  const q=document.getElementById('paymentSearch').value.toLowerCase();
-  const type=document.getElementById('paymentTypeFilter').value;
-  const status=document.getElementById('paymentStatusFilter').value;
-  renderPayments(allPayments.filter(p=>(!q||p.full_name.toLowerCase().includes(q)||p.course_name.toLowerCase().includes(q))&&(!type||p.type===type)&&(!status||p.status===status)));
-}
-function renderPayments(list){
+  const r=await fetch('/api/admin/payments',{headers:{Authorization:'Bearer '+token}});const payments=await r.json();
   const tbody=document.getElementById('paymentsBody');
-  const summary=document.getElementById('paymentSummary');
-  const paid=list.filter(p=>p.status==='paid').reduce((s,p)=>s+parseFloat(p.amount),0);
-  const pend=list.filter(p=>p.status==='pending').reduce((s,p)=>s+parseFloat(p.amount),0);
-  summary.innerHTML=`<b style="color:#22c55e">Collected: $${paid.toFixed(2)}</b> &nbsp;·&nbsp; <b style="color:#f5a623">Pending: $${pend.toFixed(2)}</b> &nbsp;·&nbsp; ${list.length} records`;
-  if(!list.length){tbody.innerHTML='<tr><td colspan="9" class="empty">No payments found</td></tr>';return;}
-  tbody.innerHTML=list.map(p=>`<tr>
-    <td>${p.full_name}<br><small style="color:#64748b">${p.email}</small></td>
-    <td>${p.phone||'-'}</td><td>${p.course_name}</td>
-    <td><span class="badge ${p.type}">${p.type}</span></td>
-    <td>${p.type==='installment'?p.installment_number:'-'}</td>
-    <td><b>$${parseFloat(p.amount).toFixed(2)}</b></td>
-    <td><span class="badge ${p.status}">${p.status}</span></td>
-    <td>${p.due_date?new Date(p.due_date).toLocaleDateString():'-'}</td>
-    <td>${p.paid_at?new Date(p.paid_at).toLocaleDateString():'-'}</td>
-  </tr>`).join('');
+  if(!payments.length){tbody.innerHTML='<tr><td colspan="6" class="empty">No payments yet</td></tr>';return;}
+  tbody.innerHTML=payments.map(p=>'<tr><td>'+(p.full_name||'&mdash;')+'</td><td>'+(p.course||'&mdash;')+'</td><td>$'+(p.amount||0)+'</td><td>'+p.type+'</td><td><span class="badge '+(p.status==='paid'?'paid':'pending')+'">'+p.status+'</span></td><td>'+(p.paid_at?new Date(p.paid_at).toLocaleDateString():'&mdash;')+'</td></tr>').join('');
 }
-
+async function loadNetps(){
+  const [mRes,eRes]=await Promise.all([fetch('/api/netps/team',{headers:{Authorization:'Bearer '+token}}),fetch('/api/netps/eligible',{headers:{Authorization:'Bearer '+token}})]);
+  const members=await mRes.json();const eligible=await eRes.json();
+  const cont=document.getElementById('netpsMembers');
+  cont.innerHTML=members.length?members.map(m=>'<div class="netps-member"><div><div style="font-weight:600">'+m.full_name+'</div><div style="font-size:.78rem;color:#64748b">'+m.email+'</div></div><button class="btn-reject" onclick="removeNetpsMember('+m.id+')">Remove</button></div>').join(''):'<div class="empty">No Net-PS members yet</div>';
+  const sel=document.getElementById('netpsAddSelect');
+  sel.innerHTML='<option value="">-- Select eligible student --</option>'+eligible.map(e=>'<option value="'+e.id+'">'+e.full_name+' ('+e.email+')</option>').join('');
+}
+async function addNetpsMember(){const userId=document.getElementById('netpsAddSelect').value;if(!userId){alert('Please select a student');return;}await fetch('/api/netps/team/'+userId,{method:'POST',headers:{Authorization:'Bearer '+token}});loadNetps();}
+async function removeNetpsMember(userId){if(!confirm('Remove from Net-PS team?'))return;await fetch('/api/netps/team/'+userId,{method:'DELETE',headers:{Authorization:'Bearer '+token}});loadNetps();}
+// -- CLASS SESSIONS --
+async function loadSessions(){
+  const r=await fetch('/api/admin/sessions',{headers:{Authorization:'Bearer '+token}});const sessions=await r.json();
+  const cont=document.getElementById('sessionsContainer');
+  if(!Array.isArray(sessions)||!sessions.length){cont.innerHTML='<div style="text-align:center;color:#64748b;padding:3rem">No sessions yet. Click <b style="color:#0e8a78">+ New Session</b> to get started.</div>';return;}
+  cont.innerHTML=sessions.map(s=>{
+    const isOpen=s.status==='open';
+    const fmt=d=>new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const badge=isOpen?'<span style="background:rgba(14,138,120,.2);color:#0e8a78;font-size:.68rem;padding:.2rem .6rem;border-radius:10px;font-weight:700;border:1px solid rgba(14,138,120,.4)">&#128994; OPEN</span>':'<span style="background:rgba(100,116,139,.12);color:#64748b;font-size:.68rem;padding:.2rem .6rem;border-radius:10px;font-weight:700;border:1px solid rgba(100,116,139,.3)">&#9899; CLOSED</span>';
+    return '<div style="background:#0d1117;border:2px solid '+(isOpen?'#0e8a78':'#1e2330')+';border-radius:12px;margin-bottom:1.1rem;overflow:hidden"><div onclick="toggleSession('+s.id+')" style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;cursor:pointer;background:'+(isOpen?'rgba(14,138,120,.07)':'transparent')+'"><div style="display:flex;align-items:center;gap:.9rem"><span style="font-size:1.5rem" id="ficon-'+s.id+'">&#128193;</span><div><div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.3rem"><span style="font-weight:700;color:#e2e8f0;font-size:1rem">'+s.name+'</span>'+badge+'</div><div style="font-size:.76rem;color:#64748b">'+fmt(s.start_date)+' &mdash; '+fmt(s.end_date)+'</div></div></div><div style="display:flex;align-items:center;gap:.8rem"><span style="background:rgba(14,138,120,.1);color:#0e8a78;padding:.3rem .9rem;border-radius:20px;font-size:.8rem;font-weight:700;border:1px solid rgba(14,138,120,.2)">'+s.student_count+' students</span><span id="chev-'+s.id+'" style="color:#64748b;font-size:.75rem">&#9660;</span></div></div><div id="sbody-'+s.id+'" style="display:none;border-top:1px solid #1e2330"><div id="sstudents-'+s.id+'" style="padding:1.2rem 1.5rem"><div style="color:#64748b;font-size:.85rem">Loading...</div></div></div></div>';
+  }).join('');
+}
+async function toggleSession(id){
+  const body=document.getElementById('sbody-'+id);const chev=document.getElementById('chev-'+id);const icon=document.getElementById('ficon-'+id);
+  if(body.style.display==='none'){
+    body.style.display='block';chev.innerHTML='&#9650;';if(icon)icon.innerHTML='&#128194;';
+    const r=await fetch('/api/admin/sessions/'+id,{headers:{Authorization:'Bearer '+token}});const data=await r.json();
+    const el=document.getElementById('sstudents-'+id);
+    if(!data.students||!data.students.length){el.innerHTML='<div style="color:#64748b;font-size:.85rem;padding:.5rem 0">No approved enrollments in this session window.</div>';return;}
+    let rows='';data.students.forEach((s,i)=>{rows+='<tr style="border-top:1px solid #1e2330"><td style="padding:.6rem .8rem;color:#475569">'+(i+1)+'</td><td style="padding:.6rem .8rem;color:#e2e8f0;font-weight:600">'+s.full_name+'</td><td style="padding:.6rem .8rem;color:#94a3b8">'+s.email+'</td><td style="padding:.6rem .8rem;color:#0e8a78;font-weight:600">'+s.course+'</td><td style="padding:.6rem .8rem;color:#64748b">'+new Date(s.enrolled_at).toLocaleDateString()+'</td></tr>';});
+    el.innerHTML='<table style="width:100%;border-collapse:collapse;font-size:.83rem"><thead><tr style="color:#64748b;border-bottom:1px solid #1e2330"><th style="padding:.5rem .8rem;text-align:left">#</th><th style="padding:.5rem .8rem;text-align:left">Student</th><th style="padding:.5rem .8rem;text-align:left">Email</th><th style="padding:.5rem .8rem;text-align:left">Course</th><th style="padding:.5rem .8rem;text-align:left">Enrolled</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  }else{body.style.display='none';chev.innerHTML='&#9660;';if(icon)icon.innerHTML='&#128193;';}
+}
+async function createSession(){
+  if(!confirm('Create a new session? The current OPEN session will be marked CLOSED.'))return;
+  const btn=document.getElementById('createSessionBtn');btn.disabled=true;btn.textContent='Creating...';
+  try{const r=await fetch('/api/admin/sessions',{method:'POST',headers:{Authorization:'Bearer '+token}});const d=await r.json();
+  if(r.ok){alert('Session "'+d.name+'" is now OPEN! Previous session closed.');loadSessions();}else alert('Error: '+(d.error||'Failed'));}
+  catch(e){alert('Error: '+e.message);}
+  btn.disabled=false;btn.textContent='+ New Session';
+}
+loadStats();loadPending();
 </script>
 </body>
 </html>
