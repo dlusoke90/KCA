@@ -1169,6 +1169,50 @@ app.post('/api/admin/announcements', auth, adminOnly, async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+
+// ── CCNA SUBSCRIPTION ────────────────────────────────────
+app.get('/api/ccna/subscription', auth, async (req, res) => {
+  try {
+    const [[sub]] = await pool.query('SELECT status,expires_at FROM ccna_subscriptions WHERE user_id=?',[req.user.id]);
+    if(!sub) return res.json({status:'none'});
+    if(sub.status==='approved'&&sub.expires_at&&new Date(sub.expires_at)<new Date()) return res.json({status:'expired'});
+    res.json({status:sub.status,expires_at:sub.expires_at});
+  } catch(e){res.status(500).json({error:e.message});}
+});
+app.post('/api/ccna/subscribe', auth, async (req, res) => {
+  try {
+    const [[ex]] = await pool.query('SELECT status FROM ccna_subscriptions WHERE user_id=?',[req.user.id]);
+    if(ex) return res.status(409).json({status:ex.status,error:`Subscription already ${ex.status}`});
+    await pool.query("INSERT INTO ccna_subscriptions (user_id,status) VALUES (?,'pending')",[req.user.id]);
+    const [[u]] = await pool.query('SELECT full_name,email FROM users WHERE id=?',[req.user.id]);
+    mailer.sendMail({from:process.env.EMAIL_USER,to:process.env.EMAIL_USER,
+      subject:'KCA — New CCNA Subscription Request',
+      html:`<h2>New CCNA Access Request</h2><p><b>${u.full_name}</b> (${u.email}) requested CCNA Practice Exam access ($30/3 months).</p><p><a href="https://kca-cloudnet.com/admin.html">Review in Admin</a></p>`
+    }).catch(e=>console.error(e.message));
+    res.json({message:'Subscription request submitted'});
+  } catch(e){res.status(500).json({error:e.message});}
+});
+app.get('/api/admin/ccna-subscriptions', auth, adminOnly, async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT cs.*,u.full_name,u.email,u.phone FROM ccna_subscriptions cs JOIN users u ON cs.user_id=u.id ORDER BY cs.subscribed_at DESC');
+    res.json(rows);
+  } catch(e){res.status(500).json({error:e.message});}
+});
+app.put('/api/admin/ccna-subscriptions/:id', auth, adminOnly, async (req, res) => {
+  const {status} = req.body;
+  if(!['approved','rejected'].includes(status)) return res.status(400).json({error:'Invalid status'});
+  try {
+    const exp=new Date(); exp.setMonth(exp.getMonth()+3);
+    await pool.query("UPDATE ccna_subscriptions SET status=?,approved_at=NOW(),expires_at=? WHERE id=?",[status,status==='approved'?exp.toISOString().split('T')[0]:null,req.params.id]);
+    const [[s]] = await pool.query('SELECT u.full_name,u.email FROM ccna_subscriptions cs JOIN users u ON cs.user_id=u.id WHERE cs.id=?',[req.params.id]);
+    if(s&&status==='approved') mailer.sendMail({from:process.env.EMAIL_USER,to:s.email,
+      subject:'KCA — CCNA Practice Access Approved!',
+      html:`<h2>Hi ${s.full_name}!</h2><p>Your CCNA Practice Exam access is <b style="color:#0e8a78">approved</b>! You have 3 months of full access.</p><p><a href="https://kca-cloudnet.com/ccna-exam.html" style="background:#0e8a78;color:#fff;padding:.6rem 1.2rem;border-radius:6px;text-decoration:none">Start Practicing Now</a></p><br><p>Best regards,<br><b>KCA Team</b></p>`
+    }).catch(e=>console.error(e.message));
+    res.json({message:`Subscription ${status}`});
+  } catch(e){res.status(500).json({error:e.message});}
+});
+
 app.use((req, res) => {
   if (!req.path.startsWith('/api')) res.sendFile(path.join(__dirname, 'public', 'index.html'));
   else res.status(404).json({ error: 'Not found' });

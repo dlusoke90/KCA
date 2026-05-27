@@ -89,6 +89,7 @@ select:focus,input:focus{border-color:#0e8a78}
     <div class="tab" onclick="window.location.href='/instructor'">&#128218; Assignments</div>
     <div class="tab" onclick="showTab('sessions')">&#128197; Sessions</div>
     <div class="tab" onclick="showTab('announce')">&#128226; Announcements</div>
+    <div class="tab" onclick="showTab('ccnasub')">&#127891; CCNA Access</div>
   </div>
   <div id="sec-pending" class="section" style="display:block">
     <div class="sec-hdr"><div class="sec-title">Pending Enrollment Approvals</div></div>
@@ -206,6 +207,14 @@ select:focus,input:focus{border-color:#0e8a78}
     </div>
   </div>
 
+
+  <div id="sec-ccnasub" class="section">
+    <div class="sec-hdr"><div class="sec-title">&#127891; CCNA Subscription Requests</div></div>
+    <table>
+      <thead><tr><th>Student</th><th>Email</th><th>Phone</th><th>Requested</th><th>Status</th><th>Expires</th><th>Action</th></tr></thead>
+      <tbody id="ccnaSubBody"></tbody>
+    </table>
+  </div>
 </div>
 <script>
 const token=localStorage.getItem('kca_token');
@@ -225,6 +234,7 @@ function showTab(name){
   if(name==='netps')loadNetps();
   if(name==='sessions')loadSessions();
   if(name==='announce')loadAnnounce();
+  if(name==='ccnasub')loadCcnaSub();
 }
 async function loadStats(){
   try{const r=await fetch('/api/admin/stats',{headers:{Authorization:'Bearer '+token}});const d=await r.json();
@@ -426,6 +436,33 @@ loadStats();loadPending();
       }
     } catch(e){result.innerHTML='<span style="color:#ff4d4d">&#10007; Error: '+e.message+'</span>';}
     btn.disabled=false; btn.textContent='&#128226; Send Announcement';
+  }
+
+
+  // -- CCNA SUBSCRIPTIONS --
+  async function loadCcnaSub(){
+    const r=await fetch('/api/admin/ccna-subscriptions',{headers:{Authorization:'Bearer '+token}});
+    const data=await r.json();
+    const tbody=document.getElementById('ccnaSubBody');
+    if(!data.length){tbody.innerHTML='<tr><td colspan="7" class="empty">No subscription requests yet</td></tr>';return;}
+    tbody.innerHTML=data.map(s=>'<tr>'
+      +'<td style="font-weight:600">'+s.full_name+'</td>'
+      +'<td>'+s.email+'</td>'
+      +'<td>'+(s.phone||'&mdash;')+'</td>'
+      +'<td>'+new Date(s.subscribed_at).toLocaleDateString()+'</td>'
+      +'<td><span class="badge '+s.status+'">'+s.status+'</span></td>'
+      +'<td>'+(s.expires_at?new Date(s.expires_at).toLocaleDateString():'&mdash;')+'</td>'
+      +'<td>'+(s.status==='pending'?'<button class="btn-approve" onclick="approveCcna('+s.id+')">Approve</button><button class="btn-reject" style="margin-left:.3rem" onclick="rejectCcna('+s.id+')">Reject</button>':'&mdash;')+'</td>'
+      +'</tr>').join('');
+  }
+  async function approveCcna(id){
+    await fetch('/api/admin/ccna-subscriptions/'+id,{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({status:'approved'})});
+    loadCcnaSub();
+  }
+  async function rejectCcna(id){
+    if(!confirm('Reject this subscription?'))return;
+    await fetch('/api/admin/ccna-subscriptions/'+id,{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({status:'rejected'})});
+    loadCcnaSub();
   }
 
 </script>
