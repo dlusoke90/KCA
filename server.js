@@ -1036,14 +1036,6 @@ app.put('/api/tickets/:id/netps-response', auth, async (req, res) => {
 
 // ─── END NET-PS ───────────────────────────────────────────────
 
-app.use((req, res) => {
-  if (!req.path.startsWith('/api')) res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  else res.status(404).json({ error: 'Not found' });
-});
-
-const PORT = process.env.PORT || 3000;
-
-
 // ── CLASS SESSIONS ──────────────────────────────────────────
 app.get('/api/admin/sessions', auth, adminOnly, async (req, res) => {
   try {
@@ -1092,5 +1084,97 @@ app.post('/api/admin/sessions', auth, adminOnly, async (req, res) => {
     res.json({ id: result.insertId, name, start_date: start, end_date: end, student_count: 0 });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
+
+
+// ── ANNOUNCEMENTS ────────────────────────────────────────
+app.get('/api/admin/announcements/preview', auth, adminOnly, async (req, res) => {
+  const { target, session_id, course_id } = req.query;
+  try {
+    let rows = [];
+    if (target === 'open_session') {
+      [rows] = await pool.query(`
+        SELECT DISTINCT u.full_name, u.email FROM users u
+        JOIN enrollments e ON u.id=e.user_id
+        WHERE e.status='approved'
+          AND EXISTS (SELECT 1 FROM class_sessions s WHERE s.status='open'
+            AND DATE(e.enrolled_at) BETWEEN s.start_date AND s.end_date)`);
+    } else if (target === 'session' && session_id) {
+      [rows] = await pool.query(`
+        SELECT DISTINCT u.full_name, u.email FROM users u
+        JOIN enrollments e ON u.id=e.user_id
+        JOIN class_sessions s ON s.id=?
+        WHERE e.status='approved'
+          AND DATE(e.enrolled_at) BETWEEN s.start_date AND s.end_date`, [session_id]);
+    } else if (target === 'course' && course_id) {
+      [rows] = await pool.query(`
+        SELECT DISTINCT u.full_name, u.email FROM users u
+        JOIN enrollments e ON u.id=e.user_id
+        WHERE e.course_id=? AND e.status='approved'
+          AND EXISTS (SELECT 1 FROM class_sessions s WHERE s.status='open'
+            AND DATE(e.enrolled_at) BETWEEN s.start_date AND s.end_date)`, [course_id]);
+    }
+    res.json({ count: rows.length, recipients: rows.map(r => ({ name: r.full_name, email: r.email })) });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/admin/announcements', auth, adminOnly, async (req, res) => {
+  const { target, session_id, course_id, subject, message } = req.body;
+  if (!subject || !message) return res.status(400).json({ error: 'Subject and message are required' });
+  try {
+    let recipients = [];
+    if (target === 'open_session') {
+      [recipients] = await pool.query(`
+        SELECT DISTINCT u.full_name, u.email FROM users u
+        JOIN enrollments e ON u.id=e.user_id
+        WHERE e.status='approved'
+          AND EXISTS (SELECT 1 FROM class_sessions s WHERE s.status='open'
+            AND DATE(e.enrolled_at) BETWEEN s.start_date AND s.end_date)`);
+    } else if (target === 'session' && session_id) {
+      [recipients] = await pool.query(`
+        SELECT DISTINCT u.full_name, u.email FROM users u
+        JOIN enrollments e ON u.id=e.user_id
+        JOIN class_sessions s ON s.id=?
+        WHERE e.status='approved'
+          AND DATE(e.enrolled_at) BETWEEN s.start_date AND s.end_date`, [session_id]);
+    } else if (target === 'course' && course_id) {
+      [recipients] = await pool.query(`
+        SELECT DISTINCT u.full_name, u.email FROM users u
+        JOIN enrollments e ON u.id=e.user_id
+        WHERE e.course_id=? AND e.status='approved'
+          AND EXISTS (SELECT 1 FROM class_sessions s WHERE s.status='open'
+            AND DATE(e.enrolled_at) BETWEEN s.start_date AND s.end_date)`, [course_id]);
+    }
+    if (!recipients.length) return res.status(400).json({ error: 'No recipients found for the selected target' });
+    let sent = 0;
+    const htmlBody = message.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    for (const r of recipients) {
+      await mailer.sendMail({
+        from: process.env.EMAIL_USER,
+        to: r.email,
+        subject,
+        html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
+          <div style="background:#0a1a3b;padding:1rem 1.5rem;border-radius:8px 8px 0 0">
+            <h2 style="color:#fff;margin:0">Kuwaha Cloud Academy</h2>
+          </div>
+          <div style="background:#f9f9f9;padding:1.5rem;border-radius:0 0 8px 8px">
+            <p style="color:#333">Hi <b>${r.full_name}</b>,</p>
+            <div style="color:#333;line-height:1.7">${htmlBody}</div>
+            <br><hr style="border:none;border-top:1px solid #e5e5e5">
+            <p style="color:#888;font-size:.85rem">Best regards,<br><b>KCA Team</b><br>kca-cloudnet.com</p>
+          </div>
+        </div>`
+      }).then(() => sent++).catch(e => console.error('Announcement email error:', r.email, e.message));
+    }
+    res.json({ message: `Announcement sent to ${sent} of ${recipients.length} student(s)`, sent, total: recipients.length });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+app.use((req, res) => {
+  if (!req.path.startsWith('/api')) res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  else res.status(404).json({ error: 'Not found' });
+});
+
+const PORT = process.env.PORT || 3000;
+
 
 app.listen(PORT, '0.0.0.0', () => console.log(`KCA running on port ${PORT}`));

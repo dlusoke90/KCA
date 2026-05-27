@@ -88,6 +88,7 @@ select:focus,input:focus{border-color:#0e8a78}
     <div class="tab" onclick="showTab('netps')">&#128737;&#65039; Net-PS Team</div>
     <div class="tab" onclick="window.location.href='/instructor'">&#128218; Assignments</div>
     <div class="tab" onclick="showTab('sessions')">&#128197; Sessions</div>
+    <div class="tab" onclick="showTab('announce')">&#128226; Announcements</div>
   </div>
   <div id="sec-pending" class="section" style="display:block">
     <div class="sec-hdr"><div class="sec-title">Pending Enrollment Approvals</div></div>
@@ -153,6 +154,58 @@ select:focus,input:focus{border-color:#0e8a78}
     </div>
     <div id="sessionsContainer"></div>
   </div>
+
+  <div id="sec-announce" class="section">
+    <div class="sec-hdr">
+      <div class="sec-title">&#128226; Send Announcement</div>
+    </div>
+    <div style="max-width:700px">
+      <!-- Target -->
+      <div style="margin-bottom:1.2rem">
+        <label style="display:block;color:#94a3b8;font-size:.82rem;font-weight:600;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em">Send To</label>
+        <select id="ann-target" onchange="annTargetChange()" style="width:100%;padding:.65rem .9rem">
+          <option value="open_session">All Students in Open Session</option>
+          <option value="session">Students in a Specific Session</option>
+          <option value="course">Students in a Specific Course (Open Session)</option>
+        </select>
+      </div>
+      <!-- Session picker -->
+      <div id="ann-session-row" style="display:none;margin-bottom:1.2rem">
+        <label style="display:block;color:#94a3b8;font-size:.82rem;font-weight:600;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em">Select Session</label>
+        <select id="ann-session" onchange="annPreview()" style="width:100%;padding:.65rem .9rem">
+          <option value="">-- Select session --</option>
+        </select>
+      </div>
+      <!-- Course picker -->
+      <div id="ann-course-row" style="display:none;margin-bottom:1.2rem">
+        <label style="display:block;color:#94a3b8;font-size:.82rem;font-weight:600;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em">Select Course</label>
+        <select id="ann-course" onchange="annPreview()" style="width:100%;padding:.65rem .9rem">
+          <option value="">-- Select course --</option>
+        </select>
+      </div>
+      <!-- Recipient preview -->
+      <div id="ann-preview" style="background:#0a1628;border:1px solid #1e2330;border-radius:8px;padding:.8rem 1rem;margin-bottom:1.2rem;font-size:.85rem;color:#64748b;min-height:2.5rem">
+        Select a target to preview recipients...
+      </div>
+      <!-- Subject -->
+      <div style="margin-bottom:1.2rem">
+        <label style="display:block;color:#94a3b8;font-size:.82rem;font-weight:600;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em">Subject</label>
+        <input type="text" id="ann-subject" placeholder="Email subject line..." style="width:100%;padding:.65rem .9rem">
+      </div>
+      <!-- Message -->
+      <div style="margin-bottom:1.5rem">
+        <label style="display:block;color:#94a3b8;font-size:.82rem;font-weight:600;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em">Message</label>
+        <textarea id="ann-message" rows="8" placeholder="Write your announcement here..." style="width:100%;padding:.65rem .9rem;background:#111827;border:1px solid #1e2330;color:#e2e8f0;border-radius:7px;font-size:.9rem;outline:none;font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <!-- Send -->
+      <button id="ann-send-btn" onclick="sendAnnouncement()"
+        style="background:#0e8a78;color:#fff;border:none;padding:.75rem 2rem;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer;width:100%">
+        &#128226; Send Announcement
+      </button>
+      <div id="ann-result" style="margin-top:1rem;text-align:center;font-size:.88rem"></div>
+    </div>
+  </div>
+
 </div>
 <script>
 const token=localStorage.getItem('kca_token');
@@ -294,6 +347,86 @@ async function createSession(){
   btn.disabled=false;btn.textContent='+ New Session';
 }
 loadStats();loadPending();
+
+  // -- ANNOUNCEMENTS --
+  let annRecipients = [];
+  async function loadAnnounce() {
+    // Load sessions dropdown
+    const sr = await fetch('/api/admin/sessions',{headers:{Authorization:'Bearer '+token}});
+    const sessions = await sr.json();
+    const ssel = document.getElementById('ann-session');
+    ssel.innerHTML = '<option value="">-- Select session --</option>'
+      + (Array.isArray(sessions)?sessions.map(s=>'<option value="'+s.id+'">'+s.name+' ('+(s.status==='open'?'OPEN':'CLOSED')+')</option>').join(''):'');
+    // Load courses dropdown
+    const cr = await fetch('/api/courses',{headers:{Authorization:'Bearer '+token}});
+    const courses = await cr.json();
+    const csel = document.getElementById('ann-course');
+    csel.innerHTML = '<option value="">-- Select course --</option>'
+      + (Array.isArray(courses)?courses.map(c=>'<option value="'+c.id+'">'+c.title+'</option>').join(''):'');
+    annPreview();
+  }
+  function annTargetChange() {
+    const t = document.getElementById('ann-target').value;
+    document.getElementById('ann-session-row').style.display = t==='session'?'block':'none';
+    document.getElementById('ann-course-row').style.display  = t==='course'?'block':'none';
+    annPreview();
+  }
+  async function annPreview() {
+    const t  = document.getElementById('ann-target').value;
+    const si = document.getElementById('ann-session').value;
+    const ci = document.getElementById('ann-course').value;
+    const prev = document.getElementById('ann-preview');
+    if (t==='session' && !si) { prev.innerHTML='<span style="color:#64748b">Select a session to preview recipients.</span>'; return; }
+    if (t==='course'  && !ci) { prev.innerHTML='<span style="color:#64748b">Select a course to preview recipients.</span>';  return; }
+    prev.innerHTML = '<span style="color:#64748b">Loading recipients...</span>';
+    let url = '/api/admin/announcements/preview?target='+t;
+    if (t==='session') url += '&session_id='+si;
+    if (t==='course')  url += '&course_id='+ci;
+    const r = await fetch(url,{headers:{Authorization:'Bearer '+token}});
+    const d = await r.json();
+    annRecipients = d.recipients || [];
+    if (!annRecipients.length) {
+      prev.innerHTML = '<span style="color:#f5a623">&#9888; No eligible recipients found for this selection.</span>'; return;
+    }
+    prev.innerHTML = '<span style="color:#0e8a78;font-weight:700">&#128100; '+annRecipients.length+' recipient'+(annRecipients.length>1?'s':'')+' will receive this email:</span> '
+      + annRecipients.slice(0,5).map(r=>'<span style="background:#111827;padding:.15rem .5rem;border-radius:4px;margin:.1rem;display:inline-block;font-size:.8rem">'+r.name+'</span>').join(' ')
+      + (annRecipients.length>5?'<span style="color:#64748b;font-size:.8rem"> +' + (annRecipients.length-5)+' more</span>':'');
+  }
+  async function sendAnnouncement() {
+    const t       = document.getElementById('ann-target').value;
+    const si      = document.getElementById('ann-session').value;
+    const ci      = document.getElementById('ann-course').value;
+    const subject = document.getElementById('ann-subject').value.trim();
+    const message = document.getElementById('ann-message').value.trim();
+    const result  = document.getElementById('ann-result');
+    if (!subject) { alert('Please enter a subject line'); return; }
+    if (!message) { alert('Please write a message'); return; }
+    if (!annRecipients.length) { alert('No recipients selected. Check your target selection.'); return; }
+    if (!confirm('Send this announcement to '+annRecipients.length+' student(s)?')) return;
+    const btn = document.getElementById('ann-send-btn');
+    btn.disabled=true; btn.textContent='Sending...';
+    result.innerHTML='';
+    try {
+      const body = { target:t, subject, message };
+      if (t==='session') body.session_id=si;
+      if (t==='course')  body.course_id=ci;
+      const r = await fetch('/api/admin/announcements',{method:'POST',
+        headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},
+        body:JSON.stringify(body)});
+      const d = await r.json();
+      if (r.ok) {
+        result.innerHTML='<span style="color:#3ecf6e;font-weight:700">&#10003; '+d.message+'</span>';
+        document.getElementById('ann-subject').value='';
+        document.getElementById('ann-message').value='';
+        annRecipients=[];
+        document.getElementById('ann-preview').innerHTML='<span style="color:#64748b">Select a target to preview recipients...</span>';
+      } else {
+        result.innerHTML='<span style="color:#ff4d4d">&#10007; '+(d.error||'Failed to send')+'</span>';
+      }
+    } catch(e){result.innerHTML='<span style="color:#ff4d4d">&#10007; Error: '+e.message+'</span>';}
+    btn.disabled=false; btn.textContent='&#128226; Send Announcement';
+  }
+
 </script>
 </body>
 </html>
