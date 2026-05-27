@@ -14,8 +14,6 @@ nav{background:rgba(10,26,59,.95);backdrop-filter:blur(12px);border-bottom:1px s
 .nav-logo img{height:28px;border-radius:4px}
 .nav-back{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:600;transition:.2s}
 .nav-back:hover{color:var(--teal)}
-
-/* LANDING */
 #landing{display:none;min-height:100vh;align-items:center;justify-content:center;padding:2rem}
 #landing.show{display:flex}
 .landing-inner{max-width:680px;width:100%;text-align:center}
@@ -34,18 +32,14 @@ nav{background:rgba(10,26,59,.95);backdrop-filter:blur(12px);border-bottom:1px s
 .btn-sub:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(14,138,120,.4)}
 .btn-sub:disabled{opacity:.6;transform:none;cursor:not-allowed}
 .pending-msg{background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);color:var(--gold);border-radius:12px;padding:1rem;margin-top:1rem;font-size:.88rem}
-
-/* PENDING */
 #pending-screen{display:none;min-height:calc(100vh - 56px);align-items:center;justify-content:center;padding:2rem;text-align:center}
 #pending-screen.show{display:flex}
 .pending-icon{font-size:3rem;margin-bottom:1rem}
 .pending-title{font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:700;margin-bottom:.8rem}
 .pending-sub{color:var(--muted);line-height:1.7;max-width:440px;margin:0 auto}
-
-/* EXAM */
 #exam{display:none}
 #exam.show{display:block}
-.exam-layout{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 56px)}
+.exam-layout{display:grid;grid-template-columns:255px 1fr;min-height:calc(100vh - 56px)}
 .sidebar{background:var(--card);border-right:1px solid var(--border);padding:1.2rem;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto}
 .sb-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.5rem}
 .sb-section{margin-bottom:1.4rem}
@@ -71,8 +65,6 @@ nav{background:rgba(10,26,59,.95);backdrop-filter:blur(12px);border-bottom:1px s
 .q-dot.cur{border-color:var(--teal);background:rgba(14,138,120,.15);color:var(--teal);font-weight:700}
 .q-dot.c{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:#22c55e}
 .q-dot.w{background:rgba(239,68,68,.07);border-color:rgba(239,68,68,.2);color:#ef4444}
-
-/* MAIN */
 .exam-main{padding:1.5rem 2rem;max-width:840px}
 .prog-bar{height:3px;background:var(--border);border-radius:2px;margin-bottom:1.2rem}
 .prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal2));border-radius:2px;transition:width .4s}
@@ -82,8 +74,6 @@ nav{background:rgba(10,26,59,.95);backdrop-filter:blur(12px);border-bottom:1px s
 .nav-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);width:32px;height:32px;border-radius:7px;cursor:pointer;font-size:.95rem;transition:.2s;display:flex;align-items:center;justify-content:center}
 .nav-btn:hover{border-color:var(--teal);color:var(--teal)}
 .q-counter{font-size:.82rem;color:var(--muted);padding:0 .4rem}
-
-/* QUESTION */
 .q-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1rem;transition:.3s}
 .q-card.c-bg{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.02)}
 .q-card.w-bg{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.02)}
@@ -94,8 +84,6 @@ nav{background:rgba(10,26,59,.95);backdrop-filter:blur(12px);border-bottom:1px s
 .q-multi{background:rgba(245,166,35,.1);color:var(--gold);border:1px solid rgba(245,166,35,.2);font-size:.68rem;padding:.12rem .45rem;border-radius:8px;font-weight:600}
 .q-text{font-size:.93rem;line-height:1.65}
 .q-body{padding:0 1.1rem 1.1rem}
-
-/* EXHIBIT */
 .exhibit-btn{display:flex;align-items:center;gap:.4rem;background:rgba(14,138,120,.08);border:1px solid rgba(14,138,120,.2);color:var(--teal);padding:.45rem .9rem;border-radius:7px;cursor:pointer;font-size:.8rem;font-weight:600;font-family:'DM Sans',sans-serif;margin-bottom:.7rem;transition:.2s}
 .exhibit-btn:hover{background:rgba(14,138,120,.15)}
 .exhibit-panel{display:none;background:#060c14;border:1px solid rgba(14,138,120,.25);border-radius:9px;overflow:hidden;margin-bottom:.8rem}
@@ -104,8 +92,6 @@ nav{background:rgba(10,26,59,.95);backdrop-filter:blur(12px);border-bottom:1px s
 .e-dot{width:7px;height:7px;border-radius:50%}
 .e-title{font-size:.72rem;color:var(--teal);font-family:'JetBrains Mono',monospace;margin-left:.4rem}
 .exhibit-code{padding:.75rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#4ade80;line-height:1.65;white-space:pre;overflow-x:auto;max-height:220px;overflow-y:auto}
-
-/* ANSWER */
 .btn-reveal{width:100%;background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;border:none;padding:.7rem;border-radius:9px;font-family:'Sora',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:.3s}
 .btn-reveal:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(14,138,120,.35)}
 .ans-panel{display:none;margin-top:.9rem}
@@ -125,16 +111,12 @@ nav{background:rgba(10,26,59,.95);backdrop-filter:blur(12px);border-bottom:1px s
 .verdict-done{display:flex;align-items:center;gap:.4rem;padding:.55rem .8rem;border-radius:8px;font-size:.83rem;font-weight:600}
 .verdict-done.c{background:rgba(34,197,94,.08);color:#22c55e;border:1px solid rgba(34,197,94,.18)}
 .verdict-done.w{background:rgba(239,68,68,.07);color:#ef4444;border:1px solid rgba(239,68,68,.18)}
-
 @media(max-width:768px){.exam-layout{grid-template-columns:1fr}.sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border)}.exam-main{padding:1rem}}
 </style>
 </head>
 <body>
 <nav>
-  <div class="nav-logo">
-    <img src="/kca-logo.png" onerror="this.style.display='none'">
-    KCA — CCNA Practice Exam
-  </div>
+  <div class="nav-logo"><img src="/kca-logo.png" onerror="this.style.display='none'"> KCA — CCNA Practice Exam</div>
   <a href="/dashboard.html" class="nav-back">&#8592; Dashboard</a>
 </nav>
 
@@ -142,17 +124,17 @@ nav{background:rgba(10,26,59,.95);backdrop-filter:blur(12px);border-bottom:1px s
  <div class="landing-inner">
   <div class="l-badge">&#127891; CCNA 200-301 Exam Prep</div>
   <h1 class="l-title">Ready to <span>Pass Your CCNA?</span></h1>
-  <p class="l-sub">Practice with 635 real exam-style questions across Network Fundamentals, Network Access, and Security Fundamentals. Get instant explanations and track your progress.</p>
+  <p class="l-sub">Practice with 810 real exam-style questions across 4 exam domains. Get instant explanations, CLI exhibits, and track your progress.</p>
   <div class="price-card">
    <div class="price-amount">$30</div>
    <div class="price-period">3 months full access</div>
    <ul class="price-features">
-    <li>635 practice questions (growing to 1000+)</li>
-    <li>Instant answer &amp; full explanations</li>
+    <li>810+ practice questions across all domains</li>
+    <li>Instant answers with full explanations</li>
     <li>CLI exhibit viewer for command questions</li>
     <li>Progress tracking per topic</li>
-    <li>Covers all 6 CCNA 200-301 exam domains</li>
-    <li>New questions added each session</li>
+    <li>Covers all CCNA 200-301 exam domains</li>
+    <li>New questions added every session</li>
    </ul>
    <button class="btn-sub" id="subBtn" onclick="doSubscribe()">&#127891; Get Access — $30 / 3 Months</button>
    <div id="subMsg"></div>
@@ -165,8 +147,8 @@ nav{background:rgba(10,26,59,.95);backdrop-filter:blur(12px);border-bottom:1px s
  <div>
   <div class="pending-icon">&#9200;</div>
   <div class="pending-title">Access Pending Approval</div>
-  <p class="pending-sub">Your subscription request was received. Our admin team will approve your access within 24 hours. You will receive an email once approved.</p>
-  <p style="color:var(--muted);font-size:.82rem;margin-top:1rem">Contact <a href="mailto:admin@kca-cloudnet.com" style="color:var(--teal)">admin@kca-cloudnet.com</a> for help.</p>
+  <p class="pending-sub">Your subscription request was received. Admin will approve within 24 hours. You will receive an email once approved.</p>
+  <p style="color:var(--muted);font-size:.82rem;margin-top:1rem">Contact <a href="mailto:admin@kca-cloudnet.com" style="color:var(--teal)">admin@kca-cloudnet.com</a></p>
  </div>
 </div>
 
@@ -188,16 +170,17 @@ nav{background:rgba(10,26,59,.95);backdrop-filter:blur(12px);border-bottom:1px s
     <div class="stat-grid">
      <div class="stat-box"><div class="stat-n" id="sCorrect" style="color:var(--green)">0</div><div class="stat-l">Got it</div></div>
      <div class="stat-box"><div class="stat-n" id="sWrong" style="color:var(--red)">0</div><div class="stat-l">Review</div></div>
-     <div class="stat-box"><div class="stat-n" id="sLeft" style="color:var(--muted)">635</div><div class="stat-l">Remaining</div></div>
-     <div class="stat-box"><div class="stat-n" id="sTotal" style="color:var(--gold)">635</div><div class="stat-l">Total</div></div>
+     <div class="stat-box"><div class="stat-n" id="sLeft" style="color:var(--muted)">810</div><div class="stat-l">Remaining</div></div>
+     <div class="stat-box"><div class="stat-n" id="sTotal" style="color:var(--gold)">810</div><div class="stat-l">Total</div></div>
     </div>
-    <button class="btn-reset" onclick="resetProg()">&#8635; Reset All Progress</button>
+    <button class="btn-reset" onclick="resetProg()">&#8635; Reset Progress</button>
    </div>
    <div class="sb-section">
     <div class="sb-label">Topics</div>
-    <button class="topic-btn active" onclick="setTopic('all',this)">All Topics <span class="t-count">635</span></button>
+    <button class="topic-btn active" onclick="setTopic('all',this)">All Topics <span class="t-count">810</span></button>
     <button class="topic-btn" onclick="setTopic('Network Fundamentals',this)">Network Fundamentals <span class="t-count">294</span></button>
     <button class="topic-btn" onclick="setTopic('Network Access',this)">Network Access <span class="t-count">218</span></button>
+    <button class="topic-btn" onclick="setTopic('IP Connectivity',this)">IP Connectivity <span class="t-count">175</span></button>
     <button class="topic-btn" onclick="setTopic('Security Fundamentals',this)">Security Fundamentals <span class="t-count">123</span></button>
    </div>
    <div class="sb-section">
@@ -205,14 +188,13 @@ nav{background:rgba(10,26,59,.95);backdrop-filter:blur(12px);border-bottom:1px s
     <div class="q-grid" id="qGrid"></div>
    </div>
   </div>
-
   <div class="exam-main">
    <div class="prog-bar"><div class="prog-bar-fill" id="progBar"></div></div>
    <div class="exam-hdr">
     <div class="exam-title" id="examTitle">All Topics</div>
     <div class="q-nav">
      <button class="nav-btn" onclick="prevQ()">&#8592;</button>
-     <span class="q-counter" id="qCtr">1 / 635</span>
+     <span class="q-counter" id="qCtr">1 / 810</span>
      <button class="nav-btn" onclick="nextQ()">&#8594;</button>
     </div>
    </div>
@@ -4031,179 +4013,1568 @@ A good password manager can also generate tokens for two-factor authentication.
 Repeat this test with:
 Same set of 123question(s)
 Close this window`},
+  {id:"IC1",num:1,topic:"IP Connectivity",type:"single",question:`A network engineer must configure an interface with IP address 10.10.10.145 and a subnet mask equivalent to 11111111.11111111.11111111.11111000. Which subnet mask must the engineer use?`,exhibit:``,has_exhibit:false,correct:`/29`,explanation:`The binary subnet mask provided is: 11111111.11111111.11111111.11111000. The number of bits set to 1
+(ones) determines the prefix length for the subnet mask. Counting the number of ones, we have 29 ones.
+Thus, the subnet mask is /29.
+`},
+  {id:"IC2",num:2,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. PC A is communicating with another device at IP address 10.225.34.225. Through which router does router Y route the traffic?`,exhibit:`Router-Y#show ip route
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+E1 - OSPF external type 1, E2 - OSPF external type 2
+i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+ia - IS-IS inter area, * - candidate default, U - per-user static route
+o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
++ - replicated r`,has_exhibit:true,correct:`router C`,explanation:`The destination IP address 10.225.34.225 falls under two routes in the routing table:
+1. "B 10.224.0.0/11 [20/0] via 10.224.1.5, 5d18h" (Router D)
+2. "B 10.224.0.0/15 [20/0] via 10.224.1.4, 5d18h" (Router C)
+Since the route with the longest prefix length (most specific match) is preferred. Between the two routes,
+"10.224.0.0/15" is more specific than "10.224.0.0/11". Therefore, Router Y will use the route with the /15
+prefix length to forward the traffic.
+`},
+  {id:"IC3",num:3,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. R1 learns all routes via OSPF. Which command configures a backup static route on R1 to reach the 192.168.20.0/24 network via R3?`,exhibit:``,has_exhibit:true,correct:`R1(config)#ip route 192.168.20.0 255.255.255.0 192.168.30.2 111`,explanation:`OSPF has administrative distance (AD) of 110. To configure a backup static route to reach the
+192.168.20.0/24 network via R3, the static route should be configured with an AD higher than 110 to
+ensure it is only used as a backup route.
+The command "ip route 192.168.20.0 255.255.255.0 192.168.30.2 111" creates a static route to the
+192.168.20.0/24 network via the next-hop 192.168.30.2 with an administrative distance of 111. Since the
+OSPF route has an AD of 110, the static route will only be used as a backup if the OSPF route fails.`},
+  {id:"IC4",num:4,topic:"IP Connectivity",type:"multiple",question:`Refer to the exhibit. Which two configurations must the engineer apply on this network so that R1 becomes the DR? (Choose two)`,exhibit:``,has_exhibit:true,correct:`R1(config)#interface fastethernet0/0 R1(config-if)#ip ospf priority 200 R3(config)#interface fastethernet0/0 R3(config-if)#ip ospf priority 0`,explanation:`To make R1 the Designated Router (DR) in this OSPF network, the OSPF priority values must be configured 
+accordingly since the DR and Backup Designated Router (BDR) roles are determined by the priority values.
+The default priority is 1 and higher priority is preferred. Here is why the given answers are correct:
+R1(config)#interface fastethernet0/0
+R1(config-if)#ip ospf priority 200
+Setting R1's OSPF priority to 200 (higher than other routers' default priorities) will make sure that it will
+become the DR.
+R3(config)#interface fastethernet0/0
+R3(config-if)#ip ospf priority 0
+Setting the OSPF pr`},
+  {id:"IC5",num:5,topic:"IP Connectivity",type:"multiple",question:`Refer to the exhibit. Which two prefixes are included in this routing table entry? (Choose two.)`,exhibit:`R2#show ip route
+C 192.168.1.0/26 is directly connected, FastEthernet0/1`,has_exhibit:true,correct:`192.168.1.17 192.168.1.61`,explanation:``},
+  {id:"IC6",num:6,topic:"IP Connectivity",type:"single",question:`Which interface is used to send traffic to the destination network?`,exhibit:`O 10.18.75.113/27 [110/6906] via G0/6
+O 10.18.75.113/27 [110/23018] via G0/3
+R 10.18.75.113/27 [120/16] via G0/16
+R 10.18.75.113/27 [120/14] via G0/23`,has_exhibit:true,correct:`G0/6`,explanation:`"G0/6"
+The routes listed in the exhibit show different paths to the destination network 10.18.75.113/27 with their
+respective administrative distances and metrics.
+The path via G0/6 has the lowest metric of 6906 and an administrative distance of 110, indicating that it is
+the most preferred route based on the OSPF protocol.
+Other paths have higher metrics (23018, 16, and 14) or a higher administrative distance (120 for RIP),
+making them less preferred compared to the path via G0/6.
+Therefore, traffic to the destination network 10.18.75.113/27 will be sent via G0/6.`},
+  {id:"IC7",num:7,topic:"IP Connectivity",type:"single",question:`A network engineer is upgrading a small data center to host several new applications, including server backups that are expected to account for up to 90% of the bandwidth during peak times. The data center connects to the MPLS network provider via a primary circuit and a secondary circuit. How does the engineer inexpensively update the data center to avoid saturation of the primary circuit by traffic associated with the backups?`,exhibit:``,has_exhibit:false,correct:`Advertise a more specific route for the backup traffic via the secondary circuit.`,explanation:`By advertising a more specific route for the backup traffic via the secondary circuit, the network engineer
+can ensure that backup traffic is routed through the secondary circuit, effectively reducing the load on the
+primary circuit. This method uses existing infrastructure and involves minimal cost, making it an
+inexpensive solution to avoid primary circuit saturation.
+"Configure a dedicated circuit for the backup traffic"is incorrect. Configuring a dedicated circuit for backup
+traffic is a solution, but it is not an inexpensive one. It involves additional costs for setting up and
+maintaining`},
+  {id:"IC8",num:8,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. An engineer configured the New-York router with static routes that point to the Atlanta and Washington sites. Which command must be configured on the Atlanta and Washington routers so that both sites are able to reach the loopback2 interface on the New-York router?`,exhibit:``,has_exhibit:true,correct:`ipv6 route ::/0 Serial 0/0/0`,explanation:`Directly Attached IPv6 Static Routes
+In directly attached IPv6 static routes, only the output interface is specified. The destination is assumed to
+be directly attached to this interface, so the packet destination is used as the next-hop address. This
+example shows such a definition:
+ipv6 route 2001:DB8::/32 gigabitethernet1/0/0
+The example specifies that all destinations with address prefix 2001:DB8::/32 are directly reachable through
+interface GigabitEthernet1/0/0.`},
+  {id:"IC9",num:9,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. The user has connectivity to devices on network 192.168.3.0/24 but cannot reach users on the network 10.10.1.0/24. What is the first step to verify connectivity?`,exhibit:`C:UsersADMIN>ipconfig
+Windows IP Configuration
+Ethernet adapter Ethernet:
+<...>
+Physical Address . . . . . . . . . . . : 04-42-1A-EE-AA-5E
+DHCP Enabled . . . . . . . . . . . . . : Yes
+Autoconfiguration Enabled. . . . . . . : Yes
+Link-local IPv6 Address. . . . . . . . : fe80::8a79:bcde:34dc:c11e35%(Preferred) 
+Ipv4 Address . . . . . . . . . . . . . : 192.168.3.20(Preferred)
+Subnet Mask. . . . . . . . . . . . . . : 255.255.255.0
+Lease Obtained . . . . . . . . . . . . : Thursday, 16 March 2023 6:2`,has_exhibit:true,correct:`Is the default gateway reachable?`,explanation:`The default gateway routes traffic from your local network to other networks. If the local network is
+reachable but not the outside network, then the issue might be with the default gateway. Therefore the
+first step is to check if the default gateway is reachable.`},
+  {id:"IC10",num:10,topic:"IP Connectivity",type:"single",question:`Which Windows command is used instead of the route print command to display the contents of the IP routing table?`,exhibit:``,has_exhibit:false,correct:`netstat-r`,explanation:`The "netstat -r" command in Windows displays the contents of the IP routing table, similar to the "route
+print" command. It shows the network destinations, netmasks, gateways, interfaces, and metrics.`},
+  {id:"IC11",num:11,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which next-hop IP address has the least desirable metric when sourced from R1?`,exhibit:`
+R1# show ip route
+C 1.0.0.0/8 is directly connected, Loopback0
+10.0.0.0/8 is variably subnetted, 4 subnets, 2 masks
+O 10.10.10.3/32 [110/100] via 10.10.10.3, 00:39:08, Gigabitethernet0/3
+C 10.10.10.0/24 is directly connected, Gigabitethernet0/0
+O 10.10.10.2/32 [110/5] via 10.10.10.2, 00:39:08, Gigabitethernet0/2
+R 10.10.10.4/32 [120/10] via 10.10.10.4, 00:39:08, Gigabitethernet0/4`,has_exhibit:true,correct:`10.10.10.3`,explanation:`This is question is a bit confusing. There are 4 routes in the routing table,
+C 10.10.10.0/24 is directly connected, Gigabitethernet0/0
+O 10.10.10.3/32 [110/100] via 10.10.10.3
+O 10.10.10.2/32 [110/5] via 10.10.10.2
+R 10.10.10.4/32 [120/10] via 10.10.10.4.
+OSPF routes have a lower administrative distance (110) compared to RIP (120). However, within the OSPF
+routes, the route with the highest metric is less desirable. Comparing the metrics, 100 (10.10.10.3) is higher
+than 5 (10.10.10.2).
+The RIP route (10.10.10.4) has an administrative distance of 120 and a metric of 10, which makes it less
+pre`},
+  {id:"IC12",num:12,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. An engineer just installed network 10.120.10.0/24. Which configuration must be applied to the R14 router to add the new network to its OSPF routing table?`,exhibit:``,has_exhibit:true,correct:`router ospf 100 network 10.120.10.0 0.0.0.255 area 0`,explanation:`The OSPF network command format is used to identify which interfaces will participate in the OSPF process
+and which areas they belong to. The format is as follows: "network <network_address>
+<wildcard_mask> area <area_id>"
+Network address: The network address you want to include in the OSPF process.
+Wildcard mask: The inverse of the subnet mask for the network. It specifies which bits of the network
+address must match. The wildcard mask of 255.255.255.0 (/24) is 0.0.0.255.
+area id: The OSPF area in which the network resides.
+The given answer correctly specifies the OSPF process ID (100) and th`},
+  {id:"IC13",num:13,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which prefix did router R1 learn from internal EIGRP?`,exhibit:`Rl# show ip route | begin gateway
+Gateway of last resort is not set
+172.16.0.0/16 is variably subnetted, 3 subnets, 2 masks
+C 172.16.1.0/24 is directly connected, FastEthernet0/0
+L 172.16.1.1/32 is directly connected, FastEthernet0/0
+EX 172.16.2.0/24 [170/2] via 07.165.200.250, 00:00:23, Serial0/0/0
+O 192.168.1.0/24 [110/84437] via 207.165.200.254, 00:00:17, Serial0/0/l
+D 192.168.2.0/24 [90/184437] via 207.165.200.254, 00:00:13, Serial0/0/l
+E1 192.168.3.0/24 [110/1831437] via 207.165.200.254, 00`,has_exhibit:true,correct:` 192.168.2.0/24`,explanation:`In the exhibit, the route entries show how different networks were learned.
+C (Connected): Indicates directly connected networks.
+L (Local): Indicates routes to the IP addresses of the interfaces on the router.
+EX (EIGRP External): Indicates that the route was learned via External EIGRP.
+O (OSPF): Indicates that the route was learned via OSPF.
+D (EIGRP): Indicates that the route was learned via Internal EIGRP.
+E1 (EIGRP External type 1): Indicates that the route was redistributed into EIGRP as an external route.
+The route 192.168.2.0/24 is marked with D (EIGRP) which indicates it was learned v`},
+  {id:"IC14",num:14,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. If configuring a static default route on the router with the ip route 0.0.0.0 0.0.0.0 10.13.0.1 120 command how does the router respond?`,exhibit:`Gateway of last resort is 10.12.0.1 to network 0.0.0.0
+O*E2 0.0.0.0/0 [110/1] via 10.12.0.1, 00:00:01, GigabitEthernet0/0
+10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C 10.0.0.0/24 is directly connected, GigabitEthernet0/0
+L 10.0.0.2/32 is directly connected, GigabitEthernet0/0
+C 10.13.0.0/24 is directly connected, GigabitEthernet0/1
+L 10.13.0.2/32 is directly connected, GigabitEthernet0/1`,has_exhibit:true,correct:`It ignores the new static route until the existing OSPF default route is removed.`,explanation:`The new static default route has the AD value of 120 (the last parameter), that is higher than the AD of
+current default route (OSPF External route O*E2). Since routers prefer the routes having lower AD value
+when installing in the routing table, our new static default route will not be installed into the routing table
+until the current default route is removed.
+However, if the new route had default AD configured, with the command ip route 0.0.0.0 0.0.0.0
+10.13.0.1 (without AD 120) then it would replace the OSPF default route due to lower AD value.
+`},
+  {id:"IC15",num:15,topic:"IP Connectivity",type:"single",question:`By default, how Does EIGRP determine the metric of a route for the routing table?`,exhibit:``,has_exhibit:false,correct:`It uses the bandwidth and delay values of the path to calculate the route metric.`,explanation:`By default EIGRP uses bandwidth and delay of each route to calculate its metric.`},
+  {id:"IC16",num:16,topic:"IP Connectivity",type:"single",question:`A router has two static routes to the same destination network under the same OSPF process. How does the router forward packets to the destination if the next-hop devices are different?`,exhibit:``,has_exhibit:false,correct:`The router load-balances traffic over all routes to the destination.`,explanation:`Like other dynamic routing protocols, OSPF does equal cost load balancing. If you have routes with equal
+cost paths to the same destination, then OSPF will do load sharing.`},
+  {id:"IC17",num:17,topic:"IP Connectivity",type:"single",question:`Which information is used to install the best route to a destination in IP routing table?`,exhibit:``,has_exhibit:false,correct:`The prefix length`,explanation:`
+The Effect of Prefix Length on Populating the Routing Table
+Let us look at a scenario to see how the router handles varying prefix lengths. Assume, that a router has
+four routing processes running on it, and each process has received these routes:
+EIGRP (internal): 192.168.32.0/26
+RIP: 192.168.32.0/24
+OSPF: 192.168.32.0/19
+Which of these routes will be installed in the routing table? Since EIGRP internal routes have the best
+administrative distance, it's tempting to assume the first one will be installed. However, since each of these
+routes has a different prefix length (subnet mask), they'r`},
+  {id:"IC18",num:18,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. After the configuration is applied, the two routers fail to establish an OSPF neighbor relationship. What is the reason for the problem?`,exhibit:``,has_exhibit:true,correct:` Router2 is using the default hello timer.`,explanation:`The OSPF Hello and Dead intervals must match between neighbors to establish OSPF adjacency.
+Router1 is configured with the ip ospf hello-interval 5 command, that sets Hello interval to 5 seconds, but
+Router2 is using the default OSPF Hello interval of 10 seconds.
+OSPF Hello and Dead Interval
+OSPF uses hello packets and two timers to check if a neighbor is still alive or not:
+Hello interval: this defines how often we send the hello packet.
+Dead interval: this defines how long we should wait for hello packets before we declare the neighbor
+dead.
+The hello and dead interval values can be differen`},
+  {id:"IC19",num:19,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which next-hop IP address does Router1 use for packets destined to host 10.10.13.158?`,exhibit:``,has_exhibit:true,correct:`10.10.10.9`,explanation:`The destination IP "10.10.13.158" matches only 1 route in the routing table:
+"O 10.10.13.144/28 [110/2] via 10.10.10.9, 00:05:07, GigabitEthernet0/3"
+The subnet 10.10.13.144/28 covers the IP addresses 10.10.13.144 - 10.10.13.159. According to this route,
+the correct next-hop IP address for packets destined to 10.10.13.158 is 10.10.10.9.`},
+  {id:"IC20",num:20,topic:"IP Connectivity",type:"multiple",question:`Refer to Exhibit. The loopback1 interface of the Atlanta router must reach the loopback3 interface of the Washington router. Which two static host routes must be configured on the New-York router? (Choose two)`,exhibit:``,has_exhibit:true,correct:`ipv6 route 2000::1/128 2012::1 ipv6 route 2000::3/128 2023::3`,explanation:`ipv6 route 2000::1/128 2012::1
+This route indicates that destination 2000::1/128 (Atlanta's Lo1 address) is reachable via the next hop
+address 2012::1 (Atlanta's Serial 0/0/0 address), with the default AD value of 1 (not configured).
+So this route uses New-York's interface Se0/0/0 as the primary path to reach the Lo1 interface on Atlanta
+router. This is an example of the Recursive Static Route in IPv6.
+ipv6 route 2000::3/128 2023::3
+This route indicates that destination 2000::3/128 (Washington's interface Lo3 is reachable via the next hop
+address 2023::3 (Washington's Serial 0/0/0 address).
+IP`},
+  {id:"IC21",num:21,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. The network engineer is configuring router R2 as a replacement router on the network. After the initial configuration is applied it is determined that R2 failed to show R1 as a neighbor. Which configuration must be applied to R2 to complete the OSPF configuration and enable it to establish the neighbor relationship with R1?`,exhibit:`R1#show ip ospf interface g0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+Internet address is 192.168.1.2/24, Area 0
+Process ID 1, Router ID 192.168.1.2, Network Type POINT-TO-POINT, Cost: 1
+Transmit Delay is 1 sec, State POINT-TO-POINT,
+Timer intervals configured, Hello 15, Dead 40, Wait 40, Retransmit 5
+Hello due in 00:00:08
+Index 1/1, flood queue length 0
+Next 0x0(0) /0x0(0)
+Last flood scan length is 1, maximum is 1
+Last flood scan time is 0 msec, maximum is 0 msec
+Suppress hello for 0`,has_exhibit:true,correct:`R2(config)#interface g0/0/0 R2(config-if)#ip ospf dead-interval 40`,explanation:`The OSPF Dead interval is different on R2, that is why it failed to establish neighborship with R1. The OSPF
+intervals (Hello and Dead) must be same for OSPF adjacency formation.`},
+  {id:"IC22",num:22,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. The IPv6 address for the LAN segment on router R2 must be configured using the EUI-64 format. When configured which ipv6 address is produced by the router?`,exhibit:``,has_exhibit:true,correct:`2001:db8:d955:1008:10D8:BAFF:FEC2:1`,explanation:`"2001:db8:d955:1008:10D8:BAFF:FEC2:1"
+The EUI-64 address is generated by taking the interface's MAC address and inserting "FFFE" in the middle
+of it, then flipping the 7th bit.
+From the exhibit, the MAC address for R2's E0/1 interface is 12-8D-BA-C2-00-01.
+Steps to create the EUI-64 address:
+1. Split the MAC address into two halves: 12-8D-BA and C2-00-01.
+2. Insert FFFE in the middle: 12-8D-BA-FF-FE-C2-00-01.
+3. Convert the first byte (12 in hexadecimal) to binary: 0001 0010.
+4. Flip the 7th bit: 0001 0010 becomes 0001 0000.
+5. Convert the modified binary back to hexadecimal: 10. 
+Thus, the m`},
+  {id:"IC23",num:23,topic:"IP Connectivity",type:"multiple",question:`Which two minimum parameters must be configured on an active interface to enable OSPFv2 to operate? (Choose two)`,exhibit:``,has_exhibit:false,correct:`OSPF area OSPF process ID`,explanation:``},
+  {id:"IC24",num:24,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which route must be configured on R1 so that OSPF routing is used when OSPF is up, but the server is still reachable when OSPF goes down?`,exhibit:``,has_exhibit:true,correct:`ip route 10.1.1.10 255.255.255.255 gi0/0 125`,explanation:`To ensure that the server is reachable when OSPF goes down, we need to configure a static route on R1
+with a higher administrative distance than the OSPF route. This static route will act as a backup and will
+only be used when the OSPF route is unavailable.
+ip route 10.1.1.10 255.255.255.255 gi0/0 125 This option configures a host route specifically for
+10.1.1.10 with an AD of 125, which is higher than OSPF’s AD of 110. This ensures that the route is only used
+if the OSPF route to 10.1.1.10 goes down. Additionally, it provides a more specific host route, aligning with 
+the requirement to reac`},
+  {id:"IC25",num:25,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. An engineer must configure router R2 so it is elected as the DR on the WAN subnet. Which command sequence must be configured?`,exhibit:``,has_exhibit:true,correct:`interface gigabitethernet0/0 ip address 10.0.0.34 255.255.255.224 ip ospf priority 100`,explanation:`To ensure that Router R2 is elected as the Designated Router (DR) on the WAN subnet, the OSPF priority
+must be configured with a higher value than any other routers on that subnet. The router with the highest
+OSPF priority is elected as the DR. If there is a tie in priority, the router with the highest router ID is elected.
+R1's configuration shows an OSPF priority of 99. To ensure R2 becomes the DR, we must configure its OSPF
+priority to a value higher than 99. The IP Address should also be configured as 10.0.0.34 with mask
+255.255.255.224 (/27).
+The given answer is correct as:
+It configures `},
+  {id:"IC26",num:26,topic:"IP Connectivity",type:"single",question:`A Cisco engineer notices that two OSPF neighbors are connected using a crossover Ethernet cable. The neighbors are taking too long to become fully adjacent. Which command must be issued under the interface configuration on each router to reduce the time required for the adjacency to reach the FULL state?`,exhibit:``,has_exhibit:false,correct:` ip ospf network point-to-point`,explanation:`The broadcast network type is the default network type for an OSPF-enabled Ethernet interface. It requires
+a link that supports Layer 2 broadcast. It requires the use of a DR/BDR relationship, and it has a 10-second
+hello and 40-second dead timer.
+A point-to-point network type is, as its name implies, a connection between two specific points (or OSPF
+routers). On a point-to-point link, a packet delivered from one of the routers will always have precisely one
+recipient. It does not maintain a DR/BDR relationship, and it has a 10-second hello and 40-second dead
+timer.
+Full State
+In this state, r`},
+  {id:"IC27",num:27,topic:"IP Connectivity",type:"single",question:`R1 has learned route 192.168.12.0/24 via IS-IS, OSPF, RIP, and Internal EIGRP. Under normal operating conditions, which routing protocol is installed in the routing table?`,exhibit:``,has_exhibit:false,correct:`Internal EIGRP`,explanation:`Cisco routers prefer the route, advertised by a routing protocol, with lower Administrative Distance. EIGRP
+routes have lower AD than those of other dynamic routing protocols given in this question, hence
+preferred by Cisco routers.
+The administrative distances of some common dynamic routing protocols are:
+Internal EIGRP = 90
+External EIGRP = 170
+IGRP = 100
+OSPF = 110
+IS-IS = 115
+RIP = 120
+`},
+  {id:"IC28",num:28,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. A network engineer must configure R1 so that it sends all packets destined to the 10.0.0.0/24 network to R3, and all packets destined to PC1 to R2. Which configuration must the engineer implement?`,exhibit:``,has_exhibit:true,correct:`R1(config)#ip route 10.0.0.0 255.255.255.0 192.168.0.2 R1(config)#ip route 10.0.0.5 255.255.255.255 172.16.0.2`,explanation:`To configure R1 so that it sends all packets destined for the 10.0.0.0/24 network to R3 and all packets
+destined specifically for PC1 (10.0.0.5) to R2, a route must be created to send all traffic destined for the
+10.0.0.0/24 network to R3 via the 192.168.0.2 address. Additionally, a host route must be created to send
+traffic destined specifically for the IP address 10.0.0.5 (PC1) to R2 via the 176.16.0.2 address.
+The given answer is correct:
+"R1(config)#ip route 10.0.0.0 255.255.255.0 192.168.0.2": This command routes all traffic for the
+10.0.0.0/24 network to R3 (192.168.0.2).
+"R1(config)#ip `},
+  {id:"IC29",num:29,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. What is the subnet mask of the route to the 10.10.13.160 prefix?`,exhibit:`Router1# show ip route
+Gateway of last resort is 10.10.11.2 to network 0.0.0 0
+209.165.200.0/27 is subnetted, 1 subnets
+B 209.165.200.224 [20/0] via 10 10.12.2,03:22:14
+209.165.201.0/27 is subnetted, 1 subnets
+B 209.165.201.0 [20/0] via 10.10.12.2, 02:26:33
+209.165.202.0/27 is subnetted, 1 subnets
+B 209.165.202.128 [20/0] via 10.10.12.2,02:26:03
+10.0.0.0/8 is variably subnetted, 8 subnets, 4 masks
+C 10.10.10.0/28 is directly connected, GigabitEthernet0/0 
+C 10.10.11.0/30 is directly connected, `,has_exhibit:true,correct:`255.255.255.248`,explanation:`The route to the 10.10.13.160 prefix is listed with a /29 subnet mask in the routing table. A /29 subnet
+mask corresponds to 255.255.255.248.
+Conversion process:
+The /29 notation means that the first 29 bits of the IP address are used for the network portion, and the
+remaining bits are used for the host portion.
+An IPv4 address is 32 bits long. Therefore, a /29 network has 29 bits set to 1 (network bits) and the
+remaining 3 bits set to 0 (host bits).
+Network bits (29): 11111111.11111111.11111111.11111000
+Host bits (3): 000
+Now, convert each 8-bit block (octet) from binary to decimal:
+The binar`},
+  {id:"IC30",num:30,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. A packet is being sent across router R1 to host 172.163.3.14. To which destination does the router send the packet?`,exhibit:``,has_exhibit:true,correct:` 209.165.200.246 via Serial0/1/0`,explanation:`There is no dynamic or connected route to the destination address 172.163.3.14. Therefore, R1 will use the
+default route via 209.165.200.246, Serial0/1/0.`},
+  {id:"IC31",num:31,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. How does the router manage traffic to 192.168.12.16?`,exhibit:`EIGRP: 192.168.12.0/24
+RIP: 192.168.12.0/27
+OSPF: 192.168.12.0/28`,has_exhibit:true,correct:`It selects the RIP route because it has the longest prefix inclusive of the destination address.`,explanation:`"It selects the RIP route because it has the longest prefix inclusive of the destination address."
+According to the Longest prefix match, the router first checks for the most specific route, which is the route
+with the longest subnet mask that matches the destination IP address.
+The OSPF route has the highest prefix length /28 but the range of IP addresses covered by 192.168.12.0/28
+specifically includes 192.168.12.0 to 192.168.12.15, thus not actually including the address 192.168.12.16.
+The RIP route with a /27 prefix includes the IP address range from 192.168.12.0 to 192.168.12.31, which
+do`},
+  {id:"IC32",num:32,topic:"IP Connectivity",type:"single",question:`An engineer is configuring router R1 with an IPv6 static route for prefix 2019:C15C:0CAF:E001::/64. The next hop must be 2019:C15C:0CAF:E002::1 The route must be reachable via the R1 Gigabit 0/0 interface. Which command configures the designated route? `,exhibit:``,has_exhibit:false,correct:`R1(config)#ipv6 route 2019:C15C:0CAF:E001::/64 2019:C15C:0CAF:E002::1`,explanation:``},
+  {id:"IC33",num:33,topic:"IP Connectivity",type:"single",question:`A user configured OSPF in a single area between two routers. A serial interface connecting R1 and R2 is running encapsulation PPP. By default which OSPF network type is seen on this interface when the user types show ip ospf interface on R1 or R2?`,exhibit:``,has_exhibit:false,correct:`point-to-point`,explanation:`Point-to-point
+An OSPF network, consisting of a serial link with PPP or HDLC encapsulation, is a point-to-point network.
+Here are some characteristics of OSPF point-to-point networks:
+Point-to-Point network types are intended to be used between 2 directly connected routers.
+A Point-to-Point OSPF network type does not maintain a DR/BDR relationship.
+The Point-to-Point network type has a 10 second hello and 40 second dead timer.`},
+  {id:"IC34",num:34,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Routers R1 and R3 have the default configuration. The router R2 priority is set to 99. Which commands on R3 configure it as the DR in the 10.0.4.0/24 network?`,exhibit:``,has_exhibit:true,correct:` R3(config)#interface Gig0/1 R3(config-if)#ip ospf priority 100`,explanation:`In OSPF (Open Shortest Path First), the Designated Router (DR) is chosen based on the highest router
+priority. The default priority is 1, and a higher priority increases the chances of becoming the DR. If the
+priority is 0, the router is not eligible to become a DR.
+In this topology, the router R2 has its priority set to 99, which is higher than the default priority of 1 for R1
+and R3. To make R3 the DR, you need to set its OSPF priority to a value higher than 99.
+The given answer sets the OSPF priority to 100 on the interface connected to the 10.0.4.0/24 network
+(Gig0/1). Since this value is `},
+  {id:"IC35",num:35,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Traffic from R1 to the 10.10.2.0/24 subnet uses 192.168.1.2 as its next hop. An network engineer wants to update the R1 configuration so that traffic with destination 10.10.2.1 passes through router R3, and all other traffic to the 10.10.20/24 subnet passes through R2. Which command must be used?`,exhibit:``,has_exhibit:true,correct:`ip route 10.10.2.1 255.255.255.255 192.168.1.4 100`,explanation:`To direct traffic destined for 10.10.2.1 to go through router R3 (via the next-hop 192.168.1.4), and all other
+traffic destined for the 10.10.2.0/24 subnet continues to pass through router R2 (via the next-hop
+192.168.1.2), we need to configure a host route for the IP address 10.10.2.1.
+A host route is route to a single host having subnet mask of 255.255.255.255 (/32). By specifying a host
+route for the exact IP address 10.10.2.1, this route will be used for traffic to this address, while the broader
+10.10.2.0/24 subnet route will handle all other traffic.
+The administrative distance can be us`},
+  {id:"IC36",num:36,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. R1 has taken the DROTHER role in the OSPF DR/BDR election process. Which configuration must an engineer implement so that R1 is elected as the DR?`,exhibit:``,has_exhibit:true,correct:`R1(config)#interface FastEthernet0/0 R1(config-if)#ip ospf priority 200 R1#clear ip ospf process`,explanation:`To ensure that R1 is elected as the DR (Designated Router) in the OSPF network, the engineer should
+configure R1 with a higher OSPF priority. The priority value determines the router's eligibility to become
+the DR or BDR (Backup Designated Router). The router with the highest priority value is elected as the DR,
+and in case of a tie, the router with the highest router ID is selected.
+The given answer is correct as:
+"R1(config-if)#ip ospf priority 200" sets the OSPF priority to 200 on R1 giving it a much higher chance of
+becoming the DR, as 200 is higher than the default priority of 1.
+"R1#clea`},
+  {id:"IC37",num:37,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. R5 is the current DR on the network, and R4 is the BDR. Their interfaces are flapping, so a network engineer wants the OSPF network to elect a different DR and BDR. Which set of configurations must the engineer implement?`,exhibit:``,has_exhibit:true,correct:`R3(config)#interface gi0/0 R3(config-if)#ip ospf priority 255 R2(config)#interface gi0/0 R2(config-if)#ip ospf priority 240`,explanation:`A router with the highest value of OSPF priority becomes DR and the next higher value router becomes
+BDR. The OSPF priority ranges from 0 to 255 (default 100). So, we need to increase the OSPF priority value
+of R1, R2 or R3 to select DR and BDR from them.`},
+  {id:"IC38",num:38,topic:"IP Connectivity",type:"single",question:`An engineer configured an OSPF neighbor as a designated router. Which state verifies the designated router is in the proper mode?`,exhibit:``,has_exhibit:false,correct:`Full`,explanation:`The DR and BDR that achieve FULL state with every router on the segment will display FULL/DROTHER
+when you enter the show ip ospf neighbor command on either a DR or BDR. This simply means that the
+neighbor is not a DR or BDR, but since the router on which the command was entered is either a DR or
+BDR, this shows the neighbor as FULL/DROTHER.
+https://www.cisco.com/c/en/us/support/docs/ip/open-shortest-path-first-ospf/13685-13.html`},
+  {id:"IC39",num:39,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. A network engineer executes the show ip route command on router D. What is the next hop to network 192.168.1.0/24 and why?`,exhibit:``,has_exhibit:true,correct:`The next hop is 10.0.0.1 because it has a better administrative distance`,explanation:`"The next hop is 10.0.0.1 because it has a better administrative distance"
+EIGRP has a default AD (Administrative Distance) of 90 lower than OSPF which has AD of 110, Hence an
+EIGRP route is preferred over OSPF.
+RD has two routes to the destination network 192.168.1.0/24 network, First one is an eigrp route through
+RB (10.0.0.1) and second is an OSPF route through RC (10.0.2.1).
+RD will prefer the EIGRP route because it has a lower AD of 90 compared to the OSPF route with an AD of
+110.Therefore, the next hop will be through RB with the IP address 10.0.0.1.`},
+  {id:"IC40",num:40,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. An engineer assumes a configuration task from a peer. RouterA must establish an OSPF neighbor relationship with neighbor 172.1.1.1. The output displays the status of the adjacency after 2 hours. What is the next step in the configuration process for the routers to establish an adjacency?`,exhibit:`A#show ip ospf neighbor
+Neighbor ID Pri State Dead Time Address Interface
+172.1.1.1 1 EXCHANGE/- 00:00:36 172.16.32.1 Serial0.1`,has_exhibit:true,correct:`Configure RouterA to use the same MTU size as RouterB`,explanation:`The exhibit shows that the OSPF neighbor relationship between RouterA and RouterB is stuck in the
+EXCHANGE state. This typically indicates an MTU mismatch between the two routers, as OSPF requires the
+MTU settings on both interfaces to match for a successful adjacency.
+Configure RouterA to use the same MTU size as RouterB: Matching the MTU size on both routers
+should allow the OSPF process to progress beyond the EXCHANGE state and establish a full adjacency.
+`},
+  {id:"IC41",num:41,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. What is the metric for the route to the 192.168.10.33 host?`,exhibit:`R1#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+E1 - OSPF external type 1, E2 - OSPF external type 2
+i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+ia - IS-IS inter area, * - candidate default, U - per-user static route
+o - ODR, P - periodic downloaded static route
+Gateway of last resort is 192.168.30.10 to network 0.`,has_exhibit:true,correct:`193`,explanation:`Traffic to host 192.168.10.33 matches the route entry "O IA 192.168.10.32/28 [110/193] via
+192.168.30.10, 00:18:49, Serial0/0.1" hence the metric of this route is "193" in the square bracket.`},
+  {id:"IC42",num:42,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which type of route does R1 use to reach host 10.10.13.10/32?`,exhibit:``,has_exhibit:true,correct:`network route`,explanation:`R1 uses the network route 10.10.13.0/25, learned through OSPF, to reach the end host 10.10.13.10/25.
+The network route 10.10.13.0/25 contains host range 10.10.13.1 to 10.10.13.126.`},
+  {id:"IC43",num:43,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which route does R1 select for traffic that is destined to 192 168.16.2?`,exhibit:`R1#show ip route
+D 192.168.16.0/26 [90/2679326] via 192.168.1.1
+R 192.168.16.0/24 [120/3] via 192.168.1.2
+O 192.168.16.0/21 [110/2] via 192.168.1.3
+i L1 192.168.16.0/27 [115/30] via 192.168.1.4`,has_exhibit:true,correct:`192.168.16.0/27`,explanation:`Longest Prefix Match vs Administrative Distance
+Remember the fact that when making forwarding decisions, the longest prefix match always wins among
+the routes actually installed in the routing table, while the routing protocol with the lowest administrative
+distance always wins when installing routes into the routing table.
+https://www.cisco.com/c/en/us/support/docs/ip/enhanced-interior-gateway-routing-protocol-eigrp/8651-
+21.html
+In this case the destination IP address matches all four routes but the route to 192.168.16.0/27 has the
+longest prefix, so R1 will prefer this route.
+More Info...
+M`},
+  {id:"IC44",num:44,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. The network engineer is configuring router R2 as a replacement router on the network. After the initial configuration is applied it is determined that R2 failed to show R1 as a neighbor. Which configuration must be applied to R2 to complete the OSPF configuration and enable it to establish the neighbor relationship with R1?`,exhibit:`R1#show ip ospf interface g0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+Internet address is 192.168.1.2/24, Area 0
+Process ID 1, Router ID 192.168.1.2, Network Type POINT-TO-POINT, Cost: 1
+Transmit Delay is 1 sec, State POINT-TO-POINT,
+Timer intervals configured, Hello 15, Dead 20, Wait 20, Retransmit 5
+Hello due in 00:00:08
+Index 1/1, flood queue length 0
+Next 0x0(0) /0x0(0)
+Last flood scan length is 1, maximum is 1
+Last flood scan time is 0 msec, maximum is 0 msec
+Suppress hello for 0`,has_exhibit:true,correct:`R2(config)#interface g0/0/0 R2(config-if)#ip ospf hello-interval 15 R2(config-if)#ip ospf dead-interval 20`,explanation:`For OSPF routers to establish a neighbor relationship, certain parameters must match between the
+interfaces on both routers. These parameters include the Hello interval, Dead interval, and Area ID, among
+others.
+From the exhibit:
+R1 has a Hello interval of 15 seconds and a Dead interval of 20 seconds.
+R2 has a Hello interval of 10 seconds and a Dead interval of 40 seconds.
+Since these intervals do not match, R1 and R2 cannot form an OSPF neighbor relationship.
+To resolve this, the Hello interval and Dead interval on R2 should be adjusted to match those on R1:
+Hello interval: 15 seconds
+Dead in`},
+  {id:"IC45",num:45,topic:"IP Connectivity",type:"single",question:`What is a benefit of VRRP?`,exhibit:``,has_exhibit:false,correct:`It provides the default gateway redundancy on a LAN using two or more routers.`,explanation:``},
+  {id:"IC46",num:46,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. When router R1 receives a packet with destination IP address 10.56.0.62, through which interface does it route the packet?`,exhibit:`R1#
+Gateway of last resort is 10.56.0.1 to network 0.0.0.0
+S* 0.0.0.0/0 [1/0] via 10.56.0.1 
+10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C 10.56.0.0/16 is directly connected, Null0
+C 10.56.0.0/26 is directly connected, Vlan58
+C 10.56.0.0/17 is directly connected, Vlan59
+C 10.56.0.0/24 is directly connected, Vlan60`,has_exhibit:true,correct:`Vlan58`,explanation:`"Vlan58"
+To forward the packet, the router uses the most specific route, which is determined by the highest prefix
+length. In this case, the route "C 10.56.0.0/26 is directly connected, Vlan58" is the most specific route for the
+destination IP address 10.56.0.62 because it has the highest prefix length (/26). Therefore, the packet with
+destination IP address 10.56.0.62 will be forwarded through Vlan58.`},
+  {id:"IC47",num:47,topic:"IP Connectivity",type:"single",question:`A user configured OSPF and advertised the Gigabit Ethernet interface in OSPF. By default, to which type of OSPF network does this interface belong?`,exhibit:``,has_exhibit:false,correct:`broadcast`,explanation:`When OSPF is configured on a Gigabit Ethernet interface, the default network type assigned to the
+interface is broadcast. This means that OSPF will treat the network as a broadcast multi-access network,
+where OSPF routers can directly communicate with each other, and a Designated Router (DR) and Backup
+Designated Router (BDR) are elected to manage OSPF routing updates.`},
+  {id:"IC48",num:48,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. The administrator must configure a floating static default route that points to 2001:db8:1234:2::1 and replaces the current default route only if it fails. Which command must the engineer configure on the CPE? `,exhibit:`CPE# show ipv6 route
+IPv6 Routing Table - default - 6 entries
+Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+B - BGP, R - RIP, H - NHRP, II - ISIS L1
+I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
+EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination
+NDr - Redirect, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1
+OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2
+la - LISP alt, lr - LISP site-registrations, ld - LISP dyn-e`,has_exhibit:true,correct:`ipv6 route ::/0 2001:db8:1234:2::1 3`,explanation:`A static floating route is a type of static route that is configured with a higher administrative distance than
+the primary route. It serves as a backup route incase the primary route fails.
+The existing default route has an administrative distance of 2 as shown in the exhibit:
+"ND ::/0 [2/0]".
+To create a floating static route, we need to configure a static route with a higher administrative distance
+than the existing route.
+The command ipv6 route ::/0 2001:db8:1234:2::1 3 will create a static default route pointing to
+2001:db8:1234:2::1 with higher administrative distance than the existing o`},
+  {id:"IC49",num:49,topic:"IP Connectivity",type:"single",question:`When OSPF learns multiple paths to a network, how does it select a route?`,exhibit:``,has_exhibit:false,correct:`It divides a reference bandwidth of 100 Mbps by the actual bandwidth of the existing interface to calculate the router with the lowest cost.`,explanation:`OSPF Metric
+OSPF uses Cost as the value of metric and uses a Reference Bandwidth of 100 Mbps for cost calculation.
+The formula to calculate the cost is Reference Bandwidth divided by interface bandwidth. For example, in
+the case of 10 Mbps Ethernet, OSPF Metric Cost value is 100 Mbps / 10 Mbps = 10.
+OSPF Cost is inversely proportional to the bandwidth of an interface.
+K-values are used by EIGRP.
+Hop count is used by RIP.`},
+  {id:"IC50",num:50,topic:"IP Connectivity",type:"single",question:`OSPF must be configured between routers R1 and R2. Which OSPF configuration must be applied to router R1 to avoid a DR/BDR election?`,exhibit:``,has_exhibit:false,correct:`router ospf 1 network 192.168.1.1 0.0.0.0 area 0 interface e1/1 ip address 192.168.1.1 255.55.255.252  ip ospf network point-to-point`,explanation:`The given answer is correct as it sets the OSPF network type to point-to-point with the command ip ospf
+network point-to-point on interface e1/1.
+To prevent a Designated Router (DR) and Backup Designated Router (BDR) election on an OSPF link, the
+link should be set to point-to-point mode. In OSPF, DR/BDR elections occur on broadcast and non-
+broadcast multi-access networks. By configuring the interface as point-to-point, OSPF will not perform a
+DR/BDR election, as point-to-point links are designed for two directly connected routers and do not
+require DR/BDR roles.`},
+  {id:"IC51",num:51,topic:"IP Connectivity",type:"multiple",question:`For which two reasons might you choose to configure static routing instead of dynamic routing on a router? (Choose two)`,exhibit:``,has_exhibit:false,correct:`The router only needs access to a single or small number of routes. The router is part of a stub network.`,explanation:``},
+  {id:"IC52",num:52,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. R1 has just received a packet from host A that is destined to host B. Which route in the routing table is used by R1 to reach host B?`,exhibit:``,has_exhibit:true,correct:`10.10.13.0/25[108/0] via 10.10.10.10`,explanation:`The best match for reaching Host B is the route configured as “ip route 10.10.13.0 255.255.255.128
+10.10.10.10 108”. This route has the lowest administrative distance (AD) of 108, making it the most
+preferred option. Since this AD is lower than the default AD of OSPF (which is 110), the router will prioritize 
+this static route over any OSPF-learned routes to reach the destination network 10.10.13.0/25.`},
+  {id:"IC53",num:53,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Router R1 Fa0/0 cannot ping router R3 Fa0/1. Which action must be taken in router R1 to help resolve the configuration issue?`,exhibit:``,has_exhibit:true,correct:`Configure a static route with 10.10.10.2 as the next hop to reach the 20.20.20.0/24 network.`,explanation:`The output shows that no dynamic routing protocol is configured, therefore, static routes must be used to
+route traffic between R1 and R3.
+Now the routing table of R3 shows a static route, with 20.20.20.1 as the next hop, to reach the
+10.10.10.0/24 network (R1 Fa0/0 network).
+For two-way traffic routing, R1 must be configured with a static route, with 10.10.10.2 as the next hop, to
+reach the 20.20.20.0/24 network (R3 Fa0/1 network).`},
+  {id:"IC54",num:54,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Connections must be blocked from PC2 to the file server while still allowing PC2 to connect to other network hosts and devices. Which configuration must be used to complete the task?`,exhibit:``,has_exhibit:true,correct:`R2(config)#access-list 1 deny 192.168.2.10 R2(config)#access-list 1 permit any R2(config)#interface g0/1  R2(config-if)#ip access-group 1 out`,explanation:`To block connections from PC2 to the file server while still allowing PC2 to connect to other network hosts
+and devices, we need an access list that denies packets from PC2 and permits all other traffic. Then, we
+need to apply this access list outbound on the g0/1 interface of R2, which is connected to the file server.
+The given answer accurately applies an access list on R2 to block connections from PC2 to the file server
+while allowing other connections by applying the access list outbound on the interface connected to the
+file server.
+"R2(config)#access-list 1 deny 192.168.2.10"
+denies traf`},
+  {id:"IC55",num:55,topic:"IP Connectivity",type:"single",question:`Router R1 must send all traffic without a matching routing-table entry to 192.168.1.1. Which configuration accomplishes this task?`,exhibit:``,has_exhibit:false,correct:`R1#config t R1(config)#ip routing R1(config)#ip route 0.0.0.0 0.0.0.0 192.168.1.1`,explanation:`Default Route (Gateway of Last Resort)
+A default route, also called a gateway of last resort, is a special type of static route, that is used in
+forwarding packets whose destination address does not match any route in the routing table. In IPv4 the
+CIDR notation for a default route is 0.0.0.0/0 and ::/0 in IPv6.
+The benefits include smaller routing table, low CPU usage, and connectivity to remote networks without
+having specific routes in the routing table. A typical example would be directing all traffic from the
+Corporate network, destined for Internet, to the ISP router.
+To set up a default`},
+  {id:"IC56",num:56,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Inter-VLAN routing is configured on SW1. Client A is running Linux as an OS in VLAN 10 with a default gateway IP 10.0.0.1 but cannot ping client B in VLAN 20 running Windows. What action must be taken to verify that client A has the correct IP settings?`,exhibit:``,has_exhibit:true,correct:`Run the ifconfig command on client A to confirm that its IP and subnet mask fall within 255.254.0.0.`,explanation:`The command to view IP configuration on Linux is "ifconfig". If the IP address of the client doesn't fall
+within the 255.254.0.0(/15) or the subnet mask is incorrect, routing issues will occur.`},
+  {id:"IC57",num:57,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. What does route 10.0.1.3/32 represent in the routing table?`,exhibit:`R1# show ip route
+Codes: C - connected, S - static, I - IGRP, R - rip, M - mobile, B - BGP
+D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, * - candidate
+default
+U - per-user static route, o - ODR 
+Gateway of last resort is not set
+C 10.0.0.0/8 is directly connected, Loopback0
+10.0.0.0/8 is variably subnette`,has_exhibit:true,correct:`a single destination address`,explanation:`A /32 address in the routing table represents a single destination host address.`},
+  {id:"IC58",num:58,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. The network engineer is configuring router R2 as a replacement router on the network. After the initial configuration is applied it is determined that R2 failed to show R1 as a neighbor. Which configuration must be applied to R2 to complete the OSPF configuration and enable it to establish the neighbor relationship with R1?`,exhibit:`R1# show ip ospf interface g0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+Internet address is 192.168.1.2/24, Area 0
+Process ID 1, Router ID 192.168.1.2, Network Type POINT-TO-POINT, Cost: 1
+Transmit Delay is 1 sec, State POINT-TO-POINT,
+Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+Hello due in 00:00:08
+Index 1/1, flood queue length 0
+Next 0x0(0) /0x0(0)
+Last flood scan length is 1, maximum is 1
+Last flood scan time is 0 msec, maximum is 0 msec
+Suppress hello for `,has_exhibit:true,correct:`R2(config)#interface g0/0/0 R2(config-if)#ip ospf hello-interval 10`,explanation:`From the given exhibit we can see that the hello interval on R2 is set to 15 seconds, while on R1 it is set to
+10 seconds. For OSPF neighbors to form an adjacency, their hello and dead intervals must match.
+Changing the hello interval on R2 to 10 seconds will match R1's configuration and enable the neighbor
+relationship.
+The command to change OSPF hello-interval is: "ip ospf hello-interval seconds" from the interface
+configuration mode.`},
+  {id:"IC59",num:59,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. If R1 receives a packet destined to 172.16.1.1, to which IP address does it send the packet?`,exhibit:`R1#show ip route
+#output suppressed
+Gateway of last resort is 192.168.14.4 to network 0.0.0.0
+C 172.16.1.128/25 is directly connected, GigabitEthernet1/1/0
+C 192.168.12.0/24 is directly connected, FastEthernet0/0
+C 192.168.13.0/24 is directly connected, FastEthernet0/1
+C 192.168 14.0/24 is directly connected, FastEthernet0/0
+C 172.16.16.1 is directly connected, Loopback1
+192.168.10.0/24 is variably subnetted, 3 subnets, 3 masks
+O 192.168.10.0/24 [110/2] via 192.168.14.4, 00:02:01, FastEthernet1/`,has_exhibit:true,correct:`192.168.14.4`,explanation:`This router has no route to the destination 172.16.1.1, so it will use the gateway of last resort and send the
+packet to 192.168.14.4.`},
+  {id:"IC60",num:60,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. An engineer is checking the routing table in the main router to identify the path to a server on the network. Which route does the router use to reach the server at 192.168.2.2?`,exhibit:`Gateway of last resort is not set
+10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C 10.1.1.0/30 is directly connected, GigabitEthernet0/0
+L 10.1.1.2/32 is directly connected, GigabitEthernet0/0
+S 192.168.0.0/20 [1/0] via 10.1.1.1
+192.168.1.0/30 is subnetted, 1 subnets
+S 192.168.1.0/30 [1/0] via 10.1.1.1
+192.168.2.0/24 is variably subnetted, 2 subnets, 2 masks
+S 192.168.2.0/28 [1/0] via 10.1.1.1
+S 192.168.2.0/29 [1/0] via 10.1.1.1`,has_exhibit:true,correct:`S 192.168.2.0/29 [1/0] via 10.1.1.1`,explanation:`The router chooses the route with the most specific subnet mask (the longest prefix) that matches the
+destination IP address. The more specific the subnet mask, the narrower the range of IP addresses it covers.
+The routes in the routing table that match the destination address 192.168.2.2 are: 
+S 192.168.0.0/20 [1/0] via 10.1.1.1
+S 192.168.2.0/28 [1/0] via 10.1.1.1
+S 192.168.2.0/29 [1/0] via 10.1.1.1
+The subnet 192.168.2.0/29 is the most specific (Longest prefix length) so the router will use the route
+"S 192.168.2.0/29 [1/0] via 10.1.1.1"`},
+  {id:"IC61",num:61,topic:"IP Connectivity",type:"single",question:`What is the purpose of using First Hop Redundancy Protocol in a specific subnet?`,exhibit:``,has_exhibit:false,correct:`Sends the default route to the hosts on a network`,explanation:`First Hop Redundancy Protocols (such as HSRP, VRRP, or GLBP) provide a redundant default gateway for
+hosts in a subnet. Hosts use a virtual IP address as their default gateway, and if the active router fails,
+another router takes over transparently.`},
+  {id:"IC62",num:62,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which configuration allows routers R14 and R86 to form an OSPFv2 adjacency while acting as a central point for exchanging OSPF information between routers?`,exhibit:``,has_exhibit:true,correct:`R14# interface FastEthernet0/0 ip address 10.73.65.65 255.255.255.252 ip ospf network broadcast ip ospf priority 255 ip mtu 1500 router ospf 10 router-id 10.10.1.14 network 10.10.1.14 0.0.0.0 area 0 network 10.73.65.64 0.0.0.3 area 0 R86# interface FastEthernet0/0 ip address 10.73.65.66 255.255.255.252 ip ospf network broadcast ip mtu 1500 router ospf 10 router-id 10.10.1.86 network 10.10.1.86 0.0`,explanation:`The given answer is correct as:
+Both routers have ip mtu 1500 set on FastEthernet0/0, MTU must match for OSPF adjencies to from.
+Both routers have appropriate network statements to include their Loopback and FastEthernet interfaces
+in area 0, forming the OSPF adjacency.
+Incorrect answers:
+In two of the options R14 has ip mtu 1500 while R86 has ip mtu 1400 on FastEthernet0/0. This mismatch 
+can prevent the adjacency from forming. As for the remaining option, even though the MTU value is
+correct, The loopback interfaces are configured with ip ospf 10 area 0 commands, which is unnecessary
+and ca`},
+  {id:"IC63",num:63,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. The default-information originate command is configured under the R1 OSPF configuration. After testing, workstations on VLAN 20 at Site B cannot reach a DNS server on the Internet. Which action corrects the configuration issue?`,exhibit:``,has_exhibit:true,correct:`Configure the ip route 0.0.0.0 0.0.0.0 10.10.10.18 command on R1.`,explanation:`Default routes injected into a normal area can be originated by any OSPF router. The OSPF router does not,
+by default, generate a default route into the OSPF domain. In order for OSPF to generate a default route,
+you must use the default-information originate command.
+There are two ways to advertise a default route into a normal area:
+First method is to advertise 0.0.0.0 into the OSPF domain by using the default-information originate
+command, provided the advertising router already has a default route. R1 has this command configured
+but does not have a default route in its routing table. So we`},
+  {id:"IC64",num:64,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Router R1 currently is configured to use R3 as the primary route to the internet, and the route uses the default administrative distance settings. A network engineer must configure R1 so that it uses R2 as a backup, but only if R3 goes down. Which command must the engineer configure on R1 so that it correctly uses R2 as a backup route, without changing the administrative distance configuration on the link to R3? `,exhibit:``,has_exhibit:true,correct:`ip route 0.0.0.0 0.0.0.0 g0/1 6`,explanation:`From the question statement we know that R1 is currently using R3 as a primary route to access the
+internet. Since the route uses the default administrative distance settings hence default AD of a static route
+is 1. So, we need to configure a static route with next-hop R2 from R1 with an AD higher than 1 so that it is
+less preferred than the original route and is only used when the route through R3 goes down.
+"ip route 0.0.0.0 0.0.0.0 g0/1 6" This adds a static route with a next-hop interface of g0/1 and an
+administrative distance of 6, which is higher than the default of 1. This route will be`},
+  {id:"IC65",num:65,topic:"IP Connectivity",type:"single",question:`Which interface is used to send traffic to the destination network?`,exhibit:`D 10.47.114.119/29 [90/6451] via F0/2
+D 10.47.114.119/29 [90/52201] via F0/20
+R 10.47.114.119/29 [120/9] via F0/12
+R 10.47.114.119/29 [120/10] via F0/10`,has_exhibit:true,correct:`F0/2`,explanation:`"F0/2"
+The exhibit provides four routes to the destination network 10.47.114.119/29. The routing table entries are
+as follows:
+D 10.47.114.119/29 [90/6451] via F0/2
+D 10.47.114.119/29 [90/52201] via F0/20
+R 10.47.114.119/29 [120/9] via F0/12
+R 10.47.114.119/29 [120/10] via F0/10 
+EIGRP routes have an AD of 90.
+RIP routes have an AD of 120.
+Lower AD is preferred, so EIGRP routes are chosen over RIP routes.
+Two EIGRP routes are available:
+[90/6451] via F0/2
+[90/52201] via F0/20
+The metric is used to decide between routes with the same AD.The metric values are 6451 and 52201,
+respectively.Lower `},
+  {id:"IC66",num:66,topic:"IP Connectivity",type:"single",question:`What is the primary purpose of a First Hop Redundancy Protocol?`,exhibit:``,has_exhibit:false,correct:`It reduces routing failures by allowing more than one router to represent itself, as the default gateway of a network.`,explanation:`A first hop redundancy protocol (FHRP) is a computer networking protocol which is designed to protect
+the default gateway used on a subnetwork by allowing two or more routers to provide backup for that
+address. In the event of failure of an active router, the backup router will take over as active default
+gateway, usually within a few seconds. Examples of such protocols includes HSRP, VRRP, GLBP etc.`},
+  {id:"IC67",num:67,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Load-balanced traffic is coming in from the WAN destined to a host at 172.16.1.190. Which next-hop is used by the router to forward the request?`,exhibit:`R1# show ip route
+Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
+D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, * - candidate default
+U - per-user static route, o - ODR
+Gateway of last resort is not set
+C 172.16.0.0/16 is directly connected, Loopback0
+172.16.0/16 is variably subnet`,has_exhibit:true,correct:`192.168.7.35`,explanation:`Routers choose routes when multiple routes to same destination are available using the longest prefix
+match principle, where the router prefers the route with the most specific match (highest subnet mask) to
+the destination IP address.
+Out of all the routes to the destination 172.16.1.190, the route "O 172.16.1.184/29 [110/5] via
+192.168.7.35, 00:39:08, Serial0" is the most specific (highest subnet mask). Therefore, the router will
+forward the packet to the next-hop IP address associated with this route.
+Thus, the router will use the next-hop 192.168.7.35.`},
+  {id:"IC68",num:68,topic:"IP Connectivity",type:"multiple",question:`Which two server types support domain name to IP address resolution? (Choose two)`,exhibit:``,has_exhibit:false,correct:`resolver authoritative`,explanation:`"resolver"
+DNS Resolvers are responsible for providing the correct IP address of a domain name to the requesting
+host. For example, if you make a request from your web browser and there is no information on your
+computer about this domain name (it is not cached), your computer will send the request to DNS resolvers.
+The resolver will then try to find the name servers, that are responsible for this domain name and contain 
+the necessary records. These name servers are called authoritative.
+"authoritative"
+Authoritative DNS nameservers provide answers to DNS resolvers with the correct IP addres`},
+  {id:"IC69",num:69,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. What is the metric of the route to the 192.168.10.33/28 subnet?`,exhibit:`R1#show ip route
+<output omitted>
+Gateway of last resort is 192.168.30.10 to network 0.0.0.0
+192.168.30.0/29 is subnetted, 2 subnets
+C 192.168.30.0 is directly connected, FastEthernet0/0
+C 192.168.30.8 is directly connected, Serial0/0.1
+192.168.10.0/24 is variably subnetted, 2 subnets, 2 masks
+O IA 192.168.10.32/28 [110/193] via 192.168.30.10, 00:18:49, Serial0/0.1
+O IA 192.168.10.0/27 [110/192] via 192.168.30.10, 00:18:49, Serial0/0.1
+192.168.20.0/30 is subnetted, 1 subnets
+O IA 192.168.50.0 [1`,has_exhibit:true,correct:`193`,explanation:`Using the principle of longest prefix match, the router will use the following route for the destination
+192.168.10.33/28:
+O IAÂ Â Â Â 192.168.10.32/28 [110/193] via 192.168.30.10, 00:18:49, Serial0/0.1
+The metric of this OSPF route is shown as 193.
+`},
+  {id:"IC70",num:70,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. An OSPF neighbor relationship must be configured using these guidelines: R1 is only permitted to establish a neighbor with R2. R1 will never participate in DR elections. R1 will use a router-id of 10.1.1.1. Which configuration must be used?`,exhibit:``,has_exhibit:true,correct:`interface FastEthernet0/0 ip address 10.100.1.1 255.255.255.252 ip ospf priority 0 ip access-group 102 in router ospf 10 log-adjacency-changes network 10.1.1.1 0.0.0.0 area 0 network 10.100.1.0 0.0.0.3 area 0 router-id 10.1.1.1 access-list 102 permit 89 host 10.100.1.2 host 224.0.0.5 access-list 102 deny 89 any any access-list 102 permit ip any any`,explanation:`Given the requirements: 
+1. R1 is only permitted to establish a neighbor with R2: This is achieved by using an access list that
+permits OSPF packets (which use protocol number 89) only from R2's IP address (10.100.1.2) to reach
+R1.
+2. R1 will never participate in DR elections: This is ensured by setting the OSPF priority to 0 on the
+Fa0/0 interface (ip ospf priority 0). A priority of 0 means R1 will not participate in DR/BDR
+elections.
+3. R1 will use a router-id of 10.1.1.1: This is done by configuring the router-id directly in the OSPF
+configuration as 10.1.1.1.
+The provided answer is correc`},
+  {id:"IC71",num:71,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Router R2 is configured with multiple routes to reach network 10 1.1.0/24 from router R1. What protocol is chosen by router R2 to reach the destination network 10.1.1.0/24?`,exhibit:`R1(config)# router eigrp 1
+R1(config-router)# eigrp router-id 1.1.1.1
+R1(config-router)# network 10.1.1.0 0.0.0.255
+R1(config-router)# network 192.168.0.1 0.0.0.0
+R2# config t
+R2(config)# interface gi1/1
+R2(config-if)# ip address 192.168.0.2 255.255.255.0
+R2# config t
+R2(config)# router bgp 65001
+R2(config-router)# neighbor 192.168.0.1 remote-as 65000
+R2(config)# router ospf 1
+R2(config-router)# router-id 2.2.2.2
+R2(config-router)# network 192.168.1.2 0.0.0.0 area 0
+R2(config)# router eigrp 1
+R2`,has_exhibit:true,correct:` Static`,explanation:`All available routes have the same prefix length. Router R2 will use the next deciding factor, Administrative
+Distance (AD). The last line of the output shows a static route from R2 to R1's network 10.1.1.0/24 via the
+next hop address 192.168.0.1. Router R2 will use this static route due to the least AD value of 1.`},
+  {id:"IC72",num:72,topic:"IP Connectivity",type:"single",question:`An engineer must configure a core router with a floating static default route to the backup router at 10.200.0.2. Which command meets the requirements?`,exhibit:``,has_exhibit:false,correct:`ip route 0.0.0.0 0.0.0.0 10.200.0.2 10`,explanation:``},
+  {id:"IC73",num:73,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Packets received by the router from BGP enter via a serial interface at 209.165.201.10. Each route is present within the routing table. Which interface is used to forward traffic with a destination IP of 10.10.10.24?`,exhibit:`EIGRP 10.10.10.0/24[90/1441] via F0/10
+EIGRP 10.10.10.0/24[90/144] via F0/11
+EIGRP 10.10.10.0/24[90/1441] via F0/12
+OSPF 10.10.10.0/24[110/20] via F0/13
+OSPF 10.10.10.0/24[110/30] via F0/14`,has_exhibit:true,correct:`F0/11`,explanation:`To determine the interface used for forwarding traffic to the destination IP 10.10.10.24, the router will 
+select the route with the lowest administrative distance (AD) and best metric in its routing table.
+EIGRP routes have an AD of 90.
+OSPF routes have an AD of 110.
+Since EIGRP has a lower AD (90) than OSPF (110), the router will prefer EIGRP routes over OSPF for this
+destination.
+EIGRP route via F0/10 has a metric of 1441.
+EIGRP route via F0/11 has a metric of 144.
+EIGRP route via F0/12 has a metric of 1441.
+The route with the lowest metric among the EIGRP options is the one via F0/11 (met`},
+  {id:"IC74",num:74,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. All routers in the network are configured. R2 must be the DR. After the engineer connected the devices, R1 was elected as the DR. Which command sequence must be configure on R2 to be elected as the DR in the network?`,exhibit:``,has_exhibit:true,correct:`R2(config)#interface gi0/0 R2(config-if)#ip ospf priority 100`,explanation:`R1 was elected as the DR because it has the highest Router ID, and all routers have the default OSPF
+priority of 1. During the DR and BDR election, OSPF routers on the same network segment compare their
+interface OSPF priority values (0-255). The router with the highest priority becomes the DR. If priorities are
+tied, the router with the highest Router ID is elected as the DR.
+By configuring R2 with an OSPF priority of 100, it will have the highest priority and should become the DR.
+Note: Once a DR is elected, it will remain the DR unless it fails or is manually reset. To make R2 the DR in a
+r`},
+  {id:"IC75",num:75,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. A secondary route is required on router R1 to pass traffic to the LAN network on R2 if the primary link fails. Which command must be entered to configure the router?`,exhibit:``,has_exhibit:true,correct:`ip route 10.0.2.0 255.255.255.248 10.0.0.6 91`,explanation:`"ip route 10.0.2.0 255.255.255.248 10.0.0.6 91"
+The command ip route 10.0.2.0 255.255.255.248 10.0.0.6 91 is specifying a static route to the
+10.0.2.0/29 network (which is correctly indicated by the subnet mask 255.255.255.248) via the next-hop IP
+address 10.0.0.6 with an administrative distance of 91, which is higher than EIGRP's AD of 90 and thus
+serves as a secondary route.`},
+  {id:"IC76",num:76,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which route type does the routing protocol Code D represent in the output?`,exhibit:`10.0.0.0/24 is subnetted, 1 subnets
+C 10.0.0.0 is directly connected, FastEthernet0/1
+C 172.160.0/16 is directly connected, FastEthernet0/0
+D 192.168.0.0/24 [90/30720] via 172.16.0.2, 00:00:03, FastEthernet0/0`,has_exhibit:true,correct:`route learned through EIGRP`,explanation:`EIGRP routes are represented by the letter D, in the output of the show ip route command.
+`},
+  {id:"IC77",num:77,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which path is used by the router for Internet traffic?`,exhibit:``,has_exhibit:true,correct:`0.0.0.0/0`,explanation:`The default route 0.0.0.0/0 via 10.10.11.2 will be used for the Internet traffic.`},
+  {id:"IC78",num:78,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. The show ip ospf interface command has been executed on R1. How is OSPF configured?`,exhibit:`Designated Router (ID) 10.11.11.11, Interface address 10.10.10.1
+Backup Designated router (ID) 10.3.3.3, Interface address 10.10.10.3
+Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+oob-resync timeout 40
+Hello due in 00:00:08
+Supports Link-local Signaling (LLS)
+Cisco NSF helper support enabled
+IETF NSF helper support enabled
+Index 1/1/1, flood queue length 0
+Next 0x0(0)/0x0(0)/0x0(0)
+Last flood scan length is 1, maximum is 6
+Last flood scan time is 0 msec, maximum is 1 msec
+`,has_exhibit:true,correct:` The default Hello and Dead timers are in use.`,explanation:`Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+The default Hello and Dead timers for OSPF are in use.
+"A point-to-point network type is configured" is incorrect. OSPF does not elect Designated Router (DR) and
+Backup Designated Router (BDR) on point-to-point networks.`},
+  {id:"IC79",num:79,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. A network engineer is updating the configuration on router R1 to connect a new branch office to the company network. R2 has been configured correctly. Which command must the engineer configure so that devices at the new site communicate with the main office?`,exhibit:``,has_exhibit:true,correct:`ip route 172.25.25.0 255.255.255.0 192.168.2.2`,explanation:`To allow devices at the new site to communicate with the main office, R1 needs a route to the network of
+the new office (172.25.25.0/24). The given answer correctly configures a static route to network 172.25.25.0
+with subnet mask 255.255.255.0 (/24) via the next-hop IP address 192.168.2.2, which is the IP address of
+the Gig0/2 interface on R2.`},
+  {id:"IC80",num:80,topic:"IP Connectivity",type:"multiple",question:`Refer to the exhibit. The New York router must be configured so that traffic to 2000::1 is sent primarily via the Atlanta site, with a secondary path via Washington that has an administrative distance of 2. Which two commands must be configured on the New York router? (Choose two)`,exhibit:``,has_exhibit:true,correct:`ipv6 route 2000::1/128 2012::1 ipv6 route 2000::1/128 2023::3 2`,explanation:`"ipv6 route 2000::1/128 2012::1"
+This command sets a static route for traffic to 2000::1/128 to go through the Atlanta router's IPv6 address
+on the S0/0/0 interface, which is 2012::1. Since no administrative distance is specified, it will use the default
+administrative distance for a static route, which is 1. This makes it the primary path for traffic to 2000::1
+because of the lower administrative distance.
+"ipv6 route 2000::1/128 2023::3 2"
+This command sets an alternative static route to 2000::1/128 via the Washington router's IPv6 address on
+the S0/0/1 interface, which is 2023::3. The admin`},
+  {id:"IC81",num:81,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. All traffic enters the CPE router from interface Serial0/3 with an IP address of 192.168.50.1. Web traffic from the WAN is destined for a LAN network where servers are load-balanced. An IP packet with a destination address of the HTTP virtual IP of 192.168.1.250 must be forwarded. Which routing table entry does the router use?`,exhibit:`CPE#show ip route
+192.168.1.0/24 is variably subnetted, 3 subnets, 3 masks
+B 192.168.1.0/24 [20/1] via 192.168.12.2, 00:00:06
+R 192.168.1.128/25 [120/5] via 192.168.13.3, 00:02:22, Ethernet0/1
+O 192.168.1.192/26 [110/11] via 192.168.14.4, 00:02:22, Ethernet0/2
+D 192.168.1.224/27 [90/1024640] via 192.168.15.5, 00:01:33, Ethernet0/3`,has_exhibit:true,correct:`192.168.1.224/27 via 192.168.15.5`,explanation:`When forwarding packets the router looks at the most specific route in the routing table. The most specific 
+route is the one with the longest prefix (smallest subnet), as it covers the smallest range of IP addresses.
+192.168.1.224/27 via 192.168.15.5, This route covers the range 192.168.1.224 to 192.168.1.255, and the
+destination IP, 192.168.1.250, falls within this range as well. This is the most specific match because it has
+the longest prefix (27 bits). Therefore the router will select this route to forward traffic.
+Incorrect options:
+192.168.1.0/24 via 192.168.12.2
+This route is less spe`},
+  {id:"IC82",num:82,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. When router R1 is sending traffic to IP address 10.56.192.1, which interface or next hop address does it use to route the packet?`,exhibit:`R1#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+E1 - OSPF external type 1, E2 - OSPF external type 2
+i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+ia - IS-IS inter area, * - candidate default, U - per-user static route
+o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
++ - replicated route, % - next ho`,has_exhibit:true,correct:` 10.56.0.1`,explanation:`The destination IP 10.56.192.1 does not match any of the specific routes in the routing table, as
+10.56.128.0/18 network includes IP addresses from 10.56.128.0 to 10.56.191.255 and 10.56.0.0/17 includes
+IP addresses from 10.56.0.0 to 10.56.127.255. Therefore, the router will use the default route "S* 0.0.0.0/0
+[1/0] via 10.56.0.1" to forward the packet, which means it will forward the packet to the next hop IP address
+10.56.0.1.`},
+  {id:"IC83",num:83,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. A static route must be configured on R14 to forward traffic for the 172.21.34.0/25 network that resides on R86. Which command must be used to fulfill the request?`,exhibit:``,has_exhibit:true,correct:`ip route 172.21.34.0 255.255.255.128 10.73.65.66`,explanation:`IP address 10.73.65.66 is the host address on the subnet 10.73.65.64/32. The "ip route 172.21.34.0
+255.255.255.128 10.73.65.66" command instructs the router to send all traffic destined for the network
+172.21.34.0 255.255.255.128 to the next hop address 10.73.65.66.`},
+  {id:"IC84",num:84,topic:"IP Connectivity",type:"multiple",question:`An engineer must configure an OSPF neighbor relationship between router R1 and R3. The authentication configuration has been configured and the connecting interfaces are in the same 192.168 1.0/30 sublet. What are the next two steps to complete the configuration? (Choose two.)`,exhibit:``,has_exhibit:false,correct:` Configure the interfaces as OSPF active on both sides. Configure both interfaces with the same area ID.`,explanation:`Hello and dead timers must match but with default settings these are already same on both routers.
+OSPF process ID is only locally significant.
+OSPF router ID must be different on two neighbors.
+Both routers should have the same area ID.
+We have to enable OSPF on active interfaces on both ends.`},
+  {id:"IC85",num:85,topic:"IP Connectivity",type:"single",question:`An office has 8 floors with approximately 30-40 users per floor. What command must be configured on the router Switched Virtual Interface to use address space efficiently?`,exhibit:``,has_exhibit:false,correct:`ip address 192.168.0.0 255.255.255.224`,explanation:`We need 8 subnets and each subnet should provide 30-40 host addresses. First of all find subnet bits, n:
+Subnets = 2n = 8, hence n = 3.
+Remaining bits for the host portion = 8 - 3 = 5
+Now hosts = 25 - 2 = 25 - 2 = 30
+Since a class C network has the default 24 bit subnet mask or prefix length, we can subnet using the last
+octet (8 bits) only. So we need 5 bits for the host portion and 3 bits for the subnet portion. This means the
+prefix length should be 24+3 = 27. Now /27 = 255.255.255.224, that reveals our correct answer.
+Note: If you try to use 6 bits for the host portion to provide 62 hosts,`},
+  {id:"IC86",num:86,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. How does router R1 handle traffic to 192.168.10.16?`,exhibit:`R1#show ip route
+....
+D 192.168.10.0/24 [90/2679326] via 192.168.1.1
+R 192.168.10.0/27 [120/3] via 192.168.1.2 
+O 192.168.10.0/23 [110/2] via 192.168.1.3
+i L1 192.168.10.0/13 [115/30] via 192.168.1.4`,has_exhibit:true,correct:`It selects the RIP route because it has the longest prefix inclusive of the destination address.`,explanation:`Longest Prefix Match vs Administrative Distance
+Remember the fact that when making forwarding decisions, the longest prefix match always wins among
+the routes actually installed in the routing table, while the routing protocol with the lowest administrative
+distance always wins when installing routes into the routing table.
+https://www.cisco.com/c/en/us/support/docs/ip/enhanced-interior-gateway-routing-protocol-eigrp/8651-
+21.html
+In this case the destination IP address 192.168.10.16 matches all three routes but RIP route to
+192.168.10.0/27 has the longest prefix length, so R1 will prefer this`},
+  {id:"IC87",num:87,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. The route for 10.220.100.96/27 has been very unstable. The same route has four backups to routers A, B, C, and D via the respective methods. The routing protocol defaults for router Y have not been changed. When the current route for 10.220.100.96/27 becomes unavailable, which router will router Y use to  route traffic to 10.220.100.96/27?`,exhibit:`Router-Y#show ip route
+Gateway of last resort is not set
+10.0.0.0/8 is variably subnetted
+B 10.220.100.96/27 [20/0] via 10.224.1.3, 1w6d`,has_exhibit:true,correct:`router B`,explanation:`The exhibit states that currently the best path to 10.220.100.96/27 is via BGP with an administrative
+distance of 20 (default for BGP routes). When this BGP route becomes unavailable, Router Y will choose the
+next best route based on the administrative distance.
+The static route (Router B) with an AD of 105 is the lowest among the remaining options as OSPF (Router
+A) has an AD of 110, Static route (Router B) has an AD of 105 (configured in the exhibit), External EIGRP
+(Router C) has an AD of 170 and iBGP (Router D) has an AD of 200.`},
+  {id:"IC88",num:88,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. A network engineer is verifying the settings on a new OSPF network. All OSPF configurations use the default values unless otherwise indicated. Which router does the engineer expect will be elected as the DR when all devices boot up simultaneously?`,exhibit:``,has_exhibit:true,correct:`R4`,explanation:`
+DR and BDR rules:
+1. Router is highest OSPF priority will become DR and router with second-highest priority will become
+BDR.
+2. If the priority of the routers are same then, the router with the highest Router ID is selected as DR and
+the router with second-highest Router ID is selected as BDR.
+Reference: https://www.geeksforgeeks.org/explain-ospf-dr-bdr-election/`},
+  {id:"IC89",num:89,topic:"IP Connectivity",type:"single",question:`A router running EIGRP has learned the same route from two different paths. Which parameter does the router use to select the best path?`,exhibit:``,has_exhibit:false,correct:`metric`,explanation:`EIGRP selects the best route based on the lowest metric to a destination. By default EIGRP uses bandwidth
+and delay of each route to calculate its metric.`},
+  {id:"IC90",num:90,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which network prefix was learned via EIGRP?`,exhibit:`R1#show ip route | begin gateway
+Gateway of last resort is 209.155.200.254 to network 0.0.0.0
+S* 0.0.0.0/0 [1/0] via 209.165.200.254, Serial0/0/1 is directly connected, Serial0/0/1
+Â Â Â Â Â Â Â Â 172.16.0.0/16 is variably subnetted, 3 subnets, 2 masks
+CÂ Â Â Â Â Â Â 172.16.1.0/24 is directly connected, FastEthernet0/0
+LÂ Â Â Â Â Â Â 172.16.1.1/32 is directly connected, FastEthernet0/0
+RÂ Â Â Â Â Â Â 172.16.2.0/24 [120/2] via 207.165.200.250, 00:00:25, Serial0/0/0
+OÂ Â Â Â Â Â Â 192.168.1.0/24 [`,has_exhibit:true,correct:`192.168.2.0/24`,explanation:`The route code for EIGRP is "D". To determine which network prefix was learned via EIGRP, we need to look
+for the EIGRP route code
+D 192.168.2.0/24 [90/84437] via 207.165.200.254, 00:00:15, Serial0/0/1
+This route is marked with D, meaning it was learned via EIGRP.`},
+  {id:"IC91",num:91,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. To which device does Router1 send packets that are destined to host 10.10.13.165?`,exhibit:``,has_exhibit:true,correct:`Router3`,explanation:`You need to check every route entry for valid host range and the one having IP address 10.10.13.165 in the
+range is our correct answer. Upon checking, you will find that IP address 10.10.13.165 belongs to the
+subnet 10.10.13.160/29, that is present in the routing table of Router1 and is reachable through the next
+hop address 10.10.10.5. Now this next hop address belongs to the subnet 10.10.10.4/30 - Router3.
+The subnet 10.10.13.160/29 has a valid host range from 10.10.13.161 to 10.10.13.166.`},
+  {id:"IC92",num:92,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. A packet is being sent across router R1 to host 172.16.0.14. What is the destination route for the packet?`,exhibit:``,has_exhibit:true,correct:`209.165.200.246 via Serial0/1/0`,explanation:`There is no dynamic or connected route to the destination address 172.16.0.14. Therefore, R1 will use the
+default route via 209.165.200.246, Serial0/1/0.`},
+  {id:"IC93",num:93,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. A packet sourced from 10.10.10.32 is destined for the Internet. What is the administrative distance for the destination route?`,exhibit:`Gateway of last resort is 172.16.2.2 to network 0.0.0.0
+10.0.0.0/8 is variably subnetted, 3 subnets, 3 masks
+10.10.100.0/26 is directly connected, GigabitEthernet0/0/6
+C 10.10.10.0/24 is directly connected, GigabitEthernet0/0/0
+L 10.10.10.3/32 is directly connected, GigabitEthernet0/0/0
+172.16.0.0/16 is variably subnetted, 3 subnets, 2 masks
+S 172.16.1.33/32 is directly connected, GigabitEthernet0/0/1
+C 172.16.2.0/23 is directly connected, GigabitEthernet0/0/1
+L 172.16.2.1/32 is directly connect`,has_exhibit:true,correct:`1`,explanation:`The phrase, "a packet sourced from 10.10.10.32", is just to confuse you. We are concerned with the packet
+destination, and it is stated that packet is destined for the Internet (unknown destination). Therefore, it will
+use the following default static route:
+S* 0.0.0.0/0 [1/0] via 172.16.2.2
+The Administrative Distance of a static route is 1 (also indicated in [1/0], here 1 is AD and 0 is Metric)
+`},
+  {id:"IC94",num:94,topic:"IP Connectivity",type:"multiple",question:`An engineer is configuring the NEW-York router to reach the Lo1 interface of the Atlanta router using interface Se0/0/0 as the primary path. Which two commands must be configured on the New York router so that it can reach the Lo1 interface of the Atlanta router via Washington when the link between New York and Atlanta goes down? (Choose two)`,exhibit:``,has_exhibit:true,correct:`ipv6 route 2000::1/128 2012::1 ipv6 route 2000::1/128 2023::3 5`,explanation:`ipv6 route 2000::1/128 2012::1
+This route indicates that destination 2000::1/128 (Atlanta's Lo1 address) is reachable via the host with
+address 2012::1 (Atlanta's Serial 0/0/0 address), with the default AD value of 1 (not configured).
+So this route uses New-York's interface Se0/0/0 as the primary path to reach the Lo1 interface on Atlanta
+router. Due to the default administrative distance value this static route will be preferred. This is an
+example of the Recursive Static Route in IPv6.
+ipv6 route 2000::1/128 2023::3 5
+This route indicates that destination 2000::1/128 (Atlanta's interface Lo1`},
+  {id:"IC95",num:95,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. An engineer is bringing up a new circuit to the MPLS provider on the Gi0/1 interface of Router1. The new circuit uses eBGP and learns the route to VLAN 25 from the BGP path. What is the expected behavior for the traffic flow for route 10.10.13.0/25?`,exhibit:``,has_exhibit:true,correct:`Route 10.10.13.0/25 is updated in the routing table as being learned from interface Gi0/1.`,explanation:`The output shows that R1 has learned the route to VLAN 25 from OSPF, having Administrative Distance 
+value of 110. The same route when learned from eBGP via interface Gi0/1, having lower AD value of 20, the
+routing table will be updated with the new route, learned from BGP via interface Gi0/1.`},
+  {id:"IC96",num:96,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which prefix does Router1 use for traffic to Host A?`,exhibit:``,has_exhibit:true,correct:`10.10.13.208/29`,explanation:`You need to check every route entry for valid host range and the one having Host A's IP address in the
+range is our answer. The IP address of Host A, 10.10.13.214, belongs to the subnet 10.10.13.208/29, that is
+present in the routing table of Router1 and is reachable through the next hop address 10.10.10.1.
+The subnet 10.10.13.208/29 has the valid host range from 10.10.13.209 10.10.13.214.`},
+  {id:"IC97",num:97,topic:"IP Connectivity",type:"single",question:`A router received three destination prefixes: 10.0.0.0/8, 10.0.0.0/16, and 10.0.0.0/24. When the show ip route command is executed, which output does it return?`,exhibit:``,has_exhibit:false,correct:`Gateway of last resort is 172.16.1.1 to network 0.0.0.0 O E2 10.0.0.0/8 [110/5] via 192.168.1.1, 0:01:00, Ethernet0 O E2 10.0.0.0/16[110/5] via 192.168.2.1, 0:01:00, Ethernet1 O E2 10.0.0.0/24[110/5] via 192.168.3.1, 0:01:00, Ethernet2`,explanation:`"Gateway of last resort is 172.16.1.1 to network 0.0.0.0 
+O E2 10.0.0.0/8 [110/5] via 192.168.1.1, 0:01:00, Ethernet0
+O E2 10.0.0.0/16[110/5] via 192.168.2.1, 0:01:00, Ethernet1
+O E2 10.0.0.0/24[110/5] via 192.168.3.1, 0:01:00, Ethernet2"
+Routers choose routes when multiple routes to same destination are available using the longest prefix
+match principle, where the router prefers the route with the most specific match (highest subnet mask) to
+the destination IP address.
+The given answer correctly lists all three routes (10.0.0.0/8, 10.0.0.0/16, and 10.0.0.0/24), which aligns with
+the expected`},
+  {id:"IC98",num:98,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which command configures OSPF on the point-to- point link between routers R1 and R2?`,exhibit:``,has_exhibit:true,correct:`network 10.0.0.0 0.0.0.255 area 0`,explanation:`network 10.0.0.0 0.0.0.255 area 0: This command will enable OSPF on all interfaces within the IP range
+10.0.0.0/24. Since the point-to-point link is in the 10.0.0.0/30 subnet, this command will include the point-
+to-point link between R1 and R2 in OSPF area 0. Although the wildcard mask is broader (0.0.0.255), it still
+matches the subnet 10.0.0.0/30, enabling OSPF on the link.
+Incorrect options:
+neighbor 10.1.2.0 cost 180: OSPF does not use the neighbor command to establish adjacencies on point-
+to-point links. This command would not achieve the intended result.
+ip ospf priority 100: This comm`},
+  {id:"IC99",num:99,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. According to the output, which parameter set is validated using the routing table of R7?`,exhibit:`R7#
+172.22.0.0/24 is subnetted, 1 subnets
+D 172.22.49.0 [90/284160] via 10.81.22.2, 04:55:53, FastEthernet0/0
+10.0.0.0/8 is variably subnetted, 26 subnets, 5 masks
+D EX 10.10.10.10/32 [170/35840] via 10.3.5.1, 04:55:55, FastEthernet0/1
+D 10.9.1.0/30 [90/33280] via 10.3.5.1, 04:55:56, FastEthernet0/1
+B 10.111.99.0/24 [20/0] via 10.6.25.2, 03:58:52
+D 10.14.3.0/30 [90/30720] via 10.3.5.1, 04:55:58, FastEthernet0/1
+C 10.9.4.0/30 is directly connected, FastEthernet1/0
+B 10.100.100.0/24 [20/0] via 10.`,has_exhibit:true,correct:`R7 has a gateway of last resort available. R7 is receiving routes that were redistributed in EIGRP R7 will drop traffic destined to 10.90.8.0/24.`,explanation:`"R7 has a gateway of last resort available.
+R7 is receiving routes that were redistributed in EIGRP
+R7 will drop traffic destined to 10.90.8.0/24."
+R7 has a gateway of last resort available, it's listed as the BGP route to 0.0.0.0/0.
+Given the presence of the "B 10.90.0.0/16 [200/0] via 0.0.0.0, 03:57:59, Null0" line in the routing table, any
+traffic destined for a subnet within the 10.90.0.0/16 range, which includes the 10.90.8.0/24 subnet, will
+indeed be forwarded to the Null0 interface. This typically means that the traffic will be dropped, which is a 
+method used to prevent routing loops `},
+  {id:"IC100",num:100,topic:"IP Connectivity",type:"single",question:`Why is a first-hop redundancy protocol implemented?`,exhibit:``,has_exhibit:false,correct:`to protect against default gateway failures`,explanation:`A first-hop redundancy protocol (FHRP) is implemented to protect against default gateway failures.
+First-hop redundancy protocols are used to ensure that a network has a backup for the default gateway.
+This ensures that if the primary gateway fails, a secondary gateway can take over without interrupting the
+network service.
+Examples of FHRPs include Cisco proprietary HSRP (Hot Standby Router Protocol), GLBP (Gateway Load
+Balancing Protocol) and industry standard VRRP (Virtual Router Redundancy Protocol)`},
+  {id:"IC101",num:101,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Router R1 is running three different routing protocols. Which route characteristic is used by the router to forward the packet that it receives for destination IP 172.16.32.1?`,exhibit:`R1#show ip route
+....
+D 172.16.32.0/27 [90/2888597172] via 20.1.1.1
+O 172.16.32.0/19 [110/292094] via 20.1.1.10
+R 172.16.32.0/24 [120/2] via 20.1.1.3`,has_exhibit:true,correct:` Longest prefix`,explanation:`Longest Prefix Match vs Administrative Distance
+Remember the fact that when making forwarding decisions, the longest prefix match always wins among
+the routes actually installed in the routing table, while the routing protocol with the lowest administrative
+distance always wins when installing routes into the routing table.
+https://www.cisco.com/c/en/us/support/docs/ip/enhanced-interior-gateway-routing-protocol-eigrp/8651-
+21.html
+In this case the destination IP address 172.16.32.1 matches all three routes but route entry 172.16.32.0/27
+has the longest prefix, so R1 will prefer this route for `},
+  {id:"IC102",num:102,topic:"IP Connectivity",type:"single",question:`What does the implementation of a first-hop redundancy protocol protect against on a network?`,exhibit:``,has_exhibit:false,correct:`default gateway failure`,explanation:`FHRPs, such as HSRP (Hot Standby Router Protocol), VRRP (Virtual Router Redundancy Protocol), and GLBP
+(Gateway Load Balancing Protocol), are designed to provide redundancy in case of default gateway failure.
+This ensures network availability even if the primary gateway becomes unavailable, thereby maintaining 
+connectivity for hosts in a subnet.`},
+  {id:"IC103",num:103,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Traffic sourced from the loopback0 interface is trying to connect via ssh to the host at 10.0.1.15. What is the next hop to the destination address?`,exhibit:`R1#show ip route
+Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
+D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2,
+ia - IS-IS inter area, * - candidate default, U - per-user static route,
+o - ODR P - periodic downloaded static route
+Gateway of last resort is not set
+C 192.168.3.5 is di`,has_exhibit:true,correct:`192.168.0.7`,explanation:`"192.168.0.7"
+The routing table shows different routes to the 10.0.1.0 network, but when determining the next hop for a
+destination, according to routing principles, the first criteria is longest prefix match. Here the most specific
+matching route is 10.0.1.0/28 [90/10] via 192.168.0.7, as the destination address 10.0.1.15 falls within the
+10.0.1.0/28 subnet.
+Note: It is true that the destination address 10.0.1.15 is the broadcast address for the 10.0.1.0/28 network,
+not a specific host address and the traffic is trying to ssh to a specific host "10.0.1.15", but routing process
+isn't concerned`},
+  {id:"IC104",num:104,topic:"IP Connectivity",type:"single",question:`Which Cisco proprietary protocol ensures traffic recovers immediately, transparently, and automatically when edge devices or access circuits fail?`,exhibit:``,has_exhibit:false,correct:`HSRP`,explanation:`HSRP (Hot Standby Router Protocol) is a Cisco proprietary First Hop Redundancy protocol designed to
+provide high network availability by providing first-hop redundancy for IP hosts on a LAN. It ensures
+immediate, transparent, and automatic traffic recovery when an active router or its associated access
+circuits fail. HSRP achieves this by designating a primary (active) router and a standby router that takes
+over in case the active router fails.
+VRRP is an open standard FHRP protocol similar to HSRP but not Cisco proprietary.`},
+  {id:"IC105",num:105,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. What is the next hop address for traffic that is destined to host 10.0.1.5?`,exhibit:``,has_exhibit:true,correct:`10.0.1.50`,explanation:`The destination host 10.0.1.5 has two routes in the routing table:
+C 10.0.1.0/24 is directly connected, Serial0
+and
+O 10.0.1.5/32 [110/5] via 10.0.1.50, 00:39:08, Serial0
+The second route has the longest prefix length, so the router will choose this route, having the next hop 
+address 10.0.1.50.`},
+  {id:"IC106",num:106,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. A network engineer started to configure two directly-connected routers as shown. Which command sequence must the engineer configure on R2 so that the two routers become OSPF neighbors?`,exhibit:`R1
+interface GigabitEthernet0/1
+ip address 192.168.12.1 255.255.255.128
+no shutdown
+router ospf 1
+network 192.168.12.1 0.0.0.0 area 1
+R2
+interface GigabitEthernet0/1
+ip address 192.168.12.2 255.255.255.128
+no shutdown`,has_exhibit:true,correct:`interface GigabitEthernet0/1 ip ospf 1 area 1`,explanation:`Two OSPF routers in the same area must be configured with the same area ID to become neighbors. You
+can configure area ID using one of the following commands
+ip ospf process-id area area-id
+networknetwork-address wildcard-mask area area-id
+In the given options, no option uses the network command correctly, but the given answer uses ip ospf
+command correctly. It enables OSPF on G0/1 interface of R2 with same area ID as R1 (area 1).`},
+  {id:"IC107",num:107,topic:"IP Connectivity",type:"single",question:`A packet from a companyâ€™s branch office is destined to host 172.31.0.1 at headquarters. The sending router has three possible matches in its routing table for the packet: prefixes 172.31.0.0/16, 172.31.0.0/24, and 172.31.0.0/25. How does  the router handle the packet?`,exhibit:``,has_exhibit:false,correct:`It sends the traffic via prefix 172.31.0.0/25.`,explanation:`Routers choose routes when multiple routes to same destination are available using the longest prefix
+match principle, where the router prefers the route with the most specific match (highest subnet mask or
+longest prefix length) to the destination IP address.
+The most specific route (longest prefix length) for 172.31.0.1 would be the 172.31.0.0/25 subnet.`},
+  {id:"IC108",num:108,topic:"IP Connectivity",type:"multiple",question:`Refer to the exhibit. A router received these five routes from different routing information sources. Which two routes does the router install in its routing table? (Choose two)`,exhibit:``,has_exhibit:true,correct:`OSPF route 10.0.0.0/30 EIGRP route 10.0.0.1/32`,explanation:`To determine which routes the router will install in its routing table, we need to understand the
+administrative distances of each routing protocol and the specifics of the routes received. Administrative
+distance (AD) is a value that routers use to select the best path when there are multiple routes to the same
+destination from different routing protocols. The lower the administrative distance, the more preferred the
+route.
+The exhibit shows the following routes received by the router:
+1. iBGP route 10.0.0.0/30
+2. RIP route 10.0.0.0/30
+3. OSPF route 10.0.0.0/16 
+4. OSPF route 10.0.0.0/30
+5. `},
+  {id:"IC109",num:109,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Router R1 receives static routing updates from routers A, B, C. and D. The network engineer wants R1 to advertise static routes in OSPF area 1. Which summary address must be advertised in OSPF?`,exhibit:``,has_exhibit:true,correct:`10.1.40.0/23`,explanation:`To determine the correct summary address to advertise in OSPF, we need to find a single address that can
+encompass all the networks connected to R1.
+10.1.40.0/25:
+Network range: 10.1.40.0 - 10.1.40.127
+10.1.40.128/25:
+Network range: 10.1.40.128 - 10.1.40.255
+10.1.40.176/28:
+Network range: 10.1.40.176 - 10.1.40.191
+10.1.41.224/29:
+Network range: 10.1.41.224 - 10.1.41.231
+To find the correct summary address, we need to find the smallest subnet that includes all these ranges.
+The first network range starts at 10.1.40.0.
+The last network range ends at 10.1.41.231.
+To include these ranges, we need `},
+  {id:"IC110",num:110,topic:"IP Connectivity",type:"multiple",question:`Refer to the exhibit. Which two commands, when configured on router R1, fulfill these requirements? (Choose two.) a) Packets towards the entire network 2001:db8:23::/64 must be forwarded through router R2. b) Packets towards host 2001:db8:23::14 preferably must be forwarded through R3.`,exhibit:``,has_exhibit:true,correct:` ipv6 route 2001:db8:23::14/128 fd00:13::3 ipv6 route 2001:db8:23::/64 fd00:12::2`,explanation:`ipv6 route 2001:db8:23::/64 fd00:12::2
+The above static route fulfills the requirement that packets towards the entire network 2001:db8:2::/64
+must be forwarded through router R2.
+ipv6 route 2001:db8:23::14/128 fd00:13::3
+The above entry fulfills the requirement that packets towards host 2001:db8:23::14 preferably must be
+forwarded through R3.`},
+  {id:"IC111",num:111,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Routers R1 and R2 are configured with RIP as the dynamic routing protocol. A network engineer must configure R1 with floating static route to serve as a backup route to network 192.168.23.0/24 Which command must the engineer configure on R1?`,exhibit:``,has_exhibit:true,correct:`ip route 192.168.23.0 255.255.255.0 192.168.13.3 121`,explanation:`To configure R1 with a floating static route to serve as a backup route to the network 192.168.23.0/24, we
+need to create a static route with an administrative distance higher than that of the RIP route. The default
+administrative distance for RIP is 120, so the floating static route should have an administrative distance
+greater than 120.
+The given answer configures a static route to the network 192.168.23.0/24 with a next-hop IP address of
+192.168.13.3 and an administrative distance of 121. Since 121 is higher than the RIP administrative distance
+of 120, this static route will only be used i`},
+  {id:"IC112",num:112,topic:"IP Connectivity",type:"multiple",question:`Which two actions influence the EIGRP route selection process? (Choose two)`,exhibit:``,has_exhibit:false,correct:`The router calculates the best backup path to the destination route and assigns it as the feasible successor. The router calculates the feasible distance of all paths to the destination route.`,explanation:`"The router calculates the best backup path to the destination route and assigns it as the feasible
+successor"
+EIGRP uses the concept of a feasible successor, which is a backup route to the destination that meets the
+feasibility condition. The feasible successor is the next best path after the successor route (the primary
+route).
+Feasibility Condition: "A route is considered feasible successor if its reported distance is lower than
+feasible distance of the successor route."
+"The router calculates the feasible distance of all paths to the destination route."
+The feasible distance (FD) is the lo`},
+  {id:"IC113",num:113,topic:"IP Connectivity",type:"multiple",question:`Refer to the exhibit. Which two values does router R1 use to determine the best path to reach destinations in network 1.0.0.0/8? (Choose two)`,exhibit:``,has_exhibit:true,correct:`longest prefix match lowest metric`,explanation:`Making Forwarding Decision
+When there are multiple routes available in the routing table to a destination, following ordered sequence 
+of decisions is followed to make a forwarding decision:
+1. If a routing table has multiple routes to a destination, then route with the longest prefix length
+(highest number of subnet bits) will be selected as best route to forward the packets.
+2. If multiple routes with same prefix length are available then route with the lowest administrative
+distance will be selected.
+3. If multiple routes with same administrative distance are available, then routes with th`},
+  {id:"IC114",num:114,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. An engineer is updating the R1 configuration to connect a new server to the management network. The PCs on the management network must be blocked from pinging the default gateway of the new server. Which command must be configured on R1 to complete the task?`,exhibit:``,has_exhibit:true,correct:`R1(config)#ip route 172.16.2.2 255.255.255.255 gi0/0`,explanation:``},
+  {id:"IC115",num:115,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. PC A is communicating with another device at IP address 10.227.151.255.Through which router does router Y route the traffic?`,exhibit:`Router-Y#show ip route
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+E1 - OSPF external type 1, E2 - OSPF external type 2
+i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+ia - IS-IS inter area, * - candidate default, U - per-user static route
+o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
++ - replicated r`,has_exhibit:true,correct:`router D`,explanation:`"router D"
+The destination IP 10.227.151.255 matches the BGP route advertised for the 10.224.0.0/11 network, which
+is via 10.224.4.5, corresponding to router D.`},
+  {id:"IC116",num:116,topic:"IP Connectivity",type:"single",question:`Why would VRRP be implemented when configuring a new subnet in a multivendor environment?`,exhibit:``,has_exhibit:false,correct:`to enable normal operations to continue after a member failure without requiring a change in a host ARP cache`,explanation:`VRRP is designed to provide high availability for routers in a network. It allows multiple routers to share a
+virtual IP address, which acts as the default gateway for hosts on the subnet. If the master router fails,
+another router in the VRRP group takes over the virtual IP address. This transition is seamless to the hosts, 
+as they continue to use the same default gateway IP address without needing to update their ARP caches.
+"to interoperate normally with all vendors and provide additional security features for Cisco devices" is
+incorrect. While VRRP is a multivendor protocol, the primary `},
+  {id:"IC117",num:117,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Router OldR is replacing another router on the network with the intention of having OldR and R2 exchange routes. After the engineer applied the initial OSPF configuration, the routes were still missing on both devices. Which command sequence must be issued before the clear IP ospf process command is entered to enable the neighbor relationship?`,exhibit:`0ldR#show ip ospf interface
+GigabitEthernet0/0/0 is up, line protocol is up
+Internet address is 192.168.1.2/24, Area 0
+Process ID 1, Router ID 192.168.1.1, Network Type BROADCAST, Cost: 1 Transmit Delay is 1 sec,
+Designated Router (ID) 192.168.1.1, Interface address 192.168.1.1
+Backup Designated Router (ID) 192.168.1.1, Interface address 192.168.1.1
+Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+Hello due in 00:00:01
+Index 1/1, flood queue length 0
+Neighbor Count is 1, Adja`,has_exhibit:true,correct:` OldR(config)#router ospf 1 OldR(config-router)#no router-id 192.168.1.1`,explanation:`To enable the OSPF neighbor relationship between OldR and R2, we need to ensure that the OSPF Router
+IDs are unique. The exhibit shows that both routers have the same OSPF Router ID (192.168.1.1). OSPF
+requires each router to have a unique Router ID within an OSPF domain. Therefore, we need to change the
+Router ID on OldR.
+From the exhibit we can see that OldR interface address is 192.168.1.2 while its router-id is 192.168.1.1.
+This means that this router-id was manually configured on the router.
+To resolve the conflict and allow OSPF to form neighbor relationships, we must remove the manually`},
+  {id:"IC118",num:118,topic:"IP Connectivity",type:"single",question:`When a floating static route is configured, which action ensures that the backup route is used when the primary route fails?`,exhibit:``,has_exhibit:false,correct:`The floating static route must have a higher administrative distance than the primary route so it is used as a backup.`,explanation:`Floating Static Route
+There may be times when a primary route fails due to physical layer problems, hardware issues, a
+misconfiguration, or many other reasons. A floating static route can be used as a backup route when there
+is a secondary path available.
+Floating static routes are static routes that have an administrative distance greater than the administrative
+distance of another static route or dynamic route. They are very useful when providing a backup to a
+primary link.
+By default, static routes have an administrative distance of 1, making them preferable to routes learned
+from dynamic r`},
+  {id:"IC119",num:119,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which configuration issue is preventing the OSPF neighbor relationship from being established between the two routers?`,exhibit:``,has_exhibit:true,correct:`R1 interface Gil/0 has a larger MTU size.`,explanation:`By design, OSPF will automatically detect a MTU mismatch between two devices when they exchange the
+Database Description (DBD) packets during the formation of adjacency. This is per the standard OSPF
+specification defined in RFC 2328, "OSPF Version 2".
+If a router tries to negotiate an OSPF adjacency on an interface in which the remote neighbor has a larger
+MTU, the adjacency will be denied. This is due to a check that states, "if the Interface MTU field in the
+Database Description packet indicates an IP datagram size that is larger than the router can accept on the
+receiving interface without`},
+  {id:"IC120",num:120,topic:"IP Connectivity",type:"single",question:`Which value represents a host route?`,exhibit:``,has_exhibit:false,correct:`192.168.1.0/32`,explanation:`Host Route
+A host route is configured to route packets to a specific host.
+The subnet mask will be all 1's.
+The IPv4 subnet mask of a host route will always be /32
+The IPv6 subnet mask of a host route will always be /128
+Host routes are automatically added to the routing table for all IPv4 and IPv6 addresses that are
+configured on the router.
+The purpose of a host route is to create a corresponding CEF entry as a receive entry so that the packets
+destined to this IP address can be processed by the router itself.
+Loopback interfaces are commonly created with /32 subnet masks and will therefore `},
+  {id:"IC121",num:121,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Packets are flowing from 192.168.10.1 to the destination at IP address 192.168.20.75. Which next hop will the router select for the packet?`,exhibit:`R_1# show ip route
+.....
+D 192.168.20.0/26 [90/24513456] via 10.10.10.1
+R 192.168.20.0/24 [120/5] via 10.10.10.2
+0 192.168.0.0/19 [110/219414] via 10.10.10.13
+B 192.168.0.0/16 is variably subnetted, 4 subnets,4 masks
+D 192.168.20.0/27 [90/4123710] via 10.10.10.12
+D 192.168.20.0/25 [90/14464211] via 10.10.10.11
+S* 0.0.0.0/0 [1/0] via 10.10.10.14`,has_exhibit:true,correct:`10.10.10.11`,explanation:`
+"10.10.10.11"
+When a router needs to forward a packet, it looks for the most specific matching route in its routing table.
+The IP address 192.168.20.75 is within the 192.168.20.0/25 subnet range, but not within the
+192.168.20.0/26 or 192.168.20.0/27 ranges, making the /25 route the most specific match that includes the
+destination IP address.
+Therefore, the correct next hop the router will select is the one associated with the 192.168.20.0/25 route
+which is 10.10.10.11`},
+  {id:"IC122",num:122,topic:"IP Connectivity",type:"single",question:`Router A learns the same route from two different neighbors, one of the neighbor routers is an OSPF neighbor and the other is an EIGRP neighbor. What is the administrative distance of the route that will be installed in the routing table?`,exhibit:``,has_exhibit:false,correct:`90`,explanation:`Cisco routers prefer the route, advertised by a routing protocol, with lower Administrative Distance. EIGRP
+routes have lower AD than those of OSPF routes, hence preferred by Cisco routers.
+The administrative distances of some common dynamic routing protocols are:
+EIGRP = 90
+IGRP = 100
+OSPF = 110
+IS-IS = 115
+RIP = 120`},
+  {id:"IC123",num:123,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Router R1 must be configured to reach the 10.0.3.0 network from the 10.0.1.0/24 segment. Which command must be used to configure the route?`,exhibit:``,has_exhibit:true,correct:`ip route 10.0.3.0 255.255.255.0 10.0.4.3`,explanation:`To allow R1 to reach the 10.0.3.0 network from the 10.0.1.0/24 segment, we need to configure a static
+route to the 10.0.3.0/24 network with R3 as next-hop.
+"ip route 10.0.3.0 255.255.255.0 10.0.4.3" is correct as it configures a static route to 10.0.3.0 with correct
+subnet mask 255.255.255.0 (/24) via next-hop IP address 10.0.4.3 (R3).`},
+  {id:"IC124",num:124,topic:"IP Connectivity",type:"single",question:`A user configured OSPF and advertised the Gigabit Ethernet interface in OSPF. By default, which type of OSPF network does this interface belong to?`,exhibit:``,has_exhibit:false,correct:`broadcast`,explanation:`OSPF Network Types
+There are five different configurable OSPF network types on a Cisco router:
+broadcast,
+non-broadcast,
+point-to-point,
+point-to-multipoint, and
+point-to-multipoint non-broadcast.
+Broadcast
+The Broadcast network type is the default for an OSPF enabled Ethernet interface.
+The Broadcast network type requires that a link support Layer 2 Broadcast capabilities.
+The Broadcast network type has a 10 second hello and 40 second dead timer.
+An OSPF Broadcast network type requires the use of a DR/BDR.`},
+  {id:"IC125",num:125,topic:"IP Connectivity",type:"single",question:`When deploying a new network that includes both Cisco and third- party network devices, which redundancy protocol avoids the interruption of network traffic if the default gateway router fails? `,exhibit:``,has_exhibit:false,correct:`VRRP`,explanation:`VRRP (Virtual Router Redundancy Protocol) is an open standard protocol, which makes it suitable for
+environments that include both Cisco and third-party network devices. VRRP provides redundancy for the
+default gateway by allowing multiple routers to act as a backup for the default gateway. If the primary
+router fails, another router takes over as the default gateway without interrupting network traffic.`},
+  {id:"IC126",num:126,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. How must OSPF be configured on the GigabitEthernet0/0 interface of the neighbor device to achieve the desired neighbor relationship?`,exhibit:`Current Neighbor Relationship
+Neighbor ID Pri State Dead Time Address Interface
+192.168.1.1 1 FULL/DR 00:00:33 192.168.1.1 GigabitEthernet0/0
+Desired Neighbor Relationship
+Neighbor ID Pri State Dead Time Address Interface
+192.168.1.1 0 FULL/- 00:00:31 192.168.1.1 GigabitEthernet0/0`,has_exhibit:true,correct:`Router(config)#interface GigabitEthernet 0/0 Router(config-if)#ip ospf network point-to-point`,explanation:`To achieve the desired OSPF neighbor relationship where the Priority is 0 and the neighbor state shows
+FULL/- indicating no DR or BDR election on that link, the OSPF configuration must focus on adjusting the
+priority and the OSPF network type on the interface.
+"Router(config)#interface GigabitEthernet 0/0
+Router(config-if)#ip ospf network point-to-point"
+Setting the OSPF network type to point-to-point on an interface will cause the OSPF process to stop 
+electing a DR and BDR, which aligns with the desired neighbor state of FULL/-. This configuration will lead
+to both routers on the link achie`},
+  {id:"IC127",num:127,topic:"IP Connectivity",type:"single",question:`A packet is destined for 10.10.1.22. Which static route does the router choose to forward the packet?`,exhibit:``,has_exhibit:false,correct:`ip route 10.10.1.20 255.255.255.252 10.10.255.1`,explanation:`The valid host range for the subnet 10.10.1.20 255.255.255.252 is 10.10.1.21-10.10.1.22. Therefore, the
+router will select the following route to forward traffic for the destination 10.10.1.22:
+ip route 10.10.1.20 255.255.255.252 10.10.255.1`},
+  {id:"IC128",num:128,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. How does the router manage traffic to 192.168.12.16?`,exhibit:`EIGRP: 192.168.12.0/24
+RIP: 192.168.12.0/27
+OSPF: 192.168.12.0/28`,has_exhibit:true,correct:`It selects the RIP route because it has the longest prefix inclusive of the destination address.`,explanation:`Longest Prefix Match vs Administrative Distance
+Remember the fact that when making forwarding decisions, the longest prefix match always wins among
+the routes actually installed in the routing table, while the routing protocol with the lowest administrative
+distance always wins when installing routes into the routing table. 
+https://www.cisco.com/c/en/us/support/docs/ip/enhanced-interior-gateway-routing-protocol-eigrp/8651-
+21.html
+The range of valid hosts on the OSPF network 192.168.12.0/28 is shown below:
+Subnet Valid Hosts Broadcast
+192.168.12.0 192.168.12.1 to 192.168.12.14 192.168.12.15
+`},
+  {id:"IC129",num:129,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. What is the prefix length for the route that router1 will use to reach host A?`,exhibit:`Router1#show ip route
+Gateway of last resort is 10.10.11.2 to network 0.0.0.0
+209.165.200.0/27 is subnetted, 1 subnets
+B 209.165.200.224 [20/0] via 10.10.12.2, 03:03:03
+209.165.201.0/27 is subnetted, 1 subnets
+B 209.165.201.0 [20/0] via 10.10.12.2, 03:03:03
+209.165.202.0/27 is subnetted, 1 subnets
+B 209.165.202.128 [20/0] via 10.10.12.2, 03:03:03
+10.0.0.0/8 is variably subnetted, 8 subnets, 4 masks 
+C 10.10.10.0/28 is directly connected, GigabitEthernet0/0
+C 10.10.11.0/30 is directly connected,`,has_exhibit:true,correct:`/29`,explanation:`When routers make forwarding decisions, they look for the most specific match, which means they choose
+the route with the longest prefix length that covers the destination IP address.
+From the routes given in the exhibit:
+Route 10.10.13.0/25
+This route covers the IP range 10.10.13.0 - 10.10.13.127.
+10.10.13.214 does not fall within this range.
+Route 10.10.13.128/28
+This route covers the IP range 10.10.13.128 - 10.10.13.143.
+10.10.13.214 does not fall within this range.
+Route 10.10.13.144/28
+This route covers the IP range 10.10.13.144 - 10.10.13.159.
+10.10.13.214 does not fall within this range`},
+  {id:"IC130",num:130,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. What is the subnet mask for route 172.16.4.0?`,exhibit:`R1# show ip route | begin Gateway
+Gateway of last resort is 0.0.0.0 to network 0.0.0.0
+S* 0.0.0.0/0 is directly connected, Serial0/0/1
+172.16.0.0/16 is variably subnetted, 4 subnets, 2 masks
+C 172.16.2.0/24 is directly connected, GigabitEthernet0/0
+L 172.16.2.2/32 is directly connected, GigabitEthernet0/0
+C 172.16.4.0/21 is directly connected, Serial0/0/1
+L 172.16.8.2/26 is directly connected, Serial0/0/1`,has_exhibit:true,correct:`255.255.248.0`,explanation:`From the exhibit we can see that route 172.16.4.0 has prefix length of /21.
+To determine the subnet mask for the route 172.16.4.0, we need to convert the prefix length /21 into its
+corresponding subnet mask.
+The notation /21 indicates that the first 21 bits of the IP address are used for the network portion, and the
+remaining bits are used for the host portion. In binary, the subnet mask would be:
+11111111.11111111.11111000.00000000
+When converted to dotted decimal, it is equal to 255.255.248.0.
+Thus, the subnet mask for the route 172.16.4.0/21 is 255.255.248.0.`},
+  {id:"IC131",num:131,topic:"IP Connectivity",type:"single",question:`How does HSRP provide first hop redundancy?`,exhibit:``,has_exhibit:false,correct:`It uses a shared virtual MAC and a virtual IP address to a group of routers that serve as the default gateway for hosts on a LAN.`,explanation:`The Hot Standby Router Protocol (HSRP) is a First Hop Redundancy Protocol (FHRP) designed to allow for
+transparent failover of the first-hop IP device. HSRP provides high network availability by providing first-
+hop routing redundancy for IP hosts on networks configured with a default gateway IP address.
+When HSRP is configured on a network segment, it provides a virtual MAC address and an IP address that
+is shared among a group of devices running HSRP. The address of this HSRP group is referred to as the
+virtual IP address. One of these devices is selected by the protocol to be the active dev`},
+  {id:"IC132",num:132,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which interface is chosen to forward traffic to the host at 192.168.0.55?`,exhibit:``,has_exhibit:true,correct:`GigabitEthernet0/1`,explanation:`Routers choose routes when multiple routes to same destination are available using the longest prefix
+match principle, where the router prefers the route with the most specific match (highest subnet mask) to
+the destination IP address.
+The routes that match the destination address are:
+D 192.168.0.0/16 [90/130816] via 10.0.13.3, 00:10:09, GigabitEthernet0/2
+O 192.168.0.0/23 [110/2] via 10.0.14.4, 00:00:46, GigabitEthernet0/3
+S 192.168.0.0/24 [100/0] via 10.0.12.2
+The more specific route (longest prefix match) for 192.168.0.55 would be the 192.168.0.0/24 subnet. The 
+route for 192.168.0.0/24 h`},
+  {id:"IC133",num:133,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. The IPv6 address for the LAN segment on router R2 must be configured using the EUI-64 format. Which address must be used?`,exhibit:``,has_exhibit:true,correct:`ipv6 address 2001:DB8:D8D2:1009:10A0:ABFF:FEDD:2 eui-64`,explanation:`On the R2 LAN interface, the command ipv6 address 2001:db8:d8d2:1009::/64 eui-64 tells the router to
+automatically generate an IPv6 address using the EUI-64 format. The MAC address of the interface is
+12A0.ABDD.0002.
+To create the EUI-64 address, the MAC address is split into two halves: 12A0AB and DD0002. The value
+FFFE is inserted in the middle, giving 12A0:ABFF:FEDD:0002.
+Next, the 7th bit of the first byte (12 in hex = 0001 0010 in binary) is flipped. Flipping the 7th bit changes it
+to 0001 0000, which is 10 in hex. This changes the first part of the address from 12A0 to 10A0.
+The final IP`},
+  {id:"IC134",num:134,topic:"IP Connectivity",type:"single",question:`When the active router in an HSRP group fails, what router assumes the role and forwards packets?`,exhibit:``,has_exhibit:false,correct:`standby`,explanation:`Hot Standby Router Protocol (HSRP)
+Hot Standby Router Protocol (HSRP) is a CISCO proprietary protocol, which provides redundancy for a local 
+subnet. In HSRP, two or more routers give an illusion of a virtual router.
+HSRP allows you to configure two or more routers as standby routers and only a single router as active
+router at a time. All the routers in a single HSRP group share a single MAC address and IP address, which
+acts as a default gateway for the local network. The Active router is responsible for forwarding the traffic. If
+it fails, the Standby router takes up all the responsibiliti`},
+  {id:"IC135",num:135,topic:"IP Connectivity",type:"multiple",question:`Which two outcomes are predictable behaviors for HSRP? (Choose two)`,exhibit:``,has_exhibit:false,correct:`The two routers share a virtual IP address that is used as the default gateway for devices on the LAN. The two routers negotiate one router as the active router and the other as the standby router.`,explanation:`Hot Standby Router Protocol (HSRP)
+Hot Standby Router Protocol (HSRP) is a CISCO proprietary protocol, which provides redundancy for a local
+subnet. In HSRP, two or more routers give an illusion of a virtual router.
+HSRP allows you to configure two or more routers as standby routers and only a single router as active
+router at a time. All the routers in a single HSRP group share a single MAC address and IP address, which
+acts as a default gateway for the local network. The Active router is responsible for forwarding the traffic. If
+it fails, the Standby router takes up all the responsibilities`},
+  {id:"IC136",num:136,topic:"IP Connectivity",type:"single",question:`Which interface is used to send traffic to the destination network?`,exhibit:`D 10.214.247.237/28 [90/2170] via G0/12
+D 10.214.247.237/28 [90/46985] via G0/19
+O 10.214.247.237/28 [110/665] via G0/9
+O 10.214.247.237/28 [110/3399] via G0/1
+`,has_exhibit:true,correct:`G0/12`,explanation:`In the given exhibit, the destination network 10.214.247.237/28 is reachable via multiple routes with
+different metrics. The decision on which interface to use for sending traffic is based on the metric value
+associated with each route. Lower metric values are preferred.
+The OSPF (O) routes have administrative distance 110.
+The EIGRP (D) routes have administrative distance 90.
+For OSPF routes, the metric values are 665 and 3399.
+For EIGRP routes, the metric values are 2170 and 46985.
+EIGRP is preferred over OSPF because it has a lower administrative distance (90). Among the EIGRP routes,
+the o`},
+  {id:"IC137",num:137,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. If OSPF is running on this network, how does Router2 handle traffic from Site B to 10.10.13.128/25 at Site A?`,exhibit:``,has_exhibit:true,correct:`It is unreachable and discards the traffic.`,explanation:`In unicast routing, the destination address must be a unique host address on a subnet, but the destination
+address 10.10.13.128/25 is a subnet ID. Therefore, this destination is unreachable and Router2 will discard
+the packets having destination address of 10.10.13.128/25.`},
+  {id:"IC138",num:138,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. A packet sourced from 172.16.32.254 is destined for 172.16.32.8. What is the subnet mask of the preferred destination route?`,exhibit:`
+router# show ip route
+...
+D 172.16.32.0/26 [90/25789217] via 10.0.0.1
+R 172.16.32.0/24 [120/4] via 10.0.0.2
+O 172.16.32.0/19 [110/229840] via 10.0.0.3
+C 172.16.32.32/32 is directly connected, Loopback0
+C 172.16.32.4/30 is directly connected, GigabitEthernet0/0`,has_exhibit:true,correct:`255.255.255.192`,explanation:`"255.255.255.192"
+To determine the subnet mask of the preferred destination route, we must consider the longest prefix
+match principle, which states that the router selects the route with the most specific match to the
+destination IP address.
+The destination IP address 172.16.32.8 belongs to the /26 subnet (172.16.32.0/26), which covers IPs from
+172.16.32.0 to 172.16.32.63. It also fits into the /24 and /19 subnets, but these are less specific than the /26
+subnet.
+It does not fit into the /32 subnet, as that is for a single IP address (172.16.32.32) neither in the /30 subnet
+(172.16.32.4/30), `},
+  {id:"IC139",num:139,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which action is taken by the router when a packet is sourced from 10.10.10.2 and destined for 10.10.10.16?`,exhibit:`Router1#show ip route
+Gateway of last resort is not set
+209.165.200.0/27 is subnetted, 1 subnets
+B 209.165.200.224 [20/0] via 10.10.12.2, 00:09:57
+10.0.0.0/8 is variably subnetted, 4 subnets, 3 masks
+C 10.10.10.0/28 is directly connected, GigabitEthernet0/0
+C 10.10.11.0/30 is directly connected, FastEthernet2/0
+O 10.10.13.0/24 [110/2] via 10.10.10.1, 00:08:34, GigabitEthernet0/0 
+C 10.10.12.0/30 is directly connected, GigabitEthernet0/1`,has_exhibit:true,correct:`It discards the packets.`,explanation:`The destination address is 10.10.10.16. The routing table contains a route for 10.10.10.0/28, which covers
+addresses 10.10.10.0–10.10.10.15.
+10.10.10.16 is outside this range, so it does not match that connected route. There is no other route (more
+specific or default) that matches 10.10.10.16. The gateway of last resort is not set, so there is no fallback
+route. With no matching route, the router drops the packet.`},
+  {id:"IC140",num:140,topic:"IP Connectivity",type:"multiple",question:`What are two benefits of FHRPs? (Choose two.)`,exhibit:``,has_exhibit:false,correct:`They enable automatic failover of the default gateway. They allow multiple devices to serve as a single virtual gateway for clients in the network.`,explanation:`A first hop redundancy protocol (FHRP) provides with default gateway redundancy. A FHRP allows multiple
+devices to serve as a single virtual gateway for clients in the network. There are a number of these
+technologies on the market and today, e.g., Hot Standby Router Protocol (HSRP), Virtual Router
+Redundancy Protocol (VRRP) and Gateway Load Balancing Protocol (GLBP). Many modern Cisco
+equipments support the full flavor of the First Hop Redundancy Protocols.`},
+  {id:"IC141",num:141,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Packets received by the router from BGP enter via a serial interface at 209.165.201.1. Each route is present within the routing table. Which interface is used to forward traffic with a destination IP of 10.1.1.19?`,exhibit:`
+RIP 10.1.1.16/28[120/5] via F0/0
+OSPF 10.1.1.0/24[110/30] via F0/1
+OSPF 10.1.1.0/24[110/40] via F0/2
+EIGRP 10.1.0.0/26[90/20] via F0/3
+EIGRP 10.0.0.0/8[90/133] via F0/4`,has_exhibit:true,correct:`F0/0`,explanation:`When determining which interface is used to forward traffic to a specific destination IP, the router looks at
+the most specific route in the routing table. The most specific route is the one with the longest prefix
+(smallest subnet), as it covers the smallest range of IP addresses.
+The RIP route "10.1.1.16/28[120/5] via F0/0" is the most specific route and includes the destination IP
+10.1.1.19 as it covers the IP range from 10.1.1.16 to 10.1.1.31. Traffic destined for 10.1.1.19 will be
+forwarded via F0/0.`},
+  {id:"IC142",num:142,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. An engineer assigns IP addressing to the current VLAN with three PCs. The configuration must also account for the expansion of 30 additional VLANs using the same Class C subnet for subnetting and host count. Which command set fulfills the request while reserving address space for the expected growth?`,exhibit:``,has_exhibit:true,correct:`Switch(config)#interface vlan 10 Switch(config-if)#ip address 192.168.0.1 255.255.255.248`,explanation:`"Switch(config)#interface vlan 10 
+Switch(config-if)#ip address 192.168.0.1 255.255.255.248"
+We need to configure IP addressing for VLAN 10 and also reserve address space for 30 additional VLANs,
+each requiring enough IP addresses for at least the same number of hosts as VLAN 10. Given that we have
+a Class C subnet, It has a default subnet mask of 255.255.255.0.
+We must determine the subnet mask that allows for both the current and future host count, while also
+permitting the creation of 30 additional VLANs.
+"255.255.255.248" subnet mask allows for 6 usable IP addresses, which is sufficient f`},
+  {id:"IC143",num:143,topic:"IP Connectivity",type:"multiple",question:`When troubleshooting a user complaint, you notice that two routers failed to establish an OSPF neighbor adjacency. Which two issues are root causes for the problem? (Choose two)`,exhibit:``,has_exhibit:false,correct:`The two routers are using the same router ID. The passive-interface command is configured on the connected interfaces.`,explanation:`Out of the given choices, the following two reasons will prevent an OSPF neighbor relationship between
+two connected routers:
+The two routers are using the same router ID.
+The passive-interface command is configured on the connected interfaces.`},
+  {id:"IC144",num:144,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. How will the device handle a packet destined to IP address 100.100.100.100?`,exhibit:`100.0.0.0/8 is variably subnetted, 4 subnets, 4 masks
+R 100.0.0.0/8 [120/2] via 192.168.3.1, 00:00:13, Ethernet0/3
+S 100.100.0.0/16 [1/0] via 192.168.4.1
+D 100.100.100.0/24 [90/435200] via 192.168.2.1, 00:00:13, Ethernet0/2
+O 100.100.100.100/32 [110/21] via 192.168.1.1, 00:05:57, Ethernet0/1
+`,has_exhibit:true,correct:`It will choose the route with the longest match O 100.100.100.100/32 [110/21] via 192.168.1.1, 00:05:57, Ethernet0/1`,explanation:`When a device handles a packet, it uses the longest prefix match to determine the best route. This means
+the route with the most specific subnet mask (i.e., the longest match) will be chosen. In this case, the device
+has a host route learned via OSPF directly to destination:
+"O 100.100.100.100/32 [110/21] via 192.168.1.1, 00:05:57, Ethernet0/1"
+So, the device will choose this route.`},
+  {id:"IC145",num:145,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which action must be taken to ensure that RouterA is elected as the DR for OSPF area 0?`,exhibit:``,has_exhibit:true,correct:`Configure the RouterA interfaces with the highest OSPF priority value within the area.`,explanation:``},
+  {id:"IC146",num:146,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. With a reference bandwidth of 100 GB on all routers, which path does router Y use to get to network 192.168.1.0/24?`,exhibit:``,has_exhibit:true,correct:` router C > D > A > B > F`,explanation:`The question doesn't state which routing protocol is being used. So we will assume OSPF is being used.
+The path cost in OSPF is calculated using the formula:
+Cost = Reference Bandwidth / Interface Bandwidth
+Since the reference bandwidth is 100 GB, let’s calculate the cost for each possible path. The link costs
+would be:
+10 Gigabit links: 100 GB / 10 GB = 10
+100 Gigabit links: 100 GB / 100 GB = 1
+Paths and Their Costs:
+Router Y → C → D → A → F
+Link Y to C: 10
+Link C to D: 1
+Link D to A: 1
+Link A to F: 10
+Total Cost = 10 + 1 + 1 + 10 = 22
+Router Y → E → B → F
+Link Y to E: 10
+Link E to B: 10
+Link`},
+  {id:"IC147",num:147,topic:"IP Connectivity",type:"single",question:`Which action does the router take as it forwards a packet through the network?`,exhibit:``,has_exhibit:false,correct:`The router replaces the original source and destination MAC addresses with the sending router\`s MAC address as the source and neighbor\`s MAC address as the destination.`,explanation:`When a router receives a packet, it inspects source and destination IP address only to decide which
+interface should be used to send the packet, based on its routing table. Actual packet forwarding takes
+place using the MAC addresses.
+Remember that the source and destination IP address do not change throughout the process of packet
+forwarding while the source and destination MAC address changes at each segment. The MAC address is
+only locally significant and changes on each hop.`},
+  {id:"IC148",num:148,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. What is the next hop for traffic entering R1 with a destination of 10.1.2.126?`,exhibit:`R1#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+E1 - OSPF external type 1, E2 - OSPF external type 2
+i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+ia - IS-IS inter area, * - candidate default, U - per-user static route
+o - ODR, P - periodic downloaded static route
+Gateway of last resort is not set
+10.0.0.0/24 is subn`,has_exhibit:true,correct:`10.165.20.166`,explanation:`When forwarding packets the router looks at the most specific route in the routing table. The most specific
+route is the one with the longest prefix (smallest subnet), as it covers the smallest range of IP addresses.
+The routes in the routing table that match the destination address 10.1.2.126 are:
+D 10.1.2.0/24 [90/2170112] via 10.145.20.226, Serial0/0
+D 10.1.2.0/25 [90/2170112] via 10.145.20.126, Serial0/0
+S 10.1.2.112/28 [1/0] via 10.165.20.166
+The most specific match for 10.1.2.126 is the route "S 10.1.2.112/28 [1/0] via 10.165.20.166" with the
+longest prefix length /28, and ranges from 10`},
+  {id:"IC149",num:149,topic:"IP Connectivity",type:"single",question:`What is the effect when loopback interfaces and the configured router ID are absent during the OSPF Process configuration?`,exhibit:``,has_exhibit:false,correct:`The highest up/up physical interface IP address is selected as the router ID.`,explanation:`When configuring OSPF on a router, the OSPF process requires a router ID to be assigned. If no router ID is
+explicitly configured and there are no loopback interfaces available, the router will choose the highest IP
+address of any of its up/up physical interfaces as the router ID.`},
+  {id:"IC150",num:150,topic:"IP Connectivity",type:"single",question:`You have configured a router with an OSPF router ID, but its IP address is still the physical interface. Which action can you take to correct the problem in the least disruptive way? `,exhibit:``,has_exhibit:false,correct:`Reload the OSPF process.`,explanation:`Once an OSPF router ID is selected, it is not changed even if the interface that is used to select it changed
+its operational state or its IP address. To change the OSPF router ID, you must reset the OSPF process with
+the clear ip ospf process command (the least disruptive way) or reload the router.
+R2(config-router)# router-id 2.2.2.2
+% OSPF: Reload or use "clear ip ospf process" command, for this to take effect`},
+  {id:"IC151",num:151,topic:"IP Connectivity",type:"single",question:`An engineer is installing a new wireless printer with a static IP address on the Wi-Fi network. Which feature must be enabled and configured to prevent connection issues with the printer?`,exhibit:``,has_exhibit:false,correct:`passive client`,explanation:`Passive clients are wireless devices, such as scales and printers that are configured with a static IP address.
+These clients do not transmit any IP information such as IP address, subnet mask, and gateway information
+when they associate with an access point. As a result, when passive clients are used, the controller never
+knows the IP address unless they use the DHCP.
+Since the wireless controller does not have any IP related information about passive clients, it cannot
+respond to any ARP requests. The current behavior does not allow the transfer of ARP requests to passive
+clients. Any applic`},
+  {id:"IC152",num:152,topic:"IP Connectivity",type:"single",question:`Which MAC address is recognized as a VRRP virtual address?`,exhibit:``,has_exhibit:false,correct:`0000.5E00.010a`,explanation:`The virtual MAC address for a VRRP group begins with a vendor code of 0000.5e (LANA's organizationally
+unique identifier [OUI]), followed with a well-known VRRP address block of 00.01. The last two
+hexadecimal digits are the hexadecimal representation of the VRID (group) number. For example, a VRRP
+group of 20 yields a default virtual MAC address of 0000.5e00.0114, because 20 in decimal equates to 14 in
+hexadecimal.`},
+  {id:"IC153",num:153,topic:"IP Connectivity",type:"multiple",question:`Refer to the exhibit. IPv6 must be implemented on R1 to the ISP. The uplink between R1 and the ISP must be configured with a manual assignment, and the LAN interface must be self-provisioned. Both connections must use the applicable IPv6 networks. Which two configurations must be applied to R1? (Choose two)`,exhibit:``,has_exhibit:true,correct:`interface Gi0/0 ipv6 address 2001:db8:0:AFFF::/64 eui-64 interface Gi0/1 ipv6 address 2001:db8:0F1B:FCCB:ACCE:FCED:ABCD:FA00:/127`,explanation:`"interface Gi0/0 
+ipv6 address 2001:db8:0:AFFF::/64 eui-64"
+"interface Gi0/1
+ipv6 address 2001:db8:0F1B:FCCB:ACCE:FCED:ABCD:FA00:/127"
+For the ISP uplink (Gi0/1): The IPv6 address must be manually assigned. The provided WAN address on
+Gi0/1 is 2001:db8:0F1B:FCCB:ACCE:FCED:ACBD:FA0/127. Given that this is a /127 subnet, there are only two
+addresses available. One address will be used by the ISP, and the other must be used by R1.
+First option is incorrect because it uses the Gi0/0 interface, which is for the LAN side, not the WAN link.
+Fourth option provides an IPv6 address that is part of the `},
+  {id:"IC154",num:154,topic:"IP Connectivity",type:"single",question:`Which type of protocol is VRRP?`,exhibit:``,has_exhibit:false,correct:`allows two or more routers to act as a default gateway`,explanation:`"allows two or more routers to act as a default gateway"
+VRRP is a First Hop Redundancy Protocol which allows two or more routers to act as a default gateway. It
+allows multiple routers to work together to provide a single virtual default gateway for end devices on a
+LAN. This ensures that if the primary router fails, another router can take over as the default gateway
+without disrupting network services.`},
+  {id:"IC155",num:155,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. A network engineer is in the process of establishing IP connectivity between two sites. Routers R1 and R2 are partially configured with IP addressing. Both routers have the ability to access devices on their respective LANs. Which command set configures the IP connectivity between devices  located on both LANs in each site?`,exhibit:``,has_exhibit:true,correct:`R1 ip route 0.0.0.0 0.0.0.0 209.165.200.226 R2 ip route 0.0.0.0 0.0.0.0 209.165.200.225`,explanation:``},
+  {id:"IC156",num:156,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. All routers in the network are configured correctly, and the expected routes are being exchanged among the routers. Which set of routes are learned from neighbors and installed on router 2?`,exhibit:``,has_exhibit:true,correct:`10.129.9.0/23 10.139.2.0/30 10.12.191.0/30 10.129.9.0/25`,explanation:`The routes that R2 learned from neighbors via EIGRP, and not directly connected, are: 10.129.9.0/23, 
+10.139.2.0/30, 10.12.191.0/30, and 10.129.9.0/25. The routes 10.22.1.0/24 and 10.40.1.0/30 are directly
+connected and not learned through neighbors.`},
+  {id:"IC157",num:157,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. A company is configuring a failover plan and must implement the default routes in such a way that a floating static route will assume traffic forwarding when the primary link goes down. Which primary route configuration must be used?`,exhibit:``,has_exhibit:true,correct:`ip route 0.0.0.0 0.0.0.0 192.168.0.2`,explanation:`This command ip route 0.0.0.0 0.0.0.0 192.168.0.2 will forward all traffic to the primary ISP through the
+next-hop IP address 192.168.0.2. The failover or "floating" route will be configured separately with a higher
+administrative distance.
+ip route 0.0.0.0 0.0.0.0 192.168.0.2 GigabitEthernet1/0 would configure the route using the outgoing
+interface GigabitEthernet1/0, but this is not necessary in the exhibit's setup since the next-hop IP is
+specified. Hence, this answer is incorrect.`},
+  {id:"IC158",num:158,topic:"IP Connectivity",type:"single",question:`Which attribute does a router use to select the best path when two or more different routes to the same destination exist from two different routing protocols?`,exhibit:``,has_exhibit:false,correct:`Administrative distance`,explanation:`Administrative Distance
+Primarily, Administrative Distance is used by routers to decide which routes to be added to the routing 
+table when multiple routes to a destination are advertised. It is also used in the selection of best route to
+forward the data when selection has to be made out of multiple routes available in the routing table.
+Administrative Distance is a number that denotes how believable is an entire routing protocol on a single
+router. The lower the number, the better, or more believable the routing protocol.
+When a router learns multiple routes to a specific network via multip`},
+  {id:"IC159",num:159,topic:"IP Connectivity",type:"single",question:`Which virtual MAC address is used by VRRP group 1?`,exhibit:``,has_exhibit:false,correct:`0000.5E00.0101`,explanation:`In VRRP, a virtual router must use 00-00-5E-00-01-XX as its Media Access Control (MAC) address.
+The first three octets are derived from the IANA's OUI. The next two octets (00-01) indicate the address
+block assigned to the VRRP protocol. The last byte of the address (XX) is the Virtual Router IDentifier
+(VRID). This mapping provides for up to 255 VRRP routers on a network.`},
+  {id:"IC160",num:160,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. What does router R1 use as its OSPF router-ID?`,exhibit:``,has_exhibit:true,correct:`172.16.15.10`,explanation:`The OSPF router ID is chosen according to the following criteria:
+The highest router ID configured explicitly with router-id ip address command, in OSPF router
+configuration mode.
+The highest IP address on its loopback interfaces (Loopback interface is a logical interface on a router).
+If no loopback interface is configured then the highest IP address on one of its active physical interfaces. 
+If there is no active interface, the OSPF process will not start and therefore you will not have any OSPF
+routes in your routing table.`},
+  {id:"IC161",num:161,topic:"IP Connectivity",type:"single",question:`R1 has learned route 10.10.10.0/24 via numerous routing protocols. Which route is installed?`,exhibit:``,has_exhibit:false,correct:`Route with the lowest administrative distance`,explanation:`When a router learns multiple routes to a specific network (same network, same prefix length) via multiple
+routing processes (or routing protocols), it installs the route with the lowest administrative distance in the
+routing table.`},
+  {id:"IC162",num:162,topic:"IP Connectivity",type:"single",question:`What is the effect when loopback interfaces and the configured router ID are absent during the OSPF process configuration?`,exhibit:``,has_exhibit:false,correct:`The highest up/up physical interface IP address is selected as the router ID.`,explanation:`The OSPF router ID is chosen according to the following criteria:
+The highest router ID configured explicitly with router-id ip address command, in OSPF router
+configuration mode.
+The highest IP address on its loopback interfaces (Loopback interface is a logical interface on a router).
+If no loopback interface is configured then the highest IP address on one of its active physical interfaces.
+If there is no active interface, the OSPF process will not start and therefore you will not have any OSPF
+routes in your routing table.
+`},
+  {id:"IC163",num:163,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. An engineer must translate the PC1 IP address to 10.199.77.100 and permit PC1 to ping the loopback 0 interface on router R2. What command set must be used?`,exhibit:``,has_exhibit:true,correct:`R1# ! interface Loopback0 ip address 10.1.1.1 255.255.255.255 ! interface FastEthernet0/0 ip address 10.139.91.1 255.255.255.252 ip nat outside ip virtual-reassembly in ! interface FastEthernet1/0 ip address 172.16.29.1 255.255.255.0 ip nat inside  ip virtual-reassembly in ! router eigrp 100 network 10.1.1.1 0.0.0.0 network 10.139.91.0 0.0.0.3 ! ip nat inside source static 172.16.29.78 10.199.77.`,explanation:`To fulfill the given requirements, the configurations required are:
+Correct NAT configuration on R1, where the inside local address (172.16.29.78) of PC1 is correctly
+mapped to the inside global address (10.199.77.100).
+Proper interface roles (inside/outside) on R1 for NAT.
+Proper static route on R2 to direct traffic to the translated address.
+The given answer is correct as:
+FastEthernet0/0 is correctly set as ip nat outside (connected to the outside network) on R1.
+FastEthernet1/0 is correctly set as ip nat inside (connected to the inside network) on R1.
+"ip nat inside source static 172.16.29`},
+  {id:"IC164",num:164,topic:"IP Connectivity",type:"multiple",question:`Refer to the exhibit. The New York router is configured with static routes pointing to the Atlanta and Washington sites. Which two tasks must be performed so that the Serial0/0/0 interfaces on the Atlanta and Washington routers can reach one another? (Choose two.)`,exhibit:``,has_exhibit:true,correct:`Configure the ipv6 route 2023::/126 2012::2 command on the Atlanta router. Configure the ipv6 route 2012::/126 2023::2 command on the Washington router.`,explanation:`The ipv6 route 2023::/126 2012::2 command on Atlanta router indicates that destination network 
+2023::/126 (Washington's Serial link) is reachable via the next hop address 2012::2 (New-York's Se0/0/0
+address).
+The ipv6 route 2012::/126 2023::2 command on Washington router indicates that destination network
+2012::/126 (Atlanta's Serial link) is reachable via the next hop address 2023::2, that is Se0/0/1 address on
+New-York router.
+IPv6 Static Routes
+Directly Attached Static Routes
+In directly attached static routes, only the output interface is specified. The destination is assumed to be
+direc`},
+  {id:"IC165",num:165,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. With which metric was the route to host 172.16.0.202 learned?`,exhibit:``,has_exhibit:true,correct:`38443`,explanation:`Our destination host address 172.16.0.202 is a Class B address. There are three subnets of Class B network
+172.16.0.0/16 present in the routing table. If you calculate the range of valid hosts on each Class B subnet,
+the destination address 172.16.0.202 is a valid host address on 172.16.0.0/24 with metric 0 (being static
+route) and prefix length 24, and 172.16.0.128/25 with metric 38443 and prefix length 25.
+Now we need to see which route will be used to send traffic to our destination host? The router always
+chooses the route with the longest prefix when sending traffic to a destination. So R`},
+  {id:"IC166",num:166,topic:"IP Connectivity",type:"multiple",question:`What are two capabilities provided by VRRP within a LAN network? (Choose two)`,exhibit:``,has_exhibit:false,correct:`load sharing redundancy`,explanation:`Load Sharing: VRRP can be configured to distribute traffic among multiple routers, thus providing load
+sharing. This can be achieved by assigning different virtual IP addresses to different routers in the VRRP
+group and setting up hosts to use these virtual IP addresses as their default gateways.
+Redundancy: The primary purpose of VRRP is to provide redundancy. VRRP allows for the automatic 
+assignment of available IP routers to participating hosts. By configuring multiple routers with the same
+virtual IP address, VRRP ensures that if the primary router fails, a backup router will take over t`},
+  {id:"IC167",num:167,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Router R1 resides in OSPF Area 0. After updating the R1 configuration to influence the paths that it will use to direct traffic, an engineer verified that each of the four Gigabit interfaces has the same route to 10.10.0.0/16. Which interface will R1 choose to send traffic to reach the route?`,exhibit:`R1#show run
+!
+router ospf 1
+auto-cost reference-bandwidth 100000
+!
+interface GigabitEthernet0/0
+bandwidth 10000000
+!
+interface GigabitEthernet0/1
+bandwidth 100000000
+!
+interface GigabitEthernet0/2
+ip ospf cost 100
+!
+interface GigabitEthernet0/3
+ip ospf cost 1000`,has_exhibit:true,correct:`GigabitEthernet0/1`,explanation:`In OSPF, the path with the lowest cost is preferred. OSPF calculates the cost of a route based on the
+bandwidth of the interface, or it can be manually set with the ip ospf cost command on the interface.
+Reference Bandwidth:
+The auto-cost reference-bandwidth 100000 command sets the reference bandwidth to 100,000 Mbps
+(100 Gbps). This command influences the cost calculation for each interface based on its bandwidth.
+Cost Calculation for Each Interface:
+GigabitEthernet0/0: 
+Bandwidth is set to 10,000,000 Kbps (10,000 Mbps).
+OSPF cost = reference bandwidth / interface bandwidth = 100,000 Mbps / `},
+  {id:"IC168",num:168,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Router R4 is dynamically learning the path to the server. If R4 is connected to R1 via OSPF Area 20, to R2 via BGP, and to R3 via EIGRP 777, which path is installed in the routing table of R4?`,exhibit:``,has_exhibit:true,correct:`The path through R2, because the EBGP administrative distance is 20.`,explanation:`R4 and R2 have different BGP AS numbers, they cannot use IBGP, they are EBGP neighbors. EBGP
+Administrative Distance is 20, and this is the lowest AD here.
+Primarily Administrative Distance is used by routers to decide which routes to be added to the routing
+table when multiple routes to the destination are advertised.
+It is also used in the selection of best route to forward the data when selection has to be made out of
+multiple routes available in the routing table.
+Administrative Distance is a number that denotes how believable is an entire routing protocol on a single
+router. The lower the`},
+  {id:"IC169",num:169,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which IPv6 configuration is required for R17 to successfully ping the WAN interface on R18?`,exhibit:``,has_exhibit:true,correct:`R17# ! no ip domain lookup ip cef ipv6 unicast-routing ! interface FastEthernet0/0 no ip address duplex auto speed auto ipv6 address 2001:DB8:2::201/64 ! interface FastEthernet1/0 no ip address duplex auto  speed auto ipv6 address 2001:DB8:3::201/64 ! no cdp log mismatch duplex ipv6 route 2001:DB8:4::/64 2001:DB8:3::301`,explanation:``},
+  {id:"IC170",num:170,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which command must be issued to enable a floating static default route on RouterA?`,exhibit:``,has_exhibit:true,correct:`ip route 0.0.0.0 0.0.0.0 192.168.1.2 10`,explanation:``},
+  {id:"IC171",num:171,topic:"IP Connectivity",type:"multiple",question:`What are two reasons for an engineer to configure a floating state route? (Choose two)`,exhibit:``,has_exhibit:false,correct:`to automatically route traffic on a secondary path when the primary path goes down to enable fallback static routing when the dynamic routing protocol fails`,explanation:`Floating Static Route
+There may be times when a primary route fails due to physical layer problems, hardware issues, a
+misconfiguration, or many other reasons. A floating static route can be used as a backup route when there
+is a secondary path available.
+Floating static routes are static routes that have an administrative distance greater than the administrative
+distance of another static route or dynamic route. They are very useful when providing a backup to a
+primary link. 
+By default, static routes have an administrative distance of 1, making them preferable to routes learned
+from dynamic`},
+  {id:"IC172",num:172,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. An engineer is asked to configure router R1 so that it forms an OSPF single-area neighbor relationship with R2. Which command sequence must be implemented to configure the router?`,exhibit:``,has_exhibit:true,correct:`router ospf 10 network 10.0.0.0 0.0.0.3 area 0 network 10.0.1.0 0.0.0.255 area 0`,explanation:`To form an OSPF single-area neighbor relationship between R1 and R2, we need to configure correct
+network statements that properly define the networks on R1's interfaces
+The given answer is correct as:
+"network 10.0.0.0 0.0.0.3 area 0": This correctly identifies the 10.0.0.0/30 network. The wildcard mask for
+/30 prefix is 0.0.0.3.
+"network 10.0.1.0 0.0.0.255 area 0": This correctly identifies the 10.0.1.0/24 network on R1. The wildcard 
+mask for /24 prefix is 0.0.0.255.`},
+  {id:"IC173",num:173,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. All interfaces are configured with duplex auto and ip ospf network broadcast. Which configuration allows routers R14 and R86 to form an OSPFv2 adjacency and act as a central point for exchanging OSPF information between routers?`,exhibit:``,has_exhibit:true,correct:`R14# interface Loopback0 ip ospf 10 area 0 interface FastEthernet0/0 ip address 10.73.65.65 255.255.255.252  ip ospf priority 255 ip ospf 10 area 0 ip mtu 1500 router ospf 10 router-id 10.10.1.14 R86# interface Loopback0 ip ospf 10 area 0 interface FastEthernet0/0 ip address 10.73.65.66 255.255.255.252 ip ospf 10 area 0 ip mtu 1500 router ospf 10 router-id 10.10.1.86`,explanation:`To allow routers R14 and R86 to form an OSPFv2 adjacency and act as a central point for exchanging OSPF
+information between routers, we need to do the following:
+Configure correct ip addresses to F0/0 interfaces of the routers
+Enable OSPF on both loopback and FastEthernet interfaces of R14 and R86.
+Configure interface of one of the routers with higher OSPF priority, so it becomes DR
+Configure matching MTU value (MTU mismatch can prevent OSPF adjacency).
+The given answer is the most appropriate because:
+It configures correct ip addresses to the interfaces .
+It enables OSPF on both routers inter`},
+  {id:"IC174",num:174,topic:"IP Connectivity",type:"single",question:`Refer to the exhibit. Which command configures a floating static route to provide a backup to the primary link?`,exhibit:``,has_exhibit:true,correct:` ip route 209.165.200.224 255.255.255.224 209.165.202.129 254`,explanation:`Floating Static Route
+A floating static route is configured with a higher administrative distance than the dynamic routing
+protocol, or another static route, it is backing up. As a result, the dynamic route learned through the
+routing protocol (or the primary static route) is always used in preference to the floating static route. If the
+dynamic route learned through the routing protocol (or a primary static route, as configured in this
+question) is lost, the floating static route will be used in its place.
+The following command will result-in a floating static route entered in the routing tab`},
+  {id:"IC175",num:175,topic:"IP Connectivity",type:"multiple",question:`Refer to the exhibit. A network administrator configures the CPE to provide internet access to the company headquarters. Traffic must be load-balanced via ISP1 and ISP2 to ensure redundancy. Which two command sets must be configured on the CPE router? (Choose two)`,exhibit:``,has_exhibit:true,correct:`ip route 0.0.0.0 128.0.0.0 198.51.100.1 ip route 128.0.0.0 128.0.0.0 203.0.113.1 ip route 0.0.0.0 0.0.0.0 198.51.100.1 ip route 0.0.0.0 0.0.0.0 203.0.113.1`,explanation:`For load balancing across two ISPs for redundancy, you typically want to ensure that traffic can flow
+through both paths. The way to achieve load balancing with static routing is to have routes of equal cost to
+the same destination so that the router does not prefer one over the other and we need to divide the 
+entire IP address space into two halves and send each half to a different ISP.
+"ip route 0.0.0.0 128.0.0.0 198.51.100.1
+ip route 128.0.0.0 128.0.0.0 203.0.113.1"
+is a proper implementation of load balancing with static routing. It divides the IP space into two equal
+halves. The first h`},
 ];
 
-const token = localStorage.getItem('kca_token');
-let prog = JSON.parse(localStorage.getItem('ccna_prog')||'{}');
-let topic = 'all', filtered = [], idx = 0;
+const token=localStorage.getItem('kca_token');
+let prog=JSON.parse(localStorage.getItem('ccna_prog')||'{}');
+let topic='all',filtered=[],idx=0;
 
 async function init(){
-  if(!token){ showLanding(); return; }
+  if(!token){showLanding();return;}
   try{
-    const r = await fetch('/api/ccna/subscription',{headers:{Authorization:'Bearer '+token}});
-    if(!r.ok){ showLanding(); return; }
-    const d = await r.json();
-    if(d.status==='approved') showExam();
-    else if(d.status==='pending') showPending();
+    const r=await fetch('/api/ccna/subscription',{headers:{Authorization:'Bearer '+token}});
+    if(!r.ok){showLanding();return;}
+    const d=await r.json();
+    if(d.status==='approved')showExam();
+    else if(d.status==='pending')showPending();
     else showLanding();
-  }catch(e){ showLanding(); }
+  }catch(e){showLanding();}
 }
-function showLanding(){ document.getElementById('landing').classList.add('show'); }
-function showPending(){ document.getElementById('pending-screen').classList.add('show'); }
-function showExam(){
-  document.getElementById('exam').classList.add('show');
-  setTopic('all', document.querySelector('.topic-btn'));
-}
+function showLanding(){document.getElementById('landing').classList.add('show');}
+function showPending(){document.getElementById('pending-screen').classList.add('show');}
+function showExam(){document.getElementById('exam').classList.add('show');setTopic('all',document.querySelector('.topic-btn'));}
 
 async function doSubscribe(){
-  if(!token){ alert('Please log in first.'); window.location.href='/login.html'; return; }
-  const btn=document.getElementById('subBtn'), msg=document.getElementById('subMsg');
-  btn.disabled=true; btn.textContent='Submitting...';
+  if(!token){alert('Please log in first.');window.location.href='/login.html';return;}
+  const btn=document.getElementById('subBtn'),msg=document.getElementById('subMsg');
+  btn.disabled=true;btn.textContent='Submitting...';
   try{
     const r=await fetch('/api/ccna/subscribe',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token}});
     const d=await r.json();
-    if(r.ok){ btn.style.display='none'; msg.innerHTML='<div class="pending-msg">&#9989; Request submitted! Admin will approve within 24 hours. You will receive an email.</div>'; }
-    else if(d.status==='pending'){ btn.style.display='none'; msg.innerHTML='<div class="pending-msg">&#9200; Your subscription is pending admin approval.</div>'; }
-    else if(d.status==='approved'){ showExam(); document.getElementById('landing').classList.remove('show'); }
-    else { btn.disabled=false; btn.textContent='&#127891; Get Access — $30 / 3 Months'; alert('Error: '+(d.error||'Failed')); }
-  }catch(e){ btn.disabled=false; btn.textContent='&#127891; Get Access — $30 / 3 Months'; }
+    if(r.ok){btn.style.display='none';msg.innerHTML='<div class="pending-msg">&#9989; Request submitted! Admin will approve within 24 hours.</div>';}
+    else if(d.status==='pending'){btn.style.display='none';msg.innerHTML='<div class="pending-msg">&#9200; Your subscription is pending admin approval.</div>';}
+    else if(d.status==='approved'){showExam();document.getElementById('landing').classList.remove('show');}
+    else{btn.disabled=false;btn.textContent='&#127891; Get Access — $30 / 3 Months';alert('Error: '+(d.error||'Failed'));}
+  }catch(e){btn.disabled=false;btn.textContent='&#127891; Get Access — $30 / 3 Months';}
 }
 
-function setTopic(t, el){
-  topic=t; idx=0;
-  filtered = t==='all' ? CCNA_QUESTIONS : CCNA_QUESTIONS.filter(q=>q.topic===t);
+function setTopic(t,el){
+  topic=t;idx=0;
+  filtered=t==='all'?CCNA_QUESTIONS:CCNA_QUESTIONS.filter(q=>q.topic===t);
   document.querySelectorAll('.topic-btn').forEach(b=>b.classList.remove('active'));
-  if(el) el.classList.add('active');
-  document.getElementById('examTitle').textContent = t==='all'?'All Topics':t;
-  document.getElementById('sTotal').textContent = filtered.length;
-  buildGrid(); renderQ(); updateStats();
+  if(el)el.classList.add('active');
+  document.getElementById('examTitle').textContent=t==='all'?'All Topics':t;
+  document.getElementById('sTotal').textContent=filtered.length;
+  buildGrid();renderQ();updateStats();
 }
 
-function escH(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escH(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function renderQ(){
-  if(!filtered.length) return;
+  if(!filtered.length)return;
   const q=filtered[idx];
   const verdict=prog[q.qid];
-  const cardCls = verdict==='correct'?'c-bg':verdict==='wrong'?'w-bg':'';
-
+  const cardCls=verdict==='correct'?'c-bg':verdict==='wrong'?'w-bg':'';
   let exhibitHtml='';
   if(q.has_exhibit||q.exhibit){
-    const codeLines = q.exhibit ? escH(q.exhibit) : '<span style="color:var(--muted)">See PDF exhibit for topology/diagram</span>';
-    exhibitHtml=`
-     <button class="exhibit-btn" onclick="toggleEx(this)">&#128065; Show CLI Exhibit &#9660;</button>
+    const code=q.exhibit?escH(q.exhibit):'<span style="color:var(--muted)">See PDF exhibit for topology/diagram</span>';
+    exhibitHtml=`<button class="exhibit-btn" onclick="toggleEx(this)">&#128065; Show CLI Exhibit &#9660;</button>
      <div class="exhibit-panel" id="exPanel">
-      <div class="exhibit-bar">
-       <div class="e-dot" style="background:#ef4444"></div>
-       <div class="e-dot" style="background:#f59e0b"></div>
-       <div class="e-dot" style="background:#22c55e"></div>
-       <span class="e-title">CLI Output</span>
-      </div>
-      <pre class="exhibit-code">${codeLines}</pre>
-     </div>`;
+      <div class="exhibit-bar"><div class="e-dot" style="background:#ef4444"></div><div class="e-dot" style="background:#f59e0b"></div><div class="e-dot" style="background:#22c55e"></div><span class="e-title">CLI Output</span></div>
+      <pre class="exhibit-code">${code}</pre></div>`;
   }
-
-  const multiBadge = q.type==='multiple'?'<span class="q-multi">Choose Multiple</span>':'';
-  const verdictHtml = verdict
-    ? `<div class="verdict-done ${verdict==='correct'?'c':'w'}">${verdict==='correct'?'&#9989; Got it!':'&#128257; Marked for Review'}</div>`
-    : `<div class="verdict-btns"><button class="btn-got" onclick="mark('${q.qid}','correct')">&#9989; Got it!</button><button class="btn-rev" onclick="mark('${q.qid}','wrong')">&#128257; Review Again</button></div>`;
-
+  const multi=q.type==='multiple'?'<span class="q-multi">Choose Multiple</span>':'';
+  const verdictHtml=verdict
+    ?`<div class="verdict-done ${verdict==='correct'?'c':'w'}">${verdict==='correct'?'&#9989; Got it!':'&#128257; Marked for Review'}</div>`
+    :`<div class="verdict-btns"><button class="btn-got" onclick="mark('${q.qid}','correct')">&#9989; Got it!</button><button class="btn-rev" onclick="mark('${q.qid}','wrong')">&#128257; Review Again</button></div>`;
   document.getElementById('qContainer').innerHTML=`
    <div class="q-card ${cardCls}">
-    <div class="q-hdr">
-     <div class="q-num">Q${q.num}</div>
-     <div style="flex:1">
-      <div class="q-meta"><span class="q-topic">${escH(q.topic)}</span>${multiBadge}</div>
-      <div class="q-text">${escH(q.question)}</div>
-     </div>
-    </div>
-    <div class="q-body">
-     ${exhibitHtml}
+    <div class="q-hdr"><div class="q-num">Q${q.num}</div>
+     <div style="flex:1"><div class="q-meta"><span class="q-topic">${escH(q.topic)}</span>${multi}</div>
+      <div class="q-text">${escH(q.question)}</div></div></div>
+    <div class="q-body">${exhibitHtml}
      <button class="btn-reveal" onclick="reveal(this)">&#128065; Show Answer &amp; Explanation</button>
      <div class="ans-panel" id="ansPanel">
-      <div class="ans-box"><div class="ans-lbl">&#9989; Correct Answer</div><div class="ans-text">${formatAns(q.correct)}</div></div>
+      <div class="ans-box"><div class="ans-lbl">&#9989; Correct Answer</div><div class="ans-text">${escH(q.correct)}</div></div>
       ${q.explanation?`<div class="expl-box"><div class="expl-lbl">&#128214; Explanation</div><div class="expl-text">${escH(q.explanation)}</div></div>`:''}
       ${verdictHtml}
-     </div>
-    </div>
-   </div>`;
-
+     </div></div></div>`;
   document.getElementById('qCtr').textContent=(idx+1)+' / '+filtered.length;
   document.getElementById('progBar').style.width=(((idx+1)/filtered.length)*100)+'%';
   updateGrid();
 }
 
-function formatAns(t){
-  return escH(t).replace(/((?:[A-Z][^<
-]*#[^<
-]*
-?)+)/g, m=>`<code>${m.trim()}</code>`);
-}
-
-function reveal(btn){
-  document.getElementById('ansPanel').classList.add('open');
-  btn.style.display='none';
-}
-
-function toggleEx(btn){
-  const p=document.getElementById('exPanel');
-  p.classList.toggle('open');
-  btn.innerHTML=p.classList.contains('open')?'&#128065; Hide CLI Exhibit &#9650;':'&#128065; Show CLI Exhibit &#9660;';
-}
-
-function mark(qid, verdict){
-  prog[qid]=verdict;
-  localStorage.setItem('ccna_prog',JSON.stringify(prog));
-  renderQ(); updateStats(); updateGrid();
-  setTimeout(()=>{ if(idx<filtered.length-1) nextQ(); },1300);
-}
-
-function nextQ(){ if(idx<filtered.length-1){idx++;renderQ();scrollTop();} }
-function prevQ(){ if(idx>0){idx--;renderQ();scrollTop();} }
-function goQ(i){ idx=i;renderQ();scrollTop(); }
-function scrollTop(){ document.querySelector('.exam-main').scrollTo({top:0,behavior:'smooth'}); }
-
+function reveal(btn){document.getElementById('ansPanel').classList.add('open');btn.style.display='none';}
+function toggleEx(btn){const p=document.getElementById('exPanel');p.classList.toggle('open');btn.innerHTML=p.classList.contains('open')?'&#128065; Hide CLI Exhibit &#9650;':'&#128065; Show CLI Exhibit &#9660;';}
+function mark(qid,verdict){prog[qid]=verdict;localStorage.setItem('ccna_prog',JSON.stringify(prog));renderQ();updateStats();updateGrid();setTimeout(()=>{if(idx<filtered.length-1)nextQ();},1300);}
+function nextQ(){if(idx<filtered.length-1){idx++;renderQ();scrollTop();}}
+function prevQ(){if(idx>0){idx--;renderQ();scrollTop();}}
+function goQ(i){idx=i;renderQ();scrollTop();}
+function scrollTop(){document.querySelector('.exam-main').scrollTo({top:0,behavior:'smooth'});}
 function updateStats(){
   const ids=filtered.map(q=>q.qid);
   const c=ids.filter(id=>prog[id]==='correct').length;
   const w=ids.filter(id=>prog[id]==='wrong').length;
-  const ans=c+w;
   document.getElementById('sCorrect').textContent=c;
   document.getElementById('sWrong').textContent=w;
-  document.getElementById('sLeft').textContent=filtered.length-ans;
-  const pct=filtered.length?Math.round(ans/filtered.length*100):0;
+  document.getElementById('sLeft').textContent=filtered.length-c-w;
+  const pct=filtered.length?Math.round((c+w)/filtered.length*100):0;
   document.getElementById('progPct').textContent=pct+'%';
   document.getElementById('progCircle').style.strokeDashoffset=232-(232*pct/100);
 }
-
-function buildGrid(){
-  document.getElementById('qGrid').innerHTML=filtered.map((q,i)=>{
-    const v=prog[q.qid]||'';
-    return `<div class="q-dot${v==='correct'?' c':v==='wrong'?' w':''}" onclick="goQ(${i})" id="dot${i}">${i+1}</div>`;
-  }).join('');
-}
-function updateGrid(){
-  filtered.forEach((q,i)=>{
-    const d=document.getElementById('dot'+i);
-    if(!d)return;
-    d.className='q-dot'+(prog[q.qid]==='correct'?' c':prog[q.qid]==='wrong'?' w':'')+(i===idx?' cur':'');
-  });
-}
-
-function resetProg(){
-  if(!confirm('Reset all progress for this topic?'))return;
-  const ids=new Set(filtered.map(q=>q.qid));
-  ids.forEach(id=>delete prog[id]);
-  localStorage.setItem('ccna_prog',JSON.stringify(prog));
-  renderQ(); updateStats(); buildGrid();
-}
-
-document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight')nextQ();
-  if(e.key==='ArrowLeft')prevQ();
-  if(e.key===' '){e.preventDefault();const b=document.querySelector('.btn-reveal');if(b)b.click();}
-});
-
+function buildGrid(){document.getElementById('qGrid').innerHTML=filtered.map((q,i)=>`<div class="q-dot${prog[q.qid]==='correct'?' c':prog[q.qid]==='wrong'?' w':''}" onclick="goQ(${i})" id="dot${i}">${i+1}</div>`).join('');}
+function updateGrid(){filtered.forEach((q,i)=>{const d=document.getElementById('dot'+i);if(!d)return;d.className='q-dot'+(prog[q.qid]==='correct'?' c':prog[q.qid]==='wrong'?' w':'')+(i===idx?' cur':'');});}
+function resetProg(){if(!confirm('Reset progress?'))return;filtered.forEach(q=>delete prog[q.qid]);localStorage.setItem('ccna_prog',JSON.stringify(prog));renderQ();updateStats();buildGrid();}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')nextQ();if(e.key==='ArrowLeft')prevQ();if(e.key===' '){e.preventDefault();const b=document.querySelector('.btn-reveal');if(b)b.click();}});
 init();
 </script>
 </body>
