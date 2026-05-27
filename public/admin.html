@@ -224,6 +224,7 @@ function showTab(name){
   if(name==='payments')loadPayments();
   if(name==='netps')loadNetps();
   if(name==='sessions')loadSessions();
+  if(name==='announce')loadAnnounce();
 }
 async function loadStats(){
   try{const r=await fetch('/api/admin/stats',{headers:{Authorization:'Bearer '+token}});const d=await r.json();
