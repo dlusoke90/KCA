@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KCA · Networking Interview Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Lexend:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0c0f;
+    --bg2:#0a1628;
+    --panel:#111827;
+    --panel2:#16233b;
+    --line:#1f2b40;
+    --teal:#00bfa5;
+    --teal-dim:#0a7d6b;
+    --blue:#3b9eff;
+    --gold:#F5A623;
+    --text:#e8eef6;
+    --muted:#94a3b8;
+    --faint:#5b6b82;
+    --scenario:#3b9eff;
+    --technical:#00bfa5;
+    --radius:16px;
+    --shadow:0 18px 40px -20px rgba(0,0,0,.7);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Lexend",system-ui,sans-serif;
+    background:
+      radial-gradient(1200px 600px at 85% -5%, rgba(0,191,165,.10), transparent 60%),
+      radial-gradient(900px 500px at 5% 10%, rgba(59,158,255,.08), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:80px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+  /* Header */
+  header.hero{
+    padding:64px 0 30px;
+    position:relative;
+  }
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--teal);
+    border:1px solid var(--line);border-radius:999px;padding:7px 15px;margin-bottom:22px;
+    background:rgba(0,191,165,.06);
+  }
+  .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 12px var(--teal)}
+  h1{
+    font-family:"Bricolage Grotesque",serif;
+    font-weight:700;font-size:clamp(34px,5.2vw,58px);line-height:1.04;
+    letter-spacing:-.02em;margin-bottom:16px;
+  }
+  h1 .accent{color:var(--teal)}
+  .lede{font-size:clamp(15px,1.6vw,18px);color:var(--muted);max-width:680px}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .chip{
+    font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--muted);
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 13px;
+  }
+  .chip b{color:var(--text);font-weight:500}
+
+  /* Controls */
+  .controls{
+    position:sticky;top:0;z-index:30;
+    background:linear-gradient(var(--bg),rgba(10,12,15,.86));
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    padding:16px 0;margin-top:30px;
+  }
+  .controls-inner{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .search{
+    flex:1;min-width:220px;position:relative;
+  }
+  .search input{
+    width:100%;background:var(--panel);border:1px solid var(--line);border-radius:11px;
+    color:var(--text);font-family:"Lexend";font-size:15px;padding:11px 14px 11px 40px;outline:none;
+    transition:border-color .2s;
+  }
+  .search input:focus{border-color:var(--teal)}
+  .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.5}
+  .btn{
+    font-family:"Lexend";font-size:14px;font-weight:500;cursor:pointer;
+    background:var(--panel);color:var(--text);border:1px solid var(--line);
+    border-radius:11px;padding:11px 16px;transition:all .18s;white-space:nowrap;
+  }
+  .btn:hover{border-color:var(--teal);color:var(--teal)}
+  .btn.primary{background:var(--teal);color:#04201b;border-color:var(--teal);font-weight:600}
+  .btn.primary:hover{background:#00d4b8;color:#04201b}
+  .progress{
+    font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--muted);
+    display:flex;align-items:center;gap:10px;white-space:nowrap;
+  }
+  .progress .bar{width:90px;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+  .progress .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--blue));transition:width .35s}
+
+  /* Topic nav */
+  .topicnav{display:flex;flex-wrap:wrap;gap:8px;padding:18px 0 4px}
+  .topicnav button{
+    font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.02em;
+    background:transparent;color:var(--muted);border:1px solid var(--line);
+    border-radius:999px;padding:6px 13px;cursor:pointer;transition:all .16s;
+  }
+  .topicnav button:hover{color:var(--text);border-color:var(--faint)}
+  .topicnav button.active{background:rgba(0,191,165,.12);color:var(--teal);border-color:var(--teal)}
+
+  /* Sections */
+  .section-head{
+    display:flex;align-items:baseline;gap:14px;margin:46px 0 6px;
+  }
+  .section-head .num{
+    font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--teal);
+    border:1px solid var(--teal);border-radius:8px;padding:3px 9px;
+  }
+  .section-head h2{
+    font-family:"Bricolage Grotesque",serif;font-weight:600;font-size:24px;letter-spacing:-.01em;
+  }
+  .section-sub{color:var(--faint);font-size:14px;margin-bottom:18px}
+
+  .topic{margin:34px 0 0;scroll-margin-top:150px}
+  .topic-title{
+    display:flex;align-items:center;gap:12px;margin-bottom:14px;
+  }
+  .topic-title h3{
+    font-family:"Bricolage Grotesque",serif;font-weight:600;font-size:20px;letter-spacing:-.01em;
+  }
+  .topic-title .count{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--faint)}
+  .topic-title .line{flex:1;height:1px;background:var(--line)}
+
+  /* Cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+  .card{
+    background:linear-gradient(180deg,var(--panel),#0e1726);
+    border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;transition:border-color .2s,transform .2s;
+    display:flex;flex-direction:column;
+  }
+  .card:hover{border-color:#2c3b56}
+  .card .top{padding:18px 18px 0;cursor:pointer}
+  .tag{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    padding:4px 9px;border-radius:7px;font-weight:500;margin-bottom:12px;
+  }
+  .tag.scenario{color:var(--blue);background:rgba(59,158,255,.12)}
+  .tag.technical{color:var(--teal);background:rgba(0,191,165,.12)}
+  .q{font-size:15px;font-weight:500;color:var(--text);line-height:1.5}
+  .reveal{
+    font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--teal);
+    display:flex;align-items:center;gap:7px;padding:14px 18px 18px;cursor:pointer;
+    user-select:none;transition:color .15s;
+  }
+  .reveal:hover{color:#00d4b8}
+  .reveal .chev{transition:transform .25s}
+  .card.open .reveal .chev{transform:rotate(90deg)}
+  .answer{
+    max-height:0;overflow:hidden;transition:max-height .35s ease;
+    border-top:1px solid transparent;
+  }
+  .card.open .answer{max-height:900px;border-top-color:var(--line)}
+  .answer-inner{padding:16px 18px 20px;font-size:14px;color:#cbd5e6;line-height:1.62}
+  .answer-inner strong{color:var(--text);font-weight:600}
+  .answer-inner code{
+    font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--gold);
+    background:rgba(245,166,35,.08);padding:1px 6px;border-radius:5px;
+  }
+  .answer-inner ul{margin:8px 0 2px;padding-left:18px}
+  .answer-inner li{margin-bottom:5px}
+  .answer-inner .keyline{
+    margin-top:12px;font-size:12.5px;color:var(--muted);font-style:italic;
+    border-left:2px solid var(--teal-dim);padding-left:11px;
+  }
+  .empty{text-align:center;color:var(--faint);padding:60px 0;font-size:15px;display:none}
+
+  footer{
+    margin-top:60px;padding-top:26px;border-top:1px solid var(--line);
+    color:var(--faint);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  }
+  footer .brand{color:var(--muted)}
+  footer .brand b{color:var(--teal);font-weight:600}
+
+  @media(max-width:640px){
+    header.hero{padding:42px 0 20px}
+    .grid{grid-template-columns:1fr}
+    .progress .bar{width:60px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="badge"><span class="dot"></span>KCA Interview Lab · Networking</span>
+    <h1>Networking Interview <span class="accent">Practice</span></h1>
+    <p class="lede">Scenario-based and technical interview questions across core networking, with model answers. Read the prompt, talk through your answer aloud, then reveal the model response to compare.</p>
+    <div class="meta-row" id="metaRow"></div>
+  </header>
+</div>
+
+<div class="controls">
+  <div class="wrap controls-inner">
+    <label class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="text" placeholder="Search topics, scenarios, keywords…">
+    </label>
+    <button class="btn" id="toggleAll">Expand all</button>
+    <button class="btn primary" id="shuffleBtn">Shuffle &amp; quiz</button>
+    <div class="progress" title="Cards you've revealed">
+      <span id="progText">0 / 0 revealed</span>
+      <span class="bar"><i id="progBar"></i></span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="topicnav" id="topicnav"></div>
+  <div id="content"></div>
+  <div class="empty" id="empty">No cards match that search.</div>
+
+  <footer>
+    <span class="brand">Kuwaha Cloud Academy · <b>Networking Interview Lab</b></span>
+    <span id="footCount"></span>
+  </footer>
+</div>
+
+<script>
+/* KCA Networking Interview Practice — content dataset
+   Each topic: 5 cards (mix of scenario + technical), each with a model answer. */
+const DATA = [
+{
+  group: "Core Networking",
+  groupNote: "DNS, routing, switching, addressing, and secure access",
+  topics: [
+  {
+    name: "DNS",
+    cards: [
+      { type:"technical", q:"Walk me through what happens, step by step, when a user types a URL and presses Enter.",
+        a:"The host first checks its local cache and <code>hosts</code> file. If unresolved, it sends a recursive query to its configured DNS resolver. The resolver, if it has no cached answer, queries a <strong>root</strong> server, which refers it to the <strong>TLD</strong> server (e.g. .com), which refers it to the domain's <strong>authoritative</strong> server. The authoritative server returns the A/AAAA record. The resolver caches the answer for its TTL and returns it to the client, which then opens a TCP connection to that IP. <span class='keyline'>Strong answers name the root → TLD → authoritative chain and mention caching/TTL.</span>" },
+      { type:"scenario", q:"A user says \"the internet is down,\" but you can ping 8.8.8.8 successfully from their machine. What's the likely problem and how do you confirm it?",
+        a:"If you can reach <code>8.8.8.8</code> by IP but sites fail by name, the IP path works and the problem is <strong>name resolution</strong>. Confirm with <code>nslookup google.com</code> — if that fails or times out, DNS is the culprit. Check the client's configured DNS server (<code>ipconfig /all</code>), test against a known-good server (<code>nslookup google.com 8.8.8.8</code>), and verify the resolver is reachable. Common causes: wrong/unreachable DNS server, DNS service down, or a firewall blocking UDP/53." },
+      { type:"technical", q:"Explain the difference between A, AAAA, CNAME, MX, and PTR records.",
+        a:"<strong>A</strong> maps a hostname to an IPv4 address; <strong>AAAA</strong> maps to IPv6. <strong>CNAME</strong> is an alias pointing one name to another name (never to an IP). <strong>MX</strong> specifies mail servers for a domain, with priority values. <strong>PTR</strong> is the reverse record, mapping an IP back to a name (used in reverse DNS lookups, common for mail server validation)." },
+      { type:"scenario", q:"Name resolution is intermittent — some lookups succeed, others time out. nslookup to the primary DNS works but the secondary times out. What do you suspect?",
+        a:"The client is load-balancing or failing over between two configured resolvers, and one of them is unhealthy. When queries land on the broken secondary, they time out; on the primary they succeed — producing the intermittent pattern. Fix by repairing or replacing the secondary DNS server, or temporarily pointing clients only at the healthy resolver. Verify with repeated <code>nslookup</code> against each server explicitly." },
+      { type:"technical", q:"What's the difference between a recursive and an iterative DNS query, and what role does TTL play?",
+        a:"In a <strong>recursive</strong> query the client asks its resolver for the final answer and expects the resolver to do all the work. In an <strong>iterative</strong> query a server responds with the best referral it has (e.g. \"ask this TLD server\"), and the asker follows the chain itself — this is how resolvers talk to root/TLD/authoritative servers. <strong>TTL</strong> is how long a record may be cached; lower TTLs speed up changes but increase query load." },
+    ]
+  },
+  {
+    name: "Dynamic Routing",
+    cards: [
+      { type:"technical", q:"Compare static and dynamic routing. When would you choose each?",
+        a:"<strong>Static</strong> routes are manually configured — predictable, low overhead, no protocol traffic, but they don't adapt to topology changes and don't scale. <strong>Dynamic</strong> routing (OSPF, EIGRP, BGP) automatically learns and adjusts routes as links change, scaling to large networks at the cost of CPU, memory, and protocol overhead. Use static for small/stub networks, default routes, and predictable paths; use dynamic for larger networks needing automatic convergence." },
+      { type:"technical", q:"What's the difference between distance-vector and link-state routing protocols?",
+        a:"<strong>Distance-vector</strong> protocols (e.g. RIP) share their entire routing table with neighbors periodically and choose routes by hop count — \"routing by rumor,\" slower to converge. <strong>Link-state</strong> protocols (e.g. OSPF) flood link information so every router builds a complete map of the topology and runs SPF (Dijkstra) to compute best paths — faster convergence and better scaling, but more CPU/memory intensive." },
+      { type:"scenario", q:"You add a new subnet on one router. It's reachable locally but other routers can't reach it. What do you check?",
+        a:"The new subnet isn't being advertised into the routing protocol. Check that the interface/network is included in the routing process (e.g. an OSPF <code>network</code> statement or that the interface is in the right area), that the interface isn't <strong>passive</strong>, and that neighbors have formed adjacencies. Verify with <code>show ip route</code> on a remote router and <code>show ip ospf neighbor</code>. Also confirm no route filtering or distribute-list is blocking the advertisement." },
+      { type:"technical", q:"What is administrative distance and why does it matter?",
+        a:"Administrative distance (AD) is the trustworthiness ranking a router assigns to a route source when the same destination is learned from multiple protocols — lower is preferred. Defaults: directly connected <code>0</code>, static <code>1</code>, EIGRP <code>90</code>, OSPF <code>110</code>, RIP <code>120</code>. So if a destination is learned via both OSPF and RIP, the router installs the OSPF route. AD lets you control route preference, e.g. with a floating static backup." },
+      { type:"scenario", q:"After a link flaps, traffic briefly takes a suboptimal path before recovering. Explain what's happening.",
+        a:"That's <strong>convergence</strong> — the time a dynamic protocol needs to detect the change, recompute paths, and update all routers. During this window routers may have inconsistent tables, causing temporary suboptimal routing or brief loops. Link-state protocols like OSPF converge faster than distance-vector. You can tune timers, use BFD for fast failure detection, and design summarization/areas to limit the scope of recomputation." },
+    ]
+  },
+  {
+    name: "Static Routes",
+    cards: [
+      { type:"technical", q:"How do you configure a static route, and what does each part mean?",
+        a:"On Cisco IOS: <code>ip route 10.2.0.0 255.255.255.0 192.168.1.2</code> — destination network, subnet mask, then the next-hop IP (or exit interface). This tells the router \"to reach 10.2.0.0/24, send traffic to 192.168.1.2.\" You can append an AD value to create a floating static. Always confirm the next hop is reachable, or the route won't be installed." },
+      { type:"technical", q:"What is a default route and when do you use it?",
+        a:"A default route, <code>ip route 0.0.0.0 0.0.0.0 &lt;next-hop&gt;</code>, is the \"gateway of last resort\" — used for any destination not matched by a more specific route. It's ideal on stub networks and edge routers pointing toward an ISP, so you don't need a route for every external network. Internal routers often receive it via a routing protocol as a default-originate." },
+      { type:"scenario", q:"You configured a static route but traffic still isn't reaching the destination. How do you troubleshoot?",
+        a:"First confirm the route is actually in the table (<code>show ip route</code>) — if the <strong>next hop is unreachable</strong>, IOS won't install it. Check you can ping the next hop. Watch for <strong>recursive lookup</strong> issues when using a next-hop IP that itself isn't directly connected. Verify the mask is correct and there's a <strong>return route</strong> on the far side — one-way reachability usually means the destination has no path back." },
+      { type:"technical", q:"What is a floating static route?",
+        a:"A floating static is a backup route configured with a <strong>higher administrative distance</strong> than the primary path, e.g. <code>ip route 0.0.0.0 0.0.0.0 192.168.2.1 130</code>. It stays out of the routing table while the primary (lower-AD) route is up, and \"floats\" in only when the primary fails. It's a common way to back up a dynamic route or a primary link with a secondary connection." },
+      { type:"scenario", q:"In a real deployment, when would you pick static routing over OSPF?",
+        a:"For a small branch with a single uplink, a stub site, or a predictable point-to-point link, static routing is simpler, uses no protocol resources, and is easy to audit. It's also common for default routes toward an ISP, for tightly controlled paths to a specific server/segment, and where you explicitly don't want a device participating in the routing domain (security or stability). The tradeoff is manual maintenance and no automatic failover unless you add floating statics." },
+    ]
+  },
+  {
+    name: "STP",
+    cards: [
+      { type:"technical", q:"What problem does Spanning Tree Protocol solve?",
+        a:"STP prevents <strong>Layer 2 loops</strong> in networks with redundant switch links. Without it, broadcast frames circulate endlessly, causing broadcast storms, MAC table instability, and multiple-frame delivery — which can melt down a switched network. STP builds a loop-free logical tree by electing a root bridge and blocking redundant paths, keeping them as backups." },
+      { type:"technical", q:"How is the root bridge elected?",
+        a:"Switches exchange BPDUs containing their <strong>Bridge ID</strong> (priority + MAC address). The switch with the lowest Bridge ID wins. Priority is compared first (default 32768, configurable in increments of 4096); if priorities tie, the lowest MAC address breaks it. You influence the election by lowering the priority on the switch you want as root — typically a core switch — with <code>spanning-tree vlan 1 root primary</code>." },
+      { type:"scenario", q:"The network suddenly slows to a crawl and you see massive broadcast traffic right after someone patched two switch ports together. What happened and how do you fix it?",
+        a:"Patching two ports created a <strong>Layer 2 loop</strong>, and if STP was disabled or BPDUs were filtered, frames are now looping — a broadcast storm. Immediately remove the offending cable to break the loop. Then ensure STP is enabled on all switches, enable <strong>BPDU Guard</strong> on access/PortFast ports, and educate on not creating unmanaged loops. Check logs for MAC flapping to confirm the loop location." },
+      { type:"technical", q:"Name the classic STP port states and how RSTP improves on them.",
+        a:"Classic 802.1D states: <strong>Blocking → Listening → Learning → Forwarding</strong> (plus Disabled), with ~30–50s convergence due to timers. <strong>RSTP (802.1w)</strong> collapses these into Discarding, Learning, Forwarding and uses proposal/agreement handshakes plus edge/point-to-point port roles to converge in well under a second. RSTP is backward-compatible with STP." },
+      { type:"scenario", q:"An access port is in err-disabled state right after a user plugged a device in. What feature likely triggered it?",
+        a:"Most likely <strong>BPDU Guard</strong> on a PortFast-enabled access port — the port received a BPDU (someone plugged in a switch or a looped device) and was shut down to protect the topology. Recover by removing the offending device, then <code>shutdown</code>/<code>no shutdown</code> the port (or enable err-disable recovery). PortFast is meant for end hosts only; BPDU Guard enforces that." },
+    ]
+  },
+  {
+    name: "DHCP",
+    cards: [
+      { type:"technical", q:"Walk through the DHCP DORA process.",
+        a:"<strong>Discover</strong> — the client broadcasts looking for a DHCP server. <strong>Offer</strong> — server(s) reply with an available IP and options. <strong>Request</strong> — the client broadcasts acceptance of one offer. <strong>Acknowledge</strong> — the server confirms and finalizes the lease, sending the IP, mask, gateway, DNS, and lease time. The first two and the request are broadcasts because the client has no IP yet." },
+      { type:"scenario", q:"Clients on a segment are all coming up with 169.254.x.x addresses. What does that tell you?",
+        a:"A <code>169.254.x.x</code> address is <strong>APIPA</strong> — the client tried DHCP, got no response, and self-assigned a link-local address. So the DHCP process failed for that whole segment. Likely causes: the DHCP server is down, the scope is exhausted, or — on a remote VLAN — there's no <strong>ip helper-address</strong> relaying the broadcast to the server. Check the server, scope utilization, and relay configuration on the gateway." },
+      { type:"technical", q:"Define lease, reservation, scope, and exclusion.",
+        a:"A <strong>scope</strong> is the range of addresses a server can hand out for a subnet. A <strong>lease</strong> is the time-bounded assignment of an address to a client. A <strong>reservation</strong> ties a specific IP to a client's MAC so it always gets the same address. An <strong>exclusion</strong> removes specific addresses from the scope (e.g. statically assigned servers/printers) so DHCP never offers them." },
+      { type:"scenario", q:"Clients on a new VLAN can't get an address, but the DHCP server (on a different subnet) is healthy and serving other VLANs. What's missing?",
+        a:"DHCP Discover is a broadcast and doesn't cross the router by default. The new VLAN's gateway (SVI) needs an <code>ip helper-address &lt;dhcp-server-ip&gt;</code> to relay those broadcasts as unicast to the server. Also confirm the server has a <strong>scope defined for that subnet</strong> — the relay inserts the gateway IP so the server knows which scope to use." },
+      { type:"technical", q:"What is a DHCP relay and what common options does DHCP deliver besides an IP?",
+        a:"A DHCP relay (configured via <code>ip helper-address</code>) forwards client broadcasts to a DHCP server on another subnet, inserting the relay's interface IP (giaddr) so the server picks the right scope. Beyond the address and mask, DHCP delivers options such as <strong>default gateway</strong> (option 3), <strong>DNS servers</strong> (option 6), <strong>domain name</strong> (option 15), and <strong>TFTP/boot</strong> info for things like IP phones." },
+    ]
+  },
+  {
+    name: "IP Helper",
+    cards: [
+      { type:"technical", q:"What does the ip helper-address command do?",
+        a:"It turns the router/SVI into a <strong>DHCP relay agent</strong>. When a client broadcasts a DHCP Discover, the interface with <code>ip helper-address</code> converts it to a unicast and forwards it to the configured server on another subnet, stamping the relay's IP so the server selects the correct scope. It lets you centralize DHCP servers instead of running one per VLAN." },
+      { type:"scenario", q:"You stand up a new VLAN, clients land on APIPA, and the DHCP server lives on another subnet. Walk through the fix.",
+        a:"Add <code>ip helper-address &lt;server-ip&gt;</code> under the VLAN's SVI / gateway interface so DHCP broadcasts are relayed. Then confirm the server has a <strong>scope for the new subnet</strong> with correct gateway/DNS options, and that routing exists both ways between the VLAN and the server. Test by renewing a client (<code>ipconfig /release</code> then <code>/renew</code>) and confirm it pulls an address from the right scope." },
+      { type:"technical", q:"Does ip helper forward only DHCP? What else does it relay by default?",
+        a:"By default the relay forwards several UDP broadcast services, not just DHCP/BOOTP — including DNS, TFTP, NetBIOS name/datagram, TACACS, and time. This is governed by IOS <code>ip forward-protocol udp</code> defaults. You can tighten or extend the list with <code>ip forward-protocol udp &lt;port&gt;</code> / <code>no</code> forms to avoid relaying unintended broadcast traffic." },
+      { type:"scenario", q:"ip helper-address is configured but clients still get no IP. What do you check next?",
+        a:"Verify the helper is on the <strong>correct interface</strong> (the client-facing SVI/gateway, not the server side). Confirm the <strong>DHCP server has a scope for that subnet</strong> — the most common miss. Check routing/reachability from relay to server and back, that the server isn't out of leases, and that no ACL blocks UDP 67/68. <code>debug ip dhcp server packet</code> or relay debugs confirm whether requests reach the server." },
+      { type:"technical", q:"On which interface should ip helper-address be applied?",
+        a:"On the <strong>client-facing</strong> interface — the SVI or gateway interface for the subnet where the DHCP clients live. That's where the client broadcasts arrive and need to be relayed toward the server. Applying it on the server side does nothing useful, since the goal is to capture and forward the clients' broadcast Discover messages." },
+    ]
+  },
+  {
+    name: "APIPA",
+    cards: [
+      { type:"technical", q:"What is APIPA and when does a host use it?",
+        a:"Automatic Private IP Addressing assigns a host an address from <strong>169.254.0.0/16</strong> when it's set for DHCP but gets <strong>no response</strong> from any DHCP server. It's a link-local fallback so devices on the same segment can still talk without a server. Seeing a 169.254 address almost always means DHCP failed somewhere." },
+      { type:"scenario", q:"One single PC has a 169.254 address while everyone else on the VLAN is fine. How do you approach it?",
+        a:"Since the rest of the VLAN gets DHCP, the relay and server are fine — the issue is local to this host or its port. Check the cable/link, the switchport (right VLAN, not err-disabled), and whether the NIC is set to DHCP. Try <code>ipconfig /release</code> + <code>/renew</code>. If still failing, look at the port's config and any port-security violation that might be dropping the client." },
+      { type:"scenario", q:"The entire VLAN is on APIPA. Why is this a different root cause than a single host?",
+        a:"A whole segment on APIPA points upstream, not at one host: the <strong>DHCP server is down</strong>, the <strong>scope is exhausted or undefined</strong> for that subnet, or the gateway is <strong>missing ip helper-address</strong> so broadcasts never reach the server. Verify server health and scope, then confirm relay configuration on the VLAN's gateway." },
+      { type:"technical", q:"Can two hosts with APIPA addresses communicate?",
+        a:"Yes, but only on the <strong>same local link/segment</strong>. APIPA is link-local — there's no default gateway, so the traffic can't be routed off the subnet and can't reach the internet. Two APIPA hosts on the same switch VLAN can ping each other, which is sometimes a useful clue that Layer 1/2 is fine and only DHCP/routing is broken." },
+      { type:"technical", q:"How do you confirm and clear an APIPA condition on Windows?",
+        a:"Run <code>ipconfig /all</code> — an address in 169.254.x.x with \"Autoconfiguration Enabled\" confirms APIPA. To attempt recovery: <code>ipconfig /release</code> then <code>ipconfig /renew</code> to re-trigger DORA. If it still self-assigns, the DHCP path is genuinely broken and you move on to checking the port, relay, server, and scope." },
+    ]
+  },
+  {
+    name: "VLAN",
+    cards: [
+      { type:"technical", q:"What is a VLAN and what does it give you?",
+        a:"A VLAN is a logical Layer 2 segment that groups ports into a single broadcast domain regardless of physical location. Benefits: <strong>broadcast containment</strong> (smaller broadcast domains), <strong>segmentation/security</strong> (separate departments or device types), and flexibility (move a user logically without recabling). Traffic between VLANs must be routed at Layer 3." },
+      { type:"scenario", q:"Two PCs are configured in the same VLAN but on different switches and can't reach each other. What do you check?",
+        a:"Inter-switch traffic for that VLAN rides the <strong>trunk</strong> between the switches. Confirm the link is a trunk (<code>show interfaces trunk</code>), that the VLAN exists on both switches, and that it's in the trunk's <strong>allowed VLAN list</strong>. A common cause is the VLAN being pruned or simply not allowed on the trunk. Also verify both access ports are in the correct VLAN." },
+      { type:"technical", q:"What's the difference between an access port and a trunk port?",
+        a:"An <strong>access</strong> port belongs to a single VLAN and carries untagged traffic for end devices. A <strong>trunk</strong> port carries multiple VLANs between switches (or to a router), tagging frames with <strong>802.1Q</strong> VLAN IDs so the far end knows which VLAN each frame belongs to. Access = one VLAN to a host; trunk = many VLANs between infrastructure." },
+      { type:"scenario", q:"Devices in different VLANs can't talk to each other even though both VLANs work internally. What's likely missing?",
+        a:"There's no <strong>inter-VLAN routing</strong>. VLANs are separate broadcast domains and need a Layer 3 device to route between them — either a router-on-a-stick (subinterfaces with 802.1Q) or, more commonly, a <strong>Layer 3 switch with SVIs</strong> for each VLAN. Confirm the SVIs exist, are up, and that hosts use the correct gateway." },
+      { type:"technical", q:"Explain native VLAN, default VLAN, and management VLAN.",
+        a:"The <strong>default VLAN</strong> is VLAN 1, where all ports start. The <strong>native VLAN</strong> is the one VLAN on an 802.1Q trunk whose traffic is sent <strong>untagged</strong> — it must match on both ends. The <strong>management VLAN</strong> is the VLAN used to reach switch management (SSH, SNMP); best practice is to change all three away from VLAN 1 for security." },
+    ]
+  },
+  {
+    name: "Trunk",
+    cards: [
+      { type:"technical", q:"What is a trunk link and how does it carry multiple VLANs?",
+        a:"A trunk is an inter-switch (or switch-to-router) link that carries traffic for multiple VLANs over a single physical connection. It uses <strong>802.1Q tagging</strong> — each frame gets a 4-byte tag with its VLAN ID so the receiving device places it in the correct VLAN. The native VLAN is the exception and travels untagged." },
+      { type:"scenario", q:"VLAN 20 works on each switch individually but doesn't pass between them, while VLAN 10 does. Where do you look?",
+        a:"On the trunk between the switches. Check <code>show interfaces trunk</code> — VLAN 20 is probably not in the <strong>allowed VLAN list</strong> or has been pruned, while VLAN 10 is. Add it with <code>switchport trunk allowed vlan add 20</code>. Also confirm VLAN 20 exists in the VLAN database on both switches." },
+      { type:"technical", q:"What happens if the native VLAN doesn't match on both ends of a trunk?",
+        a:"A <strong>native VLAN mismatch</strong> causes untagged frames to land in the wrong VLAN on the far side, mixing traffic between segments — a security and connectivity problem. CDP will usually log the mismatch. Both ends must agree on the native VLAN; best practice is to set an unused native VLAN and tag all traffic." },
+      { type:"technical", q:"What is DTP and why might you disable it?",
+        a:"Dynamic Trunking Protocol auto-negotiates whether a link becomes a trunk. It's convenient but a <strong>security risk</strong> — an attacker can negotiate a trunk and reach all VLANs (VLAN hopping). Best practice is to hard-set ports with <code>switchport mode trunk</code> or <code>access</code> and disable negotiation with <code>switchport nonegotiate</code>." },
+      { type:"scenario", q:"A trunk shows up/up but one expected VLAN's traffic never arrives. What's the most common cause?",
+        a:"The VLAN isn't in the trunk's <strong>allowed list</strong> (or was pruned by VTP pruning), so its frames are filtered even though the trunk is operational. Check <code>show interfaces trunk</code> for \"VLANs allowed\" and \"VLANs in spanning tree forwarding state,\" then adjust the allowed list. Also verify the VLAN actually exists on both switches." },
+    ]
+  },
+  {
+    name: "SSH",
+    cards: [
+      { type:"technical", q:"Why use SSH instead of Telnet for device management?",
+        a:"SSH encrypts the entire session — credentials and commands — over TCP <strong>22</strong>, while Telnet sends everything in <strong>cleartext</strong> over TCP 23, exposing passwords to anyone capturing traffic. SSH also supports stronger authentication (keys) and integrity checking. For any remote management, SSH is the standard; Telnet should be disabled." },
+      { type:"technical", q:"What are the key steps to enable SSH on a Cisco switch or router?",
+        a:"Set a <strong>hostname and domain name</strong> (needed to generate keys), generate an RSA key pair with <code>crypto key generate rsa</code> (≥1024 bits), force <code>ip ssh version 2</code>, create a local user, and on the VTY lines set <code>transport input ssh</code> and <code>login local</code>. Optionally restrict access with an <code>access-class</code> ACL on the VTY lines." },
+      { type:"scenario", q:"You can't SSH into a switch. Walk through your troubleshooting.",
+        a:"Check reachability first (ping the management IP). Then verify SSH is configured: an RSA key exists, <code>ip ssh version 2</code> is set, and VTY lines have <code>transport input ssh</code> with valid local credentials. Confirm no <strong>access-class ACL</strong> on the VTY lines blocks your source. Check the time/date if using certificates, and confirm your client isn't forcing an unsupported cipher. <code>show ip ssh</code> and <code>debug ip ssh</code> help isolate it." },
+      { type:"technical", q:"How does key-based authentication differ from password authentication in SSH?",
+        a:"With keys, the client holds a <strong>private key</strong> and the server stores the matching <strong>public key</strong>. Authentication proves possession of the private key without sending a password, which is more secure and supports automation. Password auth is simpler but vulnerable to brute force and reuse. Best practice: key-based auth, disable password login where possible, and protect private keys with a passphrase." },
+      { type:"scenario", q:"SSH to a device works from the data-center subnet but fails from the office subnet. What's the likely cause?",
+        a:"An <strong>access-class ACL on the VTY lines</strong> (or an ACL along the path) is permitting the data-center source range but not the office range. Review the VTY <code>access-class</code> and any transit ACLs/firewall rules, and add the office subnet if it's legitimate. The source-specific nature of the failure is the tell — connectivity and SSH config are otherwise fine." },
+    ]
+  },
+  {
+    name: "SSL / TLS",
+    cards: [
+      { type:"technical", q:"What does SSL/TLS provide, and what's the relationship between the two?",
+        a:"TLS (the modern successor to SSL) provides <strong>confidentiality</strong> (encryption), <strong>integrity</strong> (tamper detection), and <strong>authentication</strong> (verifying the server via its certificate). \"SSL\" is often used loosely, but SSL is deprecated and insecure; TLS 1.2/1.3 are current. It secures HTTPS, mail, VPNs, and more by establishing an encrypted channel after a handshake." },
+      { type:"technical", q:"Give a high-level walkthrough of the TLS handshake.",
+        a:"The client sends a <strong>ClientHello</strong> (supported ciphers, TLS version). The server replies with <strong>ServerHello</strong>, its <strong>certificate</strong>, and key parameters. They use asymmetric crypto to agree on a shared <strong>session key</strong> (e.g. via ECDHE), the client verifies the cert chain to a trusted CA, and both switch to fast <strong>symmetric</strong> encryption for the actual data. TLS 1.3 streamlines this to fewer round trips." },
+      { type:"scenario", q:"A user gets a certificate warning in the browser. What are the common causes?",
+        a:"Most often: the certificate is <strong>expired</strong>, it's <strong>self-signed</strong> or issued by an untrusted CA, the <strong>name doesn't match</strong> the site (CN/SAN mismatch), or the client's <strong>clock is wrong</strong> so a valid cert appears not-yet-valid/expired. Also possible: a missing intermediate/root CA in the client trust store. Inspect the cert details to pinpoint which one." },
+      { type:"technical", q:"Why does TLS use both asymmetric and symmetric encryption?",
+        a:"Asymmetric crypto (slow, but solves key exchange and authentication) is used only to <strong>authenticate the server and securely agree on a session key</strong>. Once that shared key exists, the connection switches to <strong>symmetric</strong> encryption, which is far faster for bulk data. You get the security of public-key exchange with the performance of symmetric ciphers." },
+      { type:"scenario", q:"An HTTPS site loads fine on one machine but throws a cert error on another. What do you investigate?",
+        a:"Since the same cert works elsewhere, suspect the client. Check the failing machine's <strong>system clock</strong> (skew invalidates certs), whether it's <strong>missing the root/intermediate CA</strong> in its trust store, or has outdated CA bundles. Corporate machines may need an internal CA installed. Compare the cert chain the failing client sees versus the working one." },
+    ]
+  },
+  {
+    name: "OSPF",
+    cards: [
+      { type:"technical", q:"Give an overview of how OSPF works.",
+        a:"OSPF is a <strong>link-state</strong> IGP. Routers discover neighbors, exchange <strong>LSAs</strong> describing their links, and build an identical link-state database. Each router runs <strong>SPF (Dijkstra)</strong> against that database to compute lowest-<strong>cost</strong> paths (cost is based on bandwidth). It uses <strong>areas</strong> for scalability, with all areas connecting to the backbone <strong>area 0</strong>. Convergence is fast and it scales well." },
+      { type:"technical", q:"How do OSPF routers form adjacencies, and what's the role of DR/BDR?",
+        a:"Routers send <strong>Hello</strong> packets to discover neighbors and agree on parameters (hello/dead intervals, area, subnet, authentication). On multi-access segments, a <strong>Designated Router</strong> and Backup DR are elected to reduce LSA flooding — other routers form full adjacencies only with the DR/BDR. Election uses interface priority, then highest Router-ID." },
+      { type:"scenario", q:"Two OSPF routers are stuck and never reach FULL state. How do you diagnose?",
+        a:"Check what state they're stuck in. Stuck in <strong>EXSTART/EXCHANGE</strong> classically means an <strong>MTU mismatch</strong>. Stuck in <strong>INIT</strong> means hellos are one-way (ACL or unidirectional issue). Stuck in <strong>2-WAY</strong> on a LAN is normal for non-DR/DR pairs. Verify matching <strong>hello/dead timers, area ID, subnet/mask, authentication</strong>, and that the link isn't passive. <code>show ip ospf neighbor</code> and <code>debug ip ospf adj</code> help." },
+      { type:"technical", q:"Why does OSPF use areas, and what is an ABR?",
+        a:"Areas limit the scope of LSA flooding and SPF calculation, so a topology change in one area doesn't force every router in the network to recompute — this is what lets OSPF scale. All areas must attach to the backbone, <strong>area 0</strong>. An <strong>Area Border Router (ABR)</strong> sits between area 0 and another area, summarizing routes between them and reducing database size." },
+      { type:"scenario", q:"A connected network isn't showing up as an OSPF route on neighbors. What are the usual culprits?",
+        a:"The interface isn't actually in OSPF (missing/incorrect <code>network</code> statement or not enabled on the interface), it's set <strong>passive</strong> (advertised but no adjacency where one is needed), there's an <strong>area mismatch</strong>, or authentication/timer mismatch is preventing adjacency. Verify with <code>show ip ospf interface</code> and <code>show ip ospf neighbor</code>, and confirm the network/mask in the OSPF config matches the interface." },
+    ]
+  }
+  ]
+},
+{
+  group: "Protocols & Models",
+  groupNote: "NAT, redundancy, transport, and the OSI framework",
+  topics: [
+  {
+    name: "NAT",
+    cards: [
+      { type:"technical", q:"What is NAT and what are its main types?",
+        a:"Network Address Translation rewrites IP addresses (and often ports) as traffic crosses a boundary, most commonly to let private addresses reach the internet. Types: <strong>Static NAT</strong> (one-to-one fixed mapping, e.g. for a public-facing server), <strong>Dynamic NAT</strong> (a pool of public IPs assigned as needed), and <strong>PAT/NAT overload</strong> (many private hosts share one public IP, distinguished by port numbers) — by far the most common." },
+      { type:"technical", q:"Explain inside local, inside global, outside local, and outside global.",
+        a:"<strong>Inside local</strong> — the private address of an internal host as seen inside. <strong>Inside global</strong> — the public address that internal host appears as outside. <strong>Outside global</strong> — the real public address of an external host. <strong>Outside local</strong> — how that external host appears inside the network (often the same as outside global unless translated). \"Inside/outside\" = which network; \"local/global\" = which perspective." },
+      { type:"scenario", q:"Internal users can't reach the internet, but the WAN link and default route are fine. NAT is configured. What do you check?",
+        a:"Verify the NAT <strong>interface roles</strong>: the inside interface needs <code>ip nat inside</code> and the outside interface <code>ip nat outside</code> — a common miss. Check the <strong>ACL/route-map</strong> that defines which traffic gets translated actually matches the user subnet, and that a translation pool or overload statement exists. <code>show ip nat translations</code> shows whether translations are being created at all." },
+      { type:"technical", q:"How many hosts can share one public IP with PAT, and how does it keep sessions apart?",
+        a:"PAT (overload) can support thousands of simultaneous sessions behind a single public IP because it multiplexes on <strong>source port numbers</strong> — each internal session is mapped to a unique public IP + port combination. The router tracks these in a translation table so return traffic is mapped back to the right inside host. The practical limit is the port space and table size, not a small fixed number." },
+      { type:"scenario", q:"You set up port forwarding (static NAT) to an internal web server but external users still can't reach it. What's likely wrong?",
+        a:"Check that the <strong>static NAT mapping</strong> is correct (public IP/port → internal IP/port), that the <strong>firewall/ACL permits</strong> the inbound traffic to that port, and that inside/outside interfaces are set. Confirm the server is actually listening and reachable internally, and that there's a return path. Also verify external users aren't being affected by hairpin/NAT-loopback limitations when testing from inside." },
+    ]
+  },
+  {
+    name: "HSRP",
+    cards: [
+      { type:"technical", q:"What does HSRP provide and how?",
+        a:"HSRP (Cisco First-Hop Redundancy Protocol) provides <strong>gateway redundancy</strong>. Two or more routers share a <strong>virtual IP and virtual MAC</strong> that hosts use as their default gateway. One router is <strong>Active</strong> and forwards traffic; another is <strong>Standby</strong>, ready to take over instantly if the active fails — so hosts never need to change their gateway." },
+      { type:"technical", q:"How are the active and standby routers chosen?",
+        a:"By <strong>priority</strong> (default 100, higher wins); if priorities tie, the highest IP address wins. The active router forwards for the virtual IP. <strong>Preempt</strong> determines whether a higher-priority router that comes back online reclaims the active role — without <code>standby preempt</code>, the current active keeps the role even if a higher-priority router returns." },
+      { type:"scenario", q:"The active router fails but failover to standby doesn't happen cleanly. What do you investigate?",
+        a:"Check that both routers are exchanging HSRP hellos and see each other, that <strong>preempt</strong> and <strong>priorities</strong> are set as intended, and that <strong>interface/object tracking</strong> is correctly lowering priority when the uplink fails (a common gap — the gateway stays active even though its WAN link is down). Verify the virtual IP/group numbers match and timers are consistent." },
+      { type:"technical", q:"How does HSRP compare to VRRP and GLBP?",
+        a:"<strong>HSRP</strong> is Cisco-proprietary, one active forwarder. <strong>VRRP</strong> is the open-standard equivalent (interoperable across vendors), also one active master. <strong>GLBP</strong> is Cisco-proprietary but adds <strong>load balancing</strong> — multiple routers actively forward by handing out different virtual MACs to hosts. Choose VRRP for multivendor, GLBP when you want active/active gateway load sharing." },
+      { type:"scenario", q:"Hosts intermittently lose their gateway and you see both routers claiming active. What's happening?",
+        a:"That's an HSRP <strong>split-brain</strong> — the routers can't hear each other's hellos, so each elects itself active for the virtual IP, causing duplicate IP/MAC and intermittent connectivity. The root cause is a Layer 2 path problem between them (broken trunk, blocked VLAN, or a one-way link). Restore Layer 2 connectivity between the HSRP peers and confirm hellos are exchanged." },
+    ]
+  },
+  {
+    name: "Telnet",
+    cards: [
+      { type:"technical", q:"What is Telnet and why is it considered insecure?",
+        a:"Telnet is a remote terminal protocol over TCP <strong>23</strong>. It transmits everything — usernames, passwords, commands — in <strong>cleartext</strong>, so anyone capturing the traffic can read credentials. For that reason it's been replaced by SSH for device management. Its remaining legitimate use is as a quick connectivity/port-testing tool." },
+      { type:"scenario", q:"During an audit you find Telnet enabled on production switches. How do you remediate?",
+        a:"Migrate to SSH: configure hostname/domain, generate RSA keys, set <code>ip ssh version 2</code>, then on the VTY lines set <code>transport input ssh</code> (removing telnet) with local or AAA authentication. Restrict management access with a VTY <code>access-class</code> ACL and a dedicated management VLAN. Then verify nothing relies on Telnet before fully disabling it." },
+      { type:"technical", q:"How is Telnet useful as a troubleshooting tool even if you don't use it for management?",
+        a:"<code>telnet &lt;host&gt; &lt;port&gt;</code> tests whether a specific <strong>TCP port</strong> is reachable and accepting connections. A successful connection proves Layer 3/4 reachability and that something is listening; a refusal or timeout tells you the service is down or filtered. It's a fast way to confirm, say, that a web server is listening on 80 or a mail server on 25." },
+      { type:"scenario", q:"You can telnet to a server on port 80 and it connects, but the website still won't load for users. What does that tell you?",
+        a:"A successful telnet to 80 proves <strong>Layer 4 reachability</strong> — the path is open and the service is listening. So the problem is higher up: the <strong>application/Layer 7</strong> (web app erroring, wrong vhost, TLS redirect issue) or client-side (DNS, proxy). You've isolated it away from network/firewall and toward the application layer." },
+      { type:"technical", q:"Summarize Telnet vs SSH.",
+        a:"Both give remote CLI access. <strong>Telnet</strong>: TCP 23, cleartext, no encryption — insecure. <strong>SSH</strong>: TCP 22, encrypted, supports key-based auth and integrity checking — the standard. Use SSH for all management; keep Telnet only as an ad-hoc port-reachability test, ideally disabled on devices." },
+    ]
+  },
+  {
+    name: "TCP 3-Way Handshake",
+    cards: [
+      { type:"technical", q:"Describe the TCP three-way handshake.",
+        a:"<strong>SYN</strong> — the client sends a segment with the SYN flag and an initial sequence number. <strong>SYN-ACK</strong> — the server replies acknowledging the client's SYN and sending its own SYN/sequence number. <strong>ACK</strong> — the client acknowledges the server's SYN. After these three steps the connection is established and data can flow reliably." },
+      { type:"scenario", q:"A client's connections to a service keep failing. A capture shows SYNs going out but no SYN-ACK ever returns. What does that indicate?",
+        a:"The handshake never completes because the server side never responds. Likely causes: a <strong>firewall/ACL is dropping</strong> the SYN (timeouts, no reset), the <strong>service isn't listening</strong> on that port (you'd often see a RST instead of silence), routing/return-path problems, or the host is down. Silence usually means filtering; an active RST usually means the port is closed but reachable." },
+      { type:"technical", q:"What's the purpose of sequence and acknowledgment numbers?",
+        a:"They make TCP <strong>reliable and ordered</strong>. The sequence number identifies the byte offset of the segment's data; the acknowledgment number tells the sender the next byte expected, confirming receipt. Together they let TCP detect loss, reorder out-of-order segments, and retransmit missing data." },
+      { type:"technical", q:"How does a TCP connection close, and what is TIME_WAIT?",
+        a:"Graceful close is typically a four-way exchange: each side sends a <strong>FIN</strong> and receives an <strong>ACK</strong>. The side that closes last enters <strong>TIME_WAIT</strong>, holding the socket for a period (2×MSL) to ensure delayed segments are handled and the final ACK was received before the port is reused. A <strong>RST</strong> is an abrupt, non-graceful teardown." },
+      { type:"scenario", q:"A server shows huge numbers of half-open connections and legitimate users can't connect. What attack does this resemble?",
+        a:"A <strong>SYN flood</strong> — an attacker sends many SYNs without completing the handshake, exhausting the server's connection table with half-open states. Mitigations: <strong>SYN cookies</strong>, reducing the SYN-ACK retry/backlog timers, rate limiting, and upstream DDoS protection. The signature is many connections stuck in SYN_RECEIVED." },
+    ]
+  },
+  {
+    name: "TCP vs UDP",
+    cards: [
+      { type:"technical", q:"What are the core differences between TCP and UDP?",
+        a:"<strong>TCP</strong> is connection-oriented and reliable — it does handshaking, ordering, acknowledgments, retransmission, and flow/congestion control, at the cost of overhead and latency. <strong>UDP</strong> is connectionless and best-effort — no handshake, no guaranteed delivery or ordering, minimal overhead, lower latency. TCP for accuracy, UDP for speed." },
+      { type:"technical", q:"Give examples of when each is the right choice.",
+        a:"<strong>TCP</strong>: web (HTTP/S), email, file transfer, SSH — anything where every byte must arrive correctly and in order. <strong>UDP</strong>: VoIP, video streaming, online gaming, DNS queries, DHCP — where low latency matters more than perfect delivery and a lost packet is better dropped than retransmitted late." },
+      { type:"scenario", q:"VoIP calls are choppy with dropouts. Why is the protocol UDP, and what do you actually troubleshoot?",
+        a:"Voice uses <strong>UDP</strong> because a late retransmitted packet is useless — better to drop it and keep the stream real-time. So you don't \"fix reliability\"; you fix the <strong>network conditions</strong>: check for packet loss, <strong>jitter</strong>, and latency, verify <strong>QoS/marking</strong> is prioritizing voice, and look for congestion or duplex/errors on the path. The protocol is correct; the transport quality is the issue." },
+      { type:"technical", q:"What reliability features does TCP add that UDP lacks?",
+        a:"TCP adds <strong>connection setup/teardown</strong>, <strong>sequencing</strong> for ordered delivery, <strong>acknowledgments and retransmission</strong> for guaranteed delivery, <strong>flow control</strong> (receiver window) to avoid overrunning the receiver, and <strong>congestion control</strong> to back off when the network is saturated. UDP has none of these — the application must handle anything it needs." },
+      { type:"scenario", q:"A TCP-based bulk transfer is slow over a high-latency satellite link even though bandwidth is plentiful. What's the likely limiter?",
+        a:"TCP throughput is bounded by <strong>window size ÷ round-trip time</strong>. On a high-latency link, a small receive window throttles throughput regardless of bandwidth (the bandwidth-delay product). The fix is <strong>TCP window scaling</strong> / larger windows and tuning, so the pipe stays full while waiting for ACKs. This is the classic long-fat-network problem." },
+    ]
+  },
+  {
+    name: "OSI Model",
+    cards: [
+      { type:"technical", q:"Name the seven OSI layers and what each does.",
+        a:"<strong>7 Application</strong> (user-facing protocols, HTTP), <strong>6 Presentation</strong> (formatting, encryption, compression), <strong>5 Session</strong> (establishing/managing sessions), <strong>4 Transport</strong> (TCP/UDP, ports, reliability), <strong>3 Network</strong> (IP, routing, logical addressing), <strong>2 Data Link</strong> (MAC, switching, framing), <strong>1 Physical</strong> (cables, signals, bits). Mnemonic: \"All People Seem To Need Data Processing.\"" },
+      { type:"technical", q:"What are encapsulation and the PDU names per layer?",
+        a:"As data goes down the stack each layer adds its header (encapsulation); going up, each strips its header (decapsulation). PDUs: Transport = <strong>segment</strong> (TCP) / datagram (UDP), Network = <strong>packet</strong>, Data Link = <strong>frame</strong>, Physical = <strong>bits</strong>. The receiving host reverses the process to hand data to the application." },
+      { type:"scenario", q:"A user reports \"the network is broken.\" How do you use the OSI model to troubleshoot methodically?",
+        a:"Work <strong>bottom-up</strong>: L1 — is the cable/link/light up? L2 — correct VLAN, MAC learned, no err-disable? L3 — valid IP/gateway, can you ping the gateway and beyond? L4 — is the port open (telnet/nc)? L7 — does the application itself respond? Layering isolates the fault to one place instead of guessing, and you can also go top-down or divide-and-conquer from a known-good midpoint." },
+      { type:"technical", q:"How does the OSI model compare to the TCP/IP model?",
+        a:"OSI has 7 layers; the TCP/IP model has 4 (Application, Transport, Internet, Network Access). TCP/IP's <strong>Application</strong> layer rolls up OSI layers 5–7; its <strong>Network Access/Link</strong> layer rolls up OSI 1–2. OSI is the teaching/reference framework; TCP/IP is what the internet actually implements. Transport and Network/Internet map closely between them." },
+      { type:"scenario", q:"How do you classify a problem as Layer 1 vs Layer 2 vs Layer 3?",
+        a:"<strong>L1</strong>: no link light, bad cable, port down, signal/duplex errors — physical. <strong>L2</strong>: link is up but no communication on the segment — wrong VLAN, MAC issues, STP blocking, switching. <strong>L3</strong>: local segment works but you can't reach other subnets — IP addressing, gateway, or routing. Matching the symptom to the layer narrows the toolset (cable tester vs switch CLI vs ping/traceroute)." },
+    ]
+  },
+  {
+    name: "Protocols per OSI Layer",
+    cards: [
+      { type:"technical", q:"Map common protocols to their OSI layers.",
+        a:"<strong>L7 Application</strong>: HTTP/S, DNS, DHCP, FTP, SMTP, SNMP. <strong>L4 Transport</strong>: TCP, UDP. <strong>L3 Network</strong>: IP, ICMP, OSPF, routing. <strong>L2 Data Link</strong>: Ethernet, ARP, STP, 802.1Q, PPP. <strong>L1 Physical</strong>: cabling, connectors, signaling standards. Knowing the mapping helps you pick the right tool for a symptom." },
+      { type:"technical", q:"Which network devices operate at which layers?",
+        a:"<strong>Hub / repeater</strong> — Layer 1 (regenerates signals, no intelligence). <strong>Switch / bridge</strong> — Layer 2 (forwards by MAC). <strong>Router / Layer 3 switch</strong> — Layer 3 (forwards by IP between subnets). <strong>Firewall / load balancer</strong> — often Layer 3–7 depending on features. Higher layer = more awareness of the traffic's content." },
+      { type:"scenario", q:"You're asked: 'DHCP — what layer, and why does that matter?' How do you answer?",
+        a:"DHCP is an <strong>application-layer (L7)</strong> protocol running over <strong>UDP (L4)</strong>, ports 67/68. Why it matters: because its initial messages are <strong>broadcasts</strong> at L2, they don't cross routers — which is exactly why you need an <strong>ip helper-address</strong> relay to reach a DHCP server on another subnet. The layer explains the design constraint." },
+      { type:"technical", q:"Where do TCP, UDP, IP, and Ethernet each sit?",
+        a:"<strong>TCP and UDP</strong> are Layer 4 (Transport). <strong>IP</strong> is Layer 3 (Network). <strong>Ethernet</strong> is Layer 2 (Data Link), with the physical signaling at Layer 1. So a web request encapsulates HTTP (L7) inside TCP (L4) inside IP (L3) inside an Ethernet frame (L2) onto the wire (L1)." },
+      { type:"scenario", q:"Interviewer's trick question: 'What layer is ARP?' How do you handle it?",
+        a:"ARP is best described as <strong>Layer 2</strong> — it maps Layer 3 IP addresses to Layer 2 MAC addresses and operates within a single broadcast domain using Ethernet frames, not IP packets. Some texts call it a \"layer 2.5\" protocol because it bridges L2 and L3. The strong answer states L2, explains the IP-to-MAC resolution, and acknowledges the in-between nature." },
+    ]
+  }
+  ]
+},
+{
+  group: "Troubleshooting Commands",
+  groupNote: "The everyday CLI tools and how to reason with their output",
+  topics: [
+  {
+    name: "nslookup",
+    cards: [
+      { type:"technical", q:"What does nslookup do and what's the basic usage?",
+        a:"<code>nslookup</code> queries DNS to resolve names to IPs (and vice versa). Basic use: <code>nslookup google.com</code> returns the resolving server and the answer. It's the first tool to confirm whether a name-resolution problem is DNS or something else. You can also point it at a specific server: <code>nslookup google.com 8.8.8.8</code>." },
+      { type:"scenario", q:"A site won't load. How do you use nslookup to decide whether it's DNS or connectivity?",
+        a:"Run <code>nslookup thesite.com</code>. If it returns a correct IP, DNS is fine and you move to connectivity (ping/traceroute/port test to that IP). If it fails or times out, the problem is <strong>DNS</strong> — then test against a known-good server (<code>nslookup thesite.com 8.8.8.8</code>) to tell whether it's your resolver or the domain's records." },
+      { type:"technical", q:"How do you query a specific record type or a specific DNS server?",
+        a:"Use type and server arguments: <code>nslookup -type=MX example.com</code> for mail records, <code>-type=NS</code> for name servers, <code>-type=PTR</code> for reverse. To target a server, append it: <code>nslookup -type=A example.com 1.1.1.1</code>. This isolates whether a specific server or record type is the problem." },
+      { type:"scenario", q:"Forward lookups work but reverse lookups fail. What does that tell you, and why might it matter?",
+        a:"A failing reverse lookup means there's <strong>no PTR record</strong> for the IP (or the reverse zone isn't delegated/configured), even though the forward A record is fine. It matters for services that validate reverse DNS — notably <strong>mail servers</strong>, which may reject or flag mail from IPs without matching PTRs. Fix by creating the PTR in the reverse zone." },
+      { type:"technical", q:"How does nslookup compare to dig?",
+        a:"Both query DNS. <code>nslookup</code> is available everywhere (especially Windows) and is simple. <code>dig</code> (Linux/macOS) gives more detailed, scriptable output — full answer/authority/additional sections, query timing, and exact record data — making it the preferred tool for deeper DNS troubleshooting. nslookup for a quick check, dig for detail." },
+    ]
+  },
+  {
+    name: "netcat (nc)",
+    cards: [
+      { type:"technical", q:"What is netcat and why is it called the 'network swiss-army knife'?",
+        a:"<code>nc</code> reads and writes raw data across TCP/UDP connections. It can act as a client or a listener, test ports, transfer data, grab banners, and script network interactions — all from one small tool. That versatility (and its scripting friendliness) is why it's a go-to for connectivity testing and quick network tasks." },
+      { type:"scenario", q:"You need to verify a remote service is listening on TCP 443. How do you use nc?",
+        a:"<code>nc -zv host 443</code> — the <code>-z</code> scans without sending data and <code>-v</code> prints the result. \"Succeeded/open\" means the port is reachable and listening; \"refused\" means reachable but nothing listening; a timeout suggests a firewall is dropping the traffic. It's a cleaner alternative to telnet for port checks and supports UDP with <code>-u</code>." },
+      { type:"technical", q:"What's the difference between netcat's listener and client modes?",
+        a:"As a <strong>listener</strong>, <code>nc -l -p 4444</code> opens a port and waits for an inbound connection — useful to test whether traffic can reach a host on a given port. As a <strong>client</strong>, <code>nc host port</code> initiates a connection. Pairing a listener on one host with a client on another verifies end-to-end reachability and any firewall rules between them." },
+      { type:"scenario", q:"You suspect a firewall is blocking a custom application port between two servers. How do you prove it with nc?",
+        a:"Start a listener on the destination: <code>nc -l -p 9000</code>. From the source, connect: <code>nc -zv dest 9000</code>. If the client connects and the listener sees it, the path is open. If it times out while the service-free listener is up, a <strong>firewall is dropping</strong> that port. This isolates the network path from the application itself." },
+      { type:"technical", q:"What should you keep in mind about using netcat responsibly?",
+        a:"netcat is powerful — it can transfer files, open listeners, and even create rudimentary shells, which is why it's also flagged by security tools and is sometimes restricted. Use it only on systems you're authorized to test, prefer it for legitimate connectivity diagnostics, and be aware that listeners you open are real attack surface if left running." },
+    ]
+  },
+  {
+    name: "telnet (as a tool)",
+    cards: [
+      { type:"technical", q:"How do you use telnet purely as a connectivity-testing tool?",
+        a:"<code>telnet &lt;host&gt; &lt;port&gt;</code> attempts a TCP connection to that port. If it connects (blank screen or a banner), the port is reachable and something is listening — proving Layer 3/4 reachability. If it's refused or times out, the service is down or filtered. It's a quick L4 reachability check, separate from telnet's insecure use as a login protocol." },
+      { type:"scenario", q:"A web server is up but the page won't load. How do you test the HTTP service with telnet?",
+        a:"<code>telnet server 80</code>, then type <code>GET / HTTP/1.1</code> and a Host header. If you get an HTTP response, the web service is answering and the problem is higher-level (content, DNS, client). If the connection itself fails, it's a network/port issue. This separates \"is the port open\" from \"is the app responding correctly.\"" },
+      { type:"scenario", q:"How would you test mail flow to an SMTP server with telnet?",
+        a:"<code>telnet mailserver 25</code> — a successful connect and a 220 banner confirm the SMTP service is reachable and listening. You can manually step through <code>HELO</code>, <code>MAIL FROM</code>, <code>RCPT TO</code> to test whether the server accepts mail. A refused/timed-out connection on 25 points to a firewall or a down service rather than a mail-logic problem." },
+      { type:"technical", q:"How do you interpret connect vs refused vs timeout from a telnet test?",
+        a:"<strong>Connects</strong> — the path is open and a service is listening (good). <strong>Connection refused</strong> — the host is reachable but nothing is listening on that port (service down/wrong port). <strong>Timeout</strong> — no response at all, typically a <strong>firewall dropping</strong> the traffic or the host being unreachable. The distinction between refused and timeout is a key diagnostic clue." },
+      { type:"scenario", q:"A port test times out on one server but is refused on another. Why does that distinction matter?",
+        a:"A <strong>refusal</strong> means packets reach the host and it actively rejects them — so there's no firewall block in the path, just no listening service. A <strong>timeout</strong> means packets vanish silently — almost always a <strong>firewall/ACL dropping</strong> them. So the same \"can't connect\" symptom points to two completely different fixes: start the service vs open the firewall." },
+    ]
+  },
+  {
+    name: "ping",
+    cards: [
+      { type:"technical", q:"What does ping do and how does it work?",
+        a:"<code>ping</code> sends <strong>ICMP echo request</strong> packets to a target and listens for echo replies, measuring reachability and round-trip time. It's the most basic test of Layer 3 connectivity — \"can I reach this host and how long does it take.\" It also reports packet loss and TTL." },
+      { type:"scenario", q:"Ping to an IP succeeds but ping to the hostname fails. What's the diagnosis?",
+        a:"Connectivity is fine (the IP responds), so the failure is <strong>name resolution</strong> — DNS. The host can't translate the name to an address. Confirm with <code>nslookup</code> and check the client's DNS settings. This is a classic, fast way to split a \"can't reach the site\" complaint into network-vs-DNS." },
+      { type:"technical", q:"What do TTL, packet loss, and RTT in ping output tell you?",
+        a:"<strong>TTL</strong> (time-to-live) decrements per router hop; the returned value hints at how many hops away and the OS type. <strong>Packet loss</strong> indicates an unreliable path or congestion. <strong>RTT</strong> (round-trip time) shows latency — consistently high or wildly variable RTT points to congestion, distance, or a struggling device along the path." },
+      { type:"scenario", q:"Ping shows intermittent packet loss to a remote host. How do you narrow down where the loss is?",
+        a:"Ping progressively farther points along the path — your gateway, the next hop, then the remote host — to find where loss starts. Use <strong>traceroute</strong> to map the path and a continuous ping to each hop to localize the lossy link or device. Loss that begins at a specific hop (and persists beyond it) localizes the problem to that segment or device." },
+      { type:"technical", q:"Why might ping fail even when a host is actually up and reachable?",
+        a:"Many hosts and firewalls <strong>block ICMP</strong> for security, so a host can be perfectly reachable on its application ports while silently dropping pings. That's why a failed ping isn't proof a host is down — you confirm with a TCP port test (telnet/nc) to the actual service before concluding the host is unreachable." },
+    ]
+  },
+  {
+    name: "traceroute",
+    cards: [
+      { type:"technical", q:"How does traceroute work?",
+        a:"It sends packets with incrementing <strong>TTL</strong> values — TTL 1 reaches the first router, which drops it and returns an ICMP \"time exceeded\"; TTL 2 reaches the second router, and so on. By recording which device replies at each TTL, traceroute maps the hop-by-hop path to the destination and the latency at each hop." },
+      { type:"scenario", q:"Users can't reach a remote service. How does traceroute help you locate the break?",
+        a:"Run traceroute to the destination and watch where it stops or where latency/loss spikes. If it dies after a specific hop, the problem is at or beyond that device/link — possibly outside your control (ISP). If it completes but the service still fails, the path is fine and the issue is at the application/port level. It localizes the fault along the path." },
+      { type:"technical", q:"What do asterisks (*) in traceroute output mean?",
+        a:"An asterisk means no reply was received for that probe within the timeout. It can indicate <strong>packet loss</strong>, or — very commonly — a router/firewall that simply <strong>doesn't send ICMP time-exceeded</strong> replies for security. So a row of <code>* * *</code> at one hop while later hops respond usually means that device is just quiet, not that the path is broken there." },
+      { type:"scenario", q:"Traceroute shows normal latency until one hop where it jumps dramatically and stays high. What does that suggest?",
+        a:"A sudden, sustained latency increase at a hop (and beyond) points to <strong>congestion or a problem at that link/device</strong>, or a long-distance/satellite segment. A spike at a single hop that doesn't carry forward can just be that router deprioritizing its own ICMP responses. You care about latency that increases <strong>and persists</strong> through subsequent hops." },
+      { type:"technical", q:"How does traceroute differ between Linux and Windows?",
+        a:"Windows <code>tracert</code> uses <strong>ICMP</strong> echo by default. Linux/macOS <code>traceroute</code> defaults to <strong>UDP</strong> probes (with options for ICMP or TCP). This matters because some firewalls treat UDP, ICMP, and TCP probes differently — so a path that looks blocked with one method may complete with another (e.g. <code>traceroute -T -p 443</code> over TCP)." },
+    ]
+  }
+  ]
+}
+];
+
+</script>
+<script>
+/* KCA Networking Interview Practice — app logic */
+(function () {
+  const content = document.getElementById('content');
+  const topicnav = document.getElementById('topicnav');
+  const searchInput = document.getElementById('search');
+  const toggleAllBtn = document.getElementById('toggleAll');
+  const shuffleBtn = document.getElementById('shuffleBtn');
+  const progText = document.getElementById('progText');
+  const progBar = document.getElementById('progBar');
+  const emptyEl = document.getElementById('empty');
+  const metaRow = document.getElementById('metaRow');
+  const footCount = document.getElementById('footCount');
+
+  // Flatten + count
+  let totalCards = 0, totalTopics = 0;
+  DATA.forEach(g => g.topics.forEach(t => { totalTopics++; totalCards += t.cards.length; }));
+
+  metaRow.innerHTML = [
+    ['Topics', totalTopics],
+    ['Questions', totalCards],
+    ['Format', 'Scenario + Technical'],
+    ['Series', 'KCA Networking']
+  ].map(([k, v]) => `<span class="chip">${k} · <b>${v}</b></span>`).join('');
+  footCount.textContent = `${totalCards} questions across ${totalTopics} topics`;
+
+  // Build topic nav
+  const allTopics = [];
+  DATA.forEach(g => g.topics.forEach(t => allTopics.push(t)));
+  topicnav.innerHTML = '<button data-topic="__all" class="active">All</button>' +
+    allTopics.map(t => `<button data-topic="${slug(t.name)}">${t.name}</button>`).join('');
+
+  // Render content
+  let html = '';
+  DATA.forEach((g, gi) => {
+    html += `<div class="section-head"><span class="num">${String(gi + 1).padStart(2, '0')}</span><h2>${g.group}</h2></div>`;
+    html += `<div class="section-sub">${g.groupNote}</div>`;
+    g.topics.forEach(t => {
+      html += `<div class="topic" id="${slug(t.name)}" data-topic="${slug(t.name)}">`;
+      html += `<div class="topic-title"><h3>${t.name}</h3><span class="count">${t.cards.length} questions</span><span class="line"></span></div>`;
+      html += `<div class="grid">`;
+      t.cards.forEach((c, ci) => {
+        const id = `${slug(t.name)}-${ci}`;
+        const search = (t.name + ' ' + c.q + ' ' + c.a).toLowerCase().replace(/<[^>]+>/g, '');
+        html += `
+          <div class="card" data-id="${id}" data-search="${escapeAttr(search)}">
+            <div class="top" role="button" tabindex="0">
+              <span class="tag ${c.type}">${c.type === 'scenario' ? '◆ Scenario' : '● Technical'}</span>
+              <div class="q">${c.q}</div>
+            </div>
+            <div class="reveal" role="button" tabindex="0">
+              <span class="chev">▶</span><span class="reveal-label">Reveal model answer</span>
+            </div>
+            <div class="answer"><div class="answer-inner">${c.a}</div></div>
+          </div>`;
+      });
+      html += `</div></div>`;
+    });
+  });
+  content.innerHTML = html;
+
+  // Reveal tracking
+  const revealed = new Set();
+  function updateProgress() {
+    progText.textContent = `${revealed.size} / ${totalCards} revealed`;
+    progBar.style.width = (revealed.size / totalCards * 100) + '%';
+  }
+  updateProgress();
+
+  function toggleCard(card) {
+    const open = card.classList.toggle('open');
+    const label = card.querySelector('.reveal-label');
+    label.textContent = open ? 'Hide answer' : 'Reveal model answer';
+    if (open) revealed.add(card.dataset.id);
+    updateProgress();
+  }
+
+  content.addEventListener('click', e => {
+    const card = e.target.closest('.card');
+    if (!card) return;
+    if (e.target.closest('.top') || e.target.closest('.reveal')) toggleCard(card);
+  });
+  content.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = e.target.closest('.card');
+    if (card && (e.target.closest('.top') || e.target.closest('.reveal'))) {
+      e.preventDefault(); toggleCard(card);
+    }
+  });
+
+  // Expand / collapse all (visible)
+  let allOpen = false;
+  toggleAllBtn.addEventListener('click', () => {
+    allOpen = !allOpen;
+    document.querySelectorAll('.topic:not(.hidden) .card').forEach(card => {
+      if (card.style.display === 'none') return;
+      const isOpen = card.classList.contains('open');
+      if (allOpen && !isOpen) toggleCard(card);
+      if (!allOpen && isOpen) toggleCard(card);
+    });
+    toggleAllBtn.textContent = allOpen ? 'Collapse all' : 'Expand all';
+  });
+
+  // Search filter
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    let anyVisible = false;
+    document.querySelectorAll('.topic').forEach(topic => {
+      let topicVisible = false;
+      topic.querySelectorAll('.card').forEach(card => {
+        const match = !q || card.dataset.search.includes(q);
+        card.style.display = match ? '' : 'none';
+        if (match) topicVisible = true;
+      });
+      topic.classList.toggle('hidden', !topicVisible);
+      topic.style.display = topicVisible ? '' : 'none';
+      if (topicVisible) anyVisible = true;
+    });
+    // hide section heads with no visible topics
+    document.querySelectorAll('.section-head, .section-sub').forEach(el => {
+      el.style.display = anyVisible ? '' : 'none';
+    });
+    emptyEl.style.display = anyVisible ? 'none' : 'block';
+    // reset topic nav active state on search
+    if (q) setActiveNav('__all');
+  });
+
+  // Topic nav
+  topicnav.addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const target = btn.dataset.topic;
+    setActiveNav(target);
+    searchInput.value = '';
+    // un-filter
+    document.querySelectorAll('.card').forEach(c => c.style.display = '');
+    document.querySelectorAll('.topic').forEach(t => { t.style.display = ''; t.classList.remove('hidden'); });
+    document.querySelectorAll('.section-head, .section-sub').forEach(el => el.style.display = '');
+    emptyEl.style.display = 'none';
+    if (target === '__all') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      const el = document.getElementById(target);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+  function setActiveNav(target) {
+    topicnav.querySelectorAll('button').forEach(b =>
+      b.classList.toggle('active', b.dataset.topic === target));
+  }
+
+  // Shuffle & quiz: collapse all, scroll top, randomize card order within each topic
+  shuffleBtn.addEventListener('click', () => {
+    document.querySelectorAll('.card.open').forEach(c => toggleCard(c));
+    document.querySelectorAll('.grid').forEach(grid => {
+      const cards = Array.from(grid.children);
+      for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        grid.appendChild(cards[j]);
+        cards.splice(j, 1);
+      }
+      // append remaining
+    });
+    // simpler robust shuffle:
+    document.querySelectorAll('.grid').forEach(grid => {
+      const cards = Array.from(grid.children);
+      cards.sort(() => Math.random() - 0.5).forEach(c => grid.appendChild(c));
+    });
+    window.scrollTo({ top: document.querySelector('.controls').offsetTop, behavior: 'smooth' });
+    allOpen = false; toggleAllBtn.textContent = 'Expand all';
+  });
+
+  // helpers
+  function slug(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  function escapeAttr(s) { return s.replace(/"/g, '&quot;'); }
+})();
+
+</script>
+</body>
+</html>
