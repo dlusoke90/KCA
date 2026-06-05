@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · Lab Demos · KCA</title>
+<link rel="icon" href="/favicon.ico">
+<style>
+  :root{
+    --navy:#0A1628; --ink:#0a0c0f; --panel:#0f1d33; --panel-2:#13243f;
+    --teal:#00bfa5; --blue:#3b9eff; --muted:#94a3b8; --line:rgba(148,163,184,.16);
+    --text:#e8eef7; --good:#22c55e; --warn:#f5a623; --bad:#fda4af;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+       background:radial-gradient(1000px 500px at 10% -10%,rgba(59,158,255,.10),transparent 60%),var(--ink);
+       color:var(--text)}
+  .wrap{max-width:1200px;margin:0 auto;padding:28px 18px 80px}
+  .top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+       border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+       background:linear-gradient(135deg,var(--navy),var(--panel))}
+  .top h1{margin:0;font-size:22px}
+  .top .eyebrow{color:var(--teal);font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+  .top .meta{color:var(--muted);font-size:13px}
+  a.back{color:var(--muted);text-decoration:none;font-size:13px}a.back:hover{color:var(--teal)}
+
+  table{width:100%;border-collapse:collapse;margin-top:20px;font-size:14px}
+  th{text-align:left;color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+     padding:10px 12px;border-bottom:1px solid var(--line)}
+  td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+  tr:hover td{background:rgba(255,255,255,.015)}
+  .tnum{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:800;
+        background:linear-gradient(135deg,var(--teal),var(--blue));color:#04201b;font-size:13px}
+  .title b{display:block} .title small{color:var(--muted)}
+  .pill{font-size:11px;padding:3px 9px;border-radius:999px;font-weight:700}
+  .pill.pub{background:rgba(34,197,94,.16);color:var(--good)}
+  .pill.draft{background:rgba(148,163,184,.14);color:var(--muted)}
+  .pill.prem{background:rgba(245,166,35,.16);color:var(--warn)}
+  .actions{display:flex;gap:6px;flex-wrap:wrap}
+  .btn{border:none;border-radius:8px;padding:7px 11px;font-weight:700;font-size:12px;cursor:pointer;transition:.15s}
+  .btn.t{background:var(--teal);color:#04201b}
+  .btn.b{background:var(--blue);color:#04122a}
+  .btn.g{background:transparent;border:1px solid var(--line);color:var(--muted)}
+  .btn.d{background:rgba(244,63,94,.14);color:var(--bad)}
+  .btn:hover{filter:brightness(1.08)} .btn:disabled{opacity:.4;cursor:not-allowed}
+  .prog{height:6px;border-radius:999px;background:rgba(148,163,184,.18);overflow:hidden;margin-top:6px;display:none}
+  .prog.show{display:block}
+  .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--blue));transition:width .2s}
+  .upmsg{font-size:11px;color:var(--muted);margin-top:4px;display:none}
+  .upmsg.show{display:block}
+  .toast{position:fixed;bottom:20px;right:20px;background:var(--panel-2);border:1px solid var(--line);
+         border-radius:10px;padding:12px 16px;font-size:13px;display:none;z-index:50;max-width:340px}
+  .toast.show{display:block} .toast.ok{border-color:rgba(34,197,94,.5)} .toast.bad{border-color:rgba(244,63,94,.5)}
+  /* edit modal */
+  .modal{position:fixed;inset:0;background:rgba(3,7,15,.86);display:none;place-items:center;padding:20px;z-index:60}
+  .modal.open{display:grid}
+  .sheet{width:min(540px,100%);background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .sheet h3{margin:0 0 14px} label{display:block;font-size:12px;color:var(--muted);margin:12px 0 5px}
+  input,textarea,select{width:100%;background:var(--ink);border:1px solid var(--line);border-radius:8px;
+       color:var(--text);padding:9px 11px;font-size:14px;font-family:inherit}
+  textarea{min-height:80px;resize:vertical}
+  .row{display:flex;gap:16px;margin-top:12px}
+  .check{display:flex;align-items:center;gap:8px} .check input{width:auto}
+  .sheet .end{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="/admin.html">← Admin panel</a>
+  <div class="top" style="margin-top:10px">
+    <div>
+      <div class="eyebrow">Content Management</div>
+      <h1>Lab Demos</h1>
+      <div class="meta" id="meta">Loading…</div>
+    </div>
+    <button class="btn t" onclick="openNew()">+ New topic</button>
+  </div>
+
+  <table>
+    <thead><tr>
+      <th>#</th><th>Title / Category</th><th>Status</th><th>Video</th><th style="text-align:right">Actions</th>
+    </tr></thead>
+    <tbody id="rows"><tr><td colspan="5" style="color:var(--muted);padding:30px">Loading…</td></tr></tbody>
+  </table>
+</div>
+
+<!-- hidden file input reused per-row -->
+<input type="file" id="file" accept="video/*" style="display:none">
+
+<!-- edit modal -->
+<div class="modal" id="editModal">
+  <div class="sheet">
+    <h3 id="editTitle">Edit demo</h3>
+    <input type="hidden" id="eId">
+    <label>Title</label><input id="eTitleI">
+    <label>Category</label><input id="eCat">
+    <label>Description</label><textarea id="eDesc"></textarea>
+    <label>S3 key (paste if you uploaded via CLI)</label><input id="eKey" placeholder="lab-demos/01-...mp4">
+    <div class="row">
+      <div class="check"><input type="checkbox" id="ePub"><label style="margin:0">Published</label></div>
+      <div class="check"><input type="checkbox" id="ePrem"><label style="margin:0">Premium (subscription)</label></div>
+    </div>
+    <div class="end">
+      <button class="btn g" onclick="closeEdit()">Cancel</button>
+      <button class="btn t" onclick="saveEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TOKEN = localStorage.getItem('kca_token');
+const H  = { 'Authorization':'Bearer '+TOKEN };
+const HJ = { 'Authorization':'Bearer '+TOKEN, 'Content-Type':'application/json' };
+let DEMOS = [], uploadTarget = null;
+if(!TOKEN) location.href='/login.html';
+
+async function load(){
+  const r = await fetch('/api/admin/lab-demos',{headers:H});
+  if(r.status===401){location.href='/login.html';return;}
+  if(r.status===403){document.getElementById('rows').innerHTML=
+    '<tr><td colspan="5" style="color:var(--bad);padding:30px">Admin access required.</td></tr>';return;}
+  DEMOS = await r.json();
+  draw();
+}
+
+function draw(){
+  const pub = DEMOS.filter(d=>d.is_published).length;
+  document.getElementById('meta').textContent =
+    `${DEMOS.length} topics · ${pub} published · ${DEMOS.length-pub} awaiting video`;
+  document.getElementById('rows').innerHTML = DEMOS.map(d=>{
+    const status = d.is_published
+      ? `<span class="pill pub">Published</span>` : `<span class="pill draft">Draft</span>`;
+    const prem = d.is_premium ? ' <span class="pill prem">Premium</span>' : '';
+    const vid = d.s3_key
+      ? `<small style="color:var(--muted);word-break:break-all">${esc(d.s3_key)}</small>`
+      : `<small style="color:var(--muted)">— no file —</small>`;
+    return `<tr>
+      <td><div class="tnum">${d.topic_number}</div></td>
+      <td class="title"><b>${esc(d.title)}</b><small>${esc(d.category)}</small></td>
+      <td>${status}${prem}</td>
+      <td>${vid}
+        <div class="prog" id="prog-${d.id}"><i></i></div>
+        <div class="upmsg" id="msg-${d.id}"></div>
+      </td>
+      <td><div class="actions" style="justify-content:flex-end">
+        <button class="btn b" onclick="pickFile(${d.id})">⬆ Upload</button>
+        <button class="btn t" onclick="togglePub(${d.id})">${d.is_published?'Unpublish':'Publish'}</button>
+        <button class="btn g" onclick="openEdit(${d.id})">Edit</button>
+        <button class="btn d" onclick="del(${d.id})">Del</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+/* ---------- direct-to-S3 upload ---------- */
+function pickFile(id){ uploadTarget = id; document.getElementById('file').click(); }
+
+document.getElementById('file').addEventListener('change', async e=>{
+  const f = e.target.files[0]; e.target.value='';
+  if(!f || uploadTarget==null) return;
+  const id = uploadTarget;
+  const prog = document.getElementById('prog-'+id);
+  const bar  = prog.querySelector('i');
+  const msg  = document.getElementById('msg-'+id);
+  prog.classList.add('show'); msg.classList.add('show'); msg.textContent='Requesting upload link…';
+
+  try{
+    // 1) ask server for a presigned PUT
+    const pr = await fetch('/api/admin/lab-demos/presign-upload',{
+      method:'POST', headers:HJ,
+      body:JSON.stringify({ id, filename:f.name, contentType:f.type||'video/mp4' })
+    });
+    const p = await pr.json();
+    if(!pr.ok) throw new Error(p.error||'presign failed');
+
+    // 2) PUT the file straight to S3 with progress
+    msg.textContent = 'Uploading to S3…';
+    await new Promise((resolve,reject)=>{
+      const xhr = new XMLHttpRequest();
+      xhr.open('PUT', p.uploadUrl, true);
+      xhr.setRequestHeader('Content-Type', p.contentType);
+      xhr.upload.onprogress = ev=>{ if(ev.lengthComputable){
+        bar.style.width = Math.round(ev.loaded/ev.total*100)+'%'; } };
+      xhr.onload = ()=> (xhr.status>=200&&xhr.status<300) ? resolve()
+                       : reject(new Error('S3 upload failed ('+xhr.status+')'));
+      xhr.onerror = ()=> reject(new Error('Network error during upload'));
+      xhr.send(f);
+    });
+
+    // 3) save key + publish
+    msg.textContent = 'Finalizing…';
+    const up = await fetch('/api/admin/lab-demos/'+id,{
+      method:'PUT', headers:HJ,
+      body:JSON.stringify({ s3_key:p.key, is_published:1 })
+    });
+    if(!up.ok) throw new Error('Saved to S3 but failed to publish');
+    toast('Uploaded & published ✓','ok');
+    await load();
+  }catch(err){
+    msg.textContent = 'Error: '+err.message;
+    toast(err.message,'bad');
+  }finally{
+    uploadTarget=null;
+    setTimeout(()=>{prog.classList.remove('show');msg.classList.remove('show');},4000);
+  }
+});
+
+/* ---------- quick actions ---------- */
+async function togglePub(id){
+  const d = DEMOS.find(x=>x.id===id);
+  if(!d.s3_key && !d.is_published){ toast('Upload a video before publishing','bad'); return; }
+  await fetch('/api/admin/lab-demos/'+id,{method:'PUT',headers:HJ,
+    body:JSON.stringify({is_published: d.is_published?0:1})});
+  load();
+}
+async function del(id){
+  if(!confirm('Delete this demo and its S3 video?')) return;
+  await fetch('/api/admin/lab-demos/'+id,{method:'DELETE',headers:H});
+  toast('Deleted','ok'); load();
+}
+
+/* ---------- edit / new ---------- */
+function openEdit(id){
+  const d = DEMOS.find(x=>x.id===id);
+  document.getElementById('editTitle').textContent='Edit demo';
+  document.getElementById('eId').value=d.id;
+  document.getElementById('eTitleI').value=d.title;
+  document.getElementById('eCat').value=d.category;
+  document.getElementById('eDesc').value=d.description||'';
+  document.getElementById('eKey').value=d.s3_key||'';
+  document.getElementById('ePub').checked=!!d.is_published;
+  document.getElementById('ePrem').checked=!!d.is_premium;
+  document.getElementById('editModal').classList.add('open');
+}
+function openNew(){
+  document.getElementById('editTitle').textContent='New topic';
+  ['eId','eTitleI','eCat','eDesc','eKey'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('ePub').checked=false;
+  document.getElementById('ePrem').checked=false;
+  document.getElementById('editModal').classList.add('open');
+}
+function closeEdit(){ document.getElementById('editModal').classList.remove('open'); }
+async function saveEdit(){
+  const id = document.getElementById('eId').value;
+  const body = {
+    title: document.getElementById('eTitleI').value.trim(),
+    category: document.getElementById('eCat').value.trim(),
+    description: document.getElementById('eDesc').value.trim(),
+    s3_key: document.getElementById('eKey').value.trim() || null,
+    is_published: document.getElementById('ePub').checked?1:0,
+    is_premium: document.getElementById('ePrem').checked?1:0,
+  };
+  if(!body.title||!body.category){ toast('Title and category required','bad'); return; }
+  const r = id
+    ? await fetch('/api/admin/lab-demos/'+id,{method:'PUT',headers:HJ,body:JSON.stringify(body)})
+    : await fetch('/api/admin/lab-demos',{method:'POST',headers:HJ,body:JSON.stringify(body)});
+  if(r.ok){ toast('Saved ✓','ok'); closeEdit(); load(); }
+  else { toast('Save failed','bad'); }
+}
+
+function toast(t,kind){ const el=document.getElementById('toast');
+  el.textContent=t; el.className='toast show '+(kind||''); setTimeout(()=>el.className='toast',3200); }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>(
+  {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+load();
+</script>
+</body>
+</html>

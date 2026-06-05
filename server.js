@@ -1,6 +1,8 @@
+process.on('unhandledRejection',e=>console.error('UR:',e&&e.message||e)); process.on('uncaughtException',e=>console.error('UE:',e&&e.message||e));
 require('dotenv').config();
 const express = require('express');
 const mysql   = require('mysql2/promise');
+const labDemos = require('./routes/labDemos');
 const bcrypt  = require('bcryptjs');
 const jwt     = require('jsonwebtoken');
 const stripe   = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -192,7 +194,7 @@ const assignmentStorage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, '/var/www/kca/public/uploads/assignments'),
   filename: (req, file, cb) => cb(null, Date.now() + '_' + file.originalname.replace(/\s/g,'_'))
 });
-const uploadAssignment = multer({ storage: assignmentStorage, limits: { fileSize: 20 * 1024 * 1024 } });
+const uploadAssignment = multer({ storage: assignmentStorage, limits: { fileSize: 20 * 1024 * 1024, files: 10 } });
 
 
 // ══════════════════════════════════════════════════════════
@@ -1213,6 +1215,7 @@ app.put('/api/admin/ccna-subscriptions/:id', auth, adminOnly, async (req, res) =
   } catch(e){res.status(500).json({error:e.message});}
 });
 
+app.use('/api', labDemos(pool, auth, adminOnly));
 app.use((req, res) => {
   if (!req.path.startsWith('/api')) res.sendFile(path.join(__dirname, 'public', 'index.html'));
   else res.status(404).json({ error: 'Not found' });
