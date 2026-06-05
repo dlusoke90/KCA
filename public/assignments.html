@@ -21,21 +21,39 @@ header{background:linear-gradient(135deg,#0a1628,#0d2040);padding:1rem 2rem;disp
 .a-title{font-size:1rem;font-weight:700;color:#f8fafc;margin-bottom:.3rem}
 .a-meta{font-size:.78rem;color:#64748b;margin-bottom:.75rem}
 .a-desc{font-size:.875rem;color:#94a3b8;margin-bottom:1rem;line-height:1.5}
-.a-file{display:inline-flex;align-items:center;gap:.4rem;background:#0a0f1a;border:1px solid #1e2330;padding:.4rem .9rem;border-radius:6px;color:#3b9eff;font-size:.82rem;font-weight:600;text-decoration:none;margin-bottom:1rem}
+
+/* ── instructor attachment list ── */
+.a-files-list{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem}
+.a-file{display:inline-flex;align-items:center;gap:.4rem;background:#0a0f1a;border:1px solid #1e2330;padding:.4rem .9rem;border-radius:6px;color:#3b9eff;font-size:.82rem;font-weight:600;text-decoration:none;width:fit-content}
 .a-file:hover{border-color:#3b9eff}
+
 .reply-section{background:#0a0f1a;border:1px solid #1e2330;border-radius:8px;padding:1rem}
 .reply-label{font-size:.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
 .submitted-badge{display:inline-block;background:rgba(14,138,120,.15);color:#0e8a78;border:1px solid rgba(14,138,120,.3);padding:.25rem .7rem;border-radius:12px;font-size:.75rem;font-weight:700;margin-bottom:.75rem}
 textarea{width:100%;padding:.65rem .9rem;background:#111827;border:1px solid #1e2330;border-radius:8px;color:#e2e8f0;font-size:.875rem;font-family:inherit;resize:vertical;min-height:80px;margin-bottom:.6rem;transition:border-color .2s,background .2s,box-shadow .2s}
 textarea:focus{outline:none;border-color:#0e8a78}
 textarea.drag-over{border-color:#0e8a78!important;background:#0d1f14!important;box-shadow:0 0 0 3px rgba(14,138,120,.25)}
-.attach-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem;flex-wrap:wrap}
+.attach-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem;flex-wrap:wrap}
 .file-label{background:#0a0f1a;border:1px solid #1e2330;padding:.4rem .9rem;border-radius:6px;color:#94a3b8;font-size:.8rem;cursor:pointer;font-weight:600;transition:all .2s;white-space:nowrap}
 .file-label:hover{border-color:#0e8a78;color:#0e8a78}
 .img-attach-btn{background:#0a0f1a;border:1px solid #1e2330;padding:.4rem .9rem;border-radius:6px;color:#94a3b8;font-size:.8rem;cursor:pointer;font-weight:600;transition:all .2s;white-space:nowrap}
 .img-attach-btn:hover{border-color:#a78bfa;color:#a78bfa}
 .attach-hint{font-size:.72rem;color:#475569}
-.file-name{font-size:.75rem;color:#0e8a78;margin-top:.15rem;width:100%}
+
+/* ── selected files list (student) ── */
+.selected-files{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.5rem}
+.selected-file-item{display:flex;align-items:center;gap:.5rem;background:#111827;border:1px solid #1e2330;border-radius:6px;padding:.35rem .75rem;font-size:.78rem;color:#e2e8f0}
+.selected-file-item .sf-name{flex:1;color:#0e8a78;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.selected-file-item .sf-size{color:#475569;font-size:.72rem;white-space:nowrap}
+.selected-file-item .sf-remove{background:none;border:none;color:#ef4444;cursor:pointer;font-size:.85rem;padding:0 .2rem;line-height:1;flex-shrink:0}
+.selected-file-item .sf-remove:hover{color:#dc2626}
+.files-count-badge{font-size:.72rem;color:#64748b;margin-bottom:.35rem}
+
+/* previously submitted files */
+.submitted-files-list{display:flex;flex-direction:column;gap:.35rem;margin:.4rem 0 .75rem}
+.submitted-file-item{display:inline-flex;align-items:center;gap:.4rem;background:#0a0f1a;border:1px solid rgba(14,138,120,.25);padding:.35rem .8rem;border-radius:6px;color:#0e8a78;font-size:.78rem;font-weight:600;text-decoration:none;width:fit-content}
+.submitted-file-item:hover{border-color:#0e8a78}
+
 .img-preview-wrap{display:none;position:relative;margin:.6rem 0;width:fit-content}
 .img-preview-wrap img{display:block;max-height:180px;max-width:100%;border-radius:8px;border:1px solid #0e8a78;box-shadow:0 0 0 2px rgba(14,138,120,.2)}
 .img-preview-remove{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;background:#ef4444;border:2px solid #0a0f1a;color:#fff;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1}
@@ -82,12 +100,31 @@ textarea.drag-over{border-color:#0e8a78!important;background:#0d1f14!important;b
 const token = localStorage.getItem('kca_token');
 const user = (() => { try { return JSON.parse(localStorage.getItem('kca_user') || '{}'); } catch(e) { localStorage.removeItem('kca_user'); return {}; } })();
 if (!token) window.location.replace('/login');
+
+// stagedImages[id] = File (for pasted/dragged image)
+// selectedFiles[id] = FileList or array of File objects
 const stagedImages = {};
+const selectedFiles = {};
 let focusedCardId = null;
 
 function isImagePath(p){ return p && /\.(jpg|jpeg|png|gif|webp)$/i.test(p); }
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function formatSize(bytes){ return bytes < 1024*1024 ? (bytes/1024).toFixed(0)+' KB' : (bytes/(1024*1024)).toFixed(1)+' MB'; }
 function showToast(msg){ const t=document.getElementById('pasteToast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
+
+/* ── parse multiple file paths stored as JSON array or single path ── */
+function parseFilePaths(raw){
+  if(!raw) return [];
+  try { const p = JSON.parse(raw); return Array.isArray(p) ? p : [p]; } catch(e){ return [raw]; }
+}
+
+function fileIcon(path){
+  if(isImagePath(path)) return '🖼️';
+  if(/\.pdf$/i.test(path)) return '📄';
+  if(/\.(doc|docx)$/i.test(path)) return '📝';
+  if(/\.(zip|rar|7z)$/i.test(path)) return '📦';
+  return '📎';
+}
 
 async function loadAssignments(){
   const el = document.getElementById('assignmentsList');
@@ -111,34 +148,118 @@ async function loadAssignments(){
 
 function buildCard(a){
   const submitted = !!(a.my_reply || a.my_submission);
-  const imgPath = esc(a.file_path);
-  const submittedImgHtml = (a.file_path && isImagePath(a.file_path))
-    ? '<div class="submitted-img-wrap"><div class="submitted-img-label">📎 Previously submitted image:</div><img src="' + imgPath + '" alt="Submitted" onclick="openLightbox(this.src)" title="Click to enlarge"></div>' : '';
+
+  /* ── instructor attachment files ── */
+  const instrFiles = parseFilePaths(a.file_path);
+  let instrFilesHtml = '';
+  if(instrFiles.length){
+    instrFilesHtml = '<div class="a-files-list">'
+      + instrFiles.map(fp => {
+          const icon = fileIcon(fp);
+          const name = fp.split('/').pop();
+          if(isImagePath(fp)){
+            return '<a href="'+esc(fp)+'" target="_blank" class="a-file">'+icon+' '+esc(name)+'</a>';
+          }
+          return '<a href="'+esc(fp)+'" target="_blank" class="a-file">'+icon+' '+esc(name)+'</a>';
+        }).join('')
+      + '</div>';
+  }
+
+  /* ── student previously submitted files ── */
+  const submittedFiles = parseFilePaths(a.my_submission);
+  let submittedFilesHtml = '';
+  if(submittedFiles.length && submittedFiles[0]){
+    submittedFilesHtml = '<div class="submitted-files-list">'
+      + '<div style="font-size:.72rem;color:#64748b;margin-bottom:.25rem">📁 Previously submitted:</div>'
+      + submittedFiles.map(fp => {
+          const icon = fileIcon(fp);
+          const name = fp.split('/').pop();
+          if(isImagePath(fp)){
+            return '<div class="submitted-img-wrap">'
+              +'<div class="submitted-img-label">'+icon+' '+esc(name)+'</div>'
+              +'<img src="'+esc(fp)+'" alt="Submitted" onclick="openLightbox(this.src)" title="Click to enlarge">'
+              +'</div>';
+          }
+          return '<a href="'+esc(fp)+'" target="_blank" class="submitted-file-item">'+icon+' '+esc(name)+'</a>';
+        }).join('')
+      + '</div>';
+  }
+
   return '<div class="assignment-card" id="card-'+a.id+'">'
     +'<div class="a-title">'+esc(a.title)+'</div>'
     +'<div class="a-meta">📅 '+new Date(a.created_at).toLocaleDateString()+' &nbsp;|&nbsp; 👤 '+esc(a.instructor_name||'Instructor')
     +(a.course?' &nbsp;|&nbsp;<span class="badge badge-course">'+esc(a.course)+'</span>':'')+'</div>'
     +(a.description?'<div class="a-desc">'+a.description+'</div>':'')
-    +(a.file_path&&!isImagePath(a.file_path)?'<a href="'+esc(a.file_path)+'" target="_blank" class="a-file">📎 Download Assignment File</a>':'')
-    +(a.file_path&&isImagePath(a.file_path)?'<a href="'+esc(a.file_path)+'" target="_blank" class="a-file">📄 View Assignment Image</a>':'')
+    + instrFilesHtml
     +'<div class="reply-section">'
     +'<div class="reply-label">Your Submission</div>'
     +(submitted?'<div class="submitted-badge">✅ Submitted</div>':'')
     +'<textarea id="reply-'+a.id+'" placeholder="Type your answer or notes here...&#10;&#10;Tip: Paste (Ctrl+V) or drag and drop an image here." onfocus="focusedCardId='+a.id+'">'+esc(a.my_reply||'')+'</textarea>'
+
+    /* attach buttons */
     +'<div class="attach-row">'
-    +'<label class="file-label" for="file-'+a.id+'">📎 Attach File</label>'
-    +'<input type="file" id="file-'+a.id+'" style="display:none" onchange="onFileSelected('+a.id+',this)">'
+    +'<label class="file-label" for="file-'+a.id+'">📎 Attach Files</label>'
+    +'<input type="file" id="file-'+a.id+'" style="display:none" multiple onchange="onFilesSelected('+a.id+',this)">'
     +'<label class="img-attach-btn" for="img-input-'+a.id+'">🖼️ Attach Image</label>'
     +'<input type="file" id="img-input-'+a.id+'" accept="image/*" style="display:none" onchange="onImageFileSelected('+a.id+',this)">'
-    +'<span class="attach-hint">or Ctrl+V paste · drag and drop image</span>'
+    +'<span class="attach-hint">or Ctrl+V paste · drag and drop</span>'
     +'</div>'
-    +'<div class="file-name" id="fname-'+a.id+'">'+(a.my_submission?'(file previously submitted)':'')+'</div>'
-    +submittedImgHtml
-    +'<div class="img-preview-wrap" id="img-preview-wrap-'+a.id+'"><img id="img-preview-'+a.id+'" src="" alt="Preview"><div class="img-preview-remove" onclick="clearStagedImage('+a.id+')">✕</div><div class="img-preview-meta" id="img-preview-meta-'+a.id+'"></div></div>'
+
+    /* selected files list */
+    +'<div class="selected-files" id="sel-files-'+a.id+'"></div>'
+
+    /* staged image preview */
+    +'<div class="img-preview-wrap" id="img-preview-wrap-'+a.id+'">'
+    +'<img id="img-preview-'+a.id+'" src="" alt="Preview">'
+    +'<div class="img-preview-remove" onclick="clearStagedImage('+a.id+')">✕</div>'
+    +'<div class="img-preview-meta" id="img-preview-meta-'+a.id+'"></div>'
+    +'</div>'
+
+    /* previously submitted */
+    + submittedFilesHtml
+
     +'<button class="submit-btn" id="submit-btn-'+a.id+'" onclick="submitReply('+a.id+')">'+(submitted?'🔄 Update Submission':'🚀 Submit')+'</button>'
     +'<div class="msg" id="msg-'+a.id+'"></div>'
-    +(a.instructor_reply?'<div style="margin-top:1rem;padding-top:.75rem;border-top:1px solid #1e2330"><div style="font-size:.75rem;font-weight:700;color:#0e8a78;margin-bottom:.3rem">💬 Instructor Feedback</div><div style="background:#0a1628;border:1px solid rgba(14,138,120,.3);padding:.75rem;border-radius:8px;font-size:.85rem;color:#e2e8f0;line-height:1.5">'+esc(a.instructor_reply)+'</div></div>':'')
+    +(a.instructor_reply
+      ?'<div style="margin-top:1rem;padding-top:.75rem;border-top:1px solid #1e2330">'
+        +'<div style="font-size:.75rem;font-weight:700;color:#0e8a78;margin-bottom:.3rem">💬 Instructor Feedback</div>'
+        +'<div style="background:#0a1628;border:1px solid rgba(14,138,120,.3);padding:.75rem;border-radius:8px;font-size:.85rem;color:#e2e8f0;line-height:1.5">'+esc(a.instructor_reply)+'</div>'
+        +'</div>'
+      :'')
     +'</div></div>';
+}
+
+/* ── render selected files list UI for a card ── */
+function renderSelectedFiles(id){
+  const container = document.getElementById('sel-files-'+id);
+  if(!container) return;
+  const files = selectedFiles[id] || [];
+  const staged = stagedImages[id];
+  const allFiles = [...files, ...(staged ? [staged] : [])];
+  if(!allFiles.length){ container.innerHTML=''; return; }
+  container.innerHTML = '<div class="files-count-badge">'+allFiles.length+' file'+(allFiles.length>1?'s':'')+' selected</div>'
+    + allFiles.map((f,i) => {
+        const isImg = f.type && f.type.startsWith('image/');
+        const icon = isImg ? '🖼️' : '📎';
+        const isStaged = staged && f === staged;
+        return '<div class="selected-file-item">'
+          +'<span>'+icon+'</span>'
+          +'<span class="sf-name" title="'+esc(f.name)+'">'+esc(f.name)+'</span>'
+          +'<span class="sf-size">'+formatSize(f.size)+'</span>'
+          +'<button class="sf-remove" onclick="removeSelectedFile('+id+','+i+','+isStaged+')" title="Remove">✕</button>'
+          +'</div>';
+      }).join('');
+}
+
+function removeSelectedFile(id, index, isStaged){
+  if(isStaged){
+    clearStagedImage(id);
+  } else {
+    if(selectedFiles[id]){
+      selectedFiles[id].splice(index, 1);
+    }
+    renderSelectedFiles(id);
+  }
 }
 
 function attachCardListeners(id){
@@ -148,9 +269,17 @@ function attachCardListeners(id){
   ta.addEventListener('dragleave',()=>ta.classList.remove('drag-over'));
   ta.addEventListener('drop',e=>{
     e.preventDefault();ta.classList.remove('drag-over');
-    const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];
-    if(f&&f.type.startsWith('image/'))stageImage(id,f);
-    else if(f)onFileDropped(id,f);
+    const files = e.dataTransfer && e.dataTransfer.files;
+    if(!files || !files.length) return;
+    // check if any are images for staging
+    const imgFile = Array.from(files).find(f => f.type.startsWith('image/'));
+    const otherFiles = Array.from(files).filter(f => !f.type.startsWith('image/'));
+    if(imgFile) stageImage(id, imgFile);
+    if(otherFiles.length){
+      if(!selectedFiles[id]) selectedFiles[id] = [];
+      selectedFiles[id].push(...otherFiles);
+      renderSelectedFiles(id);
+    }
   });
 }
 
@@ -169,20 +298,32 @@ window.addEventListener('paste',e=>{
 
 function getFirstCardId(){const c=document.querySelector('.assignment-card');return c?parseInt(c.id.replace('card-','')):null;}
 
-function onFileSelected(id,input){
-  const f=input.files[0];if(!f)return;
-  const n=document.getElementById('fname-'+id);if(n)n.textContent=f.name;
-  if(f.type.startsWith('image/'))stageImage(id,f);
-  else clearStagedImage(id);
+/* Multiple file selection */
+function onFilesSelected(id, input){
+  const files = Array.from(input.files);
+  if(!files.length) return;
+  // separate images from regular files
+  const imgs = files.filter(f => f.type.startsWith('image/'));
+  const others = files.filter(f => !f.type.startsWith('image/'));
+  if(imgs.length) stageImage(id, imgs[0]); // stage first image for preview
+  if(!selectedFiles[id]) selectedFiles[id] = [];
+  selectedFiles[id].push(...others);
+  if(imgs.length > 1) selectedFiles[id].push(...imgs.slice(1)); // extra images added as regular files
+  renderSelectedFiles(id);
 }
-function onImageFileSelected(id,input){const f=input.files[0];if(f)stageImage(id,f);}
-function onFileDropped(id,file){
-  const n=document.getElementById('fname-'+id);if(n)n.textContent=file.name;
-  try{const dt=new DataTransfer();dt.items.add(file);const inp=document.getElementById('file-'+id);if(inp)inp.files=dt.files;}catch(e){}
+
+function onImageFileSelected(id,input){
+  const f=input.files[0];
+  if(f) stageImage(id,f);
 }
 
 function stageImage(id,file){
-  if(!file.type.startsWith('image/')){alert('Only image files can be pasted or dragged here.');return;}
+  if(!file.type.startsWith('image/')){
+    if(!selectedFiles[id]) selectedFiles[id]=[];
+    selectedFiles[id].push(file);
+    renderSelectedFiles(id);
+    return;
+  }
   if(file.size>5*1024*1024){alert('Image must be under 5MB.');return;}
   stagedImages[id]=file;
   const reader=new FileReader();
@@ -190,8 +331,12 @@ function stageImage(id,file){
     const wrap=document.getElementById('img-preview-wrap-'+id);
     const img=document.getElementById('img-preview-'+id);
     const meta=document.getElementById('img-preview-meta-'+id);
-    if(wrap&&img&&meta){img.src=e.target.result;meta.textContent=file.name+' — '+(file.size/1024).toFixed(0)+' KB';wrap.style.display='block';}
-    const n=document.getElementById('fname-'+id);if(n)n.textContent='🖼️ '+file.name;
+    if(wrap&&img&&meta){
+      img.src=e.target.result;
+      meta.textContent=file.name+' — '+formatSize(file.size);
+      wrap.style.display='block';
+    }
+    renderSelectedFiles(id);
   };
   reader.readAsDataURL(file);
 }
@@ -202,30 +347,51 @@ function clearStagedImage(id){
   const img=document.getElementById('img-preview-'+id);if(img)img.src='';
   const meta=document.getElementById('img-preview-meta-'+id);if(meta)meta.textContent='';
   const inp=document.getElementById('img-input-'+id);if(inp)inp.value='';
-  const n=document.getElementById('fname-'+id);if(n)n.textContent='';
+  renderSelectedFiles(id);
 }
 
 async function submitReply(id){
   const replyText=(document.getElementById('reply-'+id)||{value:''}).value.trim();
-  const fileInput=document.getElementById('file-'+id);
-  const pickedFile=fileInput&&fileInput.files&&fileInput.files[0];
-  const stagedImage=stagedImages[id];
+  const files = selectedFiles[id] || [];
+  const stagedImage = stagedImages[id];
+  const allFiles = [...files, ...(stagedImage ? [stagedImage] : [])];
   const msg=document.getElementById('msg-'+id);
   const btn=document.getElementById('submit-btn-'+id);
-  if(!replyText&&!pickedFile&&!stagedImage){msg.style.color='#e74c3c';msg.textContent='⚠️ Please add a reply, attach a file, or paste an image.';return;}
+
+  if(!replyText && !allFiles.length){
+    msg.style.color='#e74c3c';
+    msg.textContent='⚠️ Please add a reply, attach a file, or paste an image.';
+    return;
+  }
+
   const fd=new FormData();
-  if(replyText)fd.append('reply_text',replyText);
-  if(stagedImage)fd.append('file',stagedImage,stagedImage.name);
-  else if(pickedFile)fd.append('file',pickedFile);
-  msg.style.color='#0e8a78';msg.textContent='Submitting...';
-  if(btn)btn.disabled=true;
+  if(replyText) fd.append('reply_text', replyText);
+  // append all files — server currently handles single; we send the first
+  // (server upgrade for multi-file is in the companion server.js patch)
+  allFiles.forEach(f => fd.append('file', f, f.name));
+
+  msg.style.color='#0e8a78';
+  msg.textContent='Submitting...';
+  if(btn) btn.disabled=true;
+
   try{
     const r=await fetch('/api/assignments/'+id+'/submit',{method:'POST',headers:{Authorization:'Bearer '+token},body:fd});
     const d=await r.json();
-    if(r.ok){msg.textContent='✅ '+d.message;clearStagedImage(id);loadAssignments();}
-    else{msg.style.color='#e74c3c';msg.textContent='❌ '+(d.error||'Failed to submit');}
-  }catch(e){msg.style.color='#e74c3c';msg.textContent='❌ Network error. Please try again.';}
-  finally{if(btn)btn.disabled=false;}
+    if(r.ok){
+      msg.textContent='✅ '+d.message;
+      selectedFiles[id]=[];
+      clearStagedImage(id);
+      loadAssignments();
+    } else {
+      msg.style.color='#e74c3c';
+      msg.textContent='❌ '+(d.error||'Failed to submit');
+    }
+  }catch(e){
+    msg.style.color='#e74c3c';
+    msg.textContent='❌ Network error. Please try again.';
+  }finally{
+    if(btn) btn.disabled=false;
+  }
 }
 
 function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open');}
